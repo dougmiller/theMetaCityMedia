@@ -1,4 +1,4 @@
-from videotmc import db
+from theMetaCityMedia import db
 
 
 class Licences(db.Model):

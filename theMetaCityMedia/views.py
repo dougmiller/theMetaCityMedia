@@ -1,5 +1,5 @@
 from flask import render_template
-from videotmc import app
+from theMetaCityMedia import app
 from models import Video
 
 
@@ -9,12 +9,12 @@ def page_not_found(e):
 
 @app.route('/')
 def show_index():
-    vids = Video.query.all()
-    return render_template('index.html', videos=vids)
+    videos = Video.query.all()
+    return render_template('index.html', videos=videos)
 
 
 @app.route('/<video>/')
 def show_specific_video(video):
-    vid = Video.query.filter_by(title=video).first_or_404()
+    vid = Video.query.filter_by(id=video).first_or_404()
     return render_template('video.html', video=vid)
 
