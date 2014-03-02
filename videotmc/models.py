@@ -20,6 +20,7 @@ class Codecs(db.Model):
     def __repr__(self):
         return '<Codec %r>' % (self.codec)
 
+
 class VideoFile(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     parent_video = db.Column(db.Integer, db.ForeignKey('video.id'))
