@@ -1,4 +1,63 @@
-{% extends "base.html" %}
-{% block title %} ccc {{ video.title }} {% endblock %}
-{% block videoTitle %} bbb {{ video.title }}{% endblock %}
- 
+{% extends "video_base.html" %}
+
+{% block video %}
+
+
+
+    <video width="{{ video.get_width() }}" height="{{ video.get_height() }}" controls
+            {% if video.has_poster %}
+                data-poster="http://assets.localcity.com/video/{{ video.file_name }}.poster.{{ video.extention }}"
+            {% endif %}
+            >
+        {% for source in video.files %}
+            {% if not source.is_fullscreen %}
+                <source src="http://assets.localcity.com/video/{{ video.file_name }}.{{ source.extention }}"
+    type="{{ source.mime_type }}; codecs={{ source.video_codec }},{{ source.audio_codec }}"
+
+                        {% if source.has_fullscreen %}
+                            data-fullscreen="true"
+                        {% endif %}
+                        >
+            {% endif %}
+        {% endfor %}
+        >
+    </video>
+{% endblock %}
+
+
+
+{% block poster %}
+    {% if not video.has_poster %}
+        <p>No poster.</p>
+    {% else %}
+        <a href="{{ video.get_poster_url() }}">{{ super() }}</a>
+    {% endif %}
+{% endblock %}
+
+{% block videoFiles %}
+    {% for file in video.files %}
+        {% if file.is_fullscreen %}
+            <li>
+                <a href="http://assets.themetacity.com/video/{{ video.file_name }}.fullscreen.{{ file.extention }}">{{ video.file_name }}.{{ file.extention }}</a> {{ file.resolution }}
+            </li>
+        {% else %}
+            <li>
+                <a href="http://assets.themetacity.com/video/{{ video.file_name }}.{{ file.extention }}">{{ video.file_name }}.{{ file.extention }}</a> {{ file.resolution }}
+            </li>
+        {% endif %}
+
+
+    {% endfor %}
+{% endblock %}
+
+{% block tracks %}
+    <ul>
+        {% for track in video.tracks %}
+            <li><a href="{{ track.get_url(video) }}">{{ track.get_description() }}</a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}
+
+{% block about %}
+{{ video.about }}
+{% endblock %}

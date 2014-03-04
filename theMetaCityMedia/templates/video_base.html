@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>{% block title %}theMetaCity.com Videos{% endblock %}</title>
+    <title>{{ video.title }}</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
     <link href="/static/css/common.css" rel="stylesheet"/>
@@ -11,37 +11,27 @@
     <main>
         <article>
             <header>
-                <h1>{% block videoTitle %}{% endblock %}</h1>
+                <h1>{{ video.title }}</h1>
             </header>
             <div class="vidcontainer">
-                <video></video>
-                <div class="videocontrols"></div>
+                {% block video %}{% endblock %}
             </div>
             <div class="infolhs">
                 <h2>Downloads:</h2>
                 <h3>Files:</h3>
                 <ul>
-                    <li>234</li>
-                    <li>wer</li>
-                    <li>sdfg</li>
-                    <li>sdfg</li>
+                    {% block videoFiles %}{% endblock %}
                 </ul>
 
-                <h3>Poster</h3>
+                <h3>{% block poster %}Poster{% endblock %}</h3>
 
                 <h3>Tracks</h3>
-                <ul>
-                    <li>234</li>
-                    <li>wer</li>
-                    <li>sdfg</li>
-                    <li>sdfg</li>
-                </ul>
+                {% block tracks %}{% endblock %}
+
             </div>
             <div class="inforhs">
                 <h2>About this video</h2>
-                <p>13</p>
-                <p>we</p>
-                <p>uikfgjdf</p>
+                {% block about %}{% endblock %}
             </div>
         </article>
     </main>
