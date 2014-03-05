@@ -1,23 +1,19 @@
 {% extends "video_base.html" %}
 
 {% block video %}
-
-
-
     <video width="{{ video.get_width() }}" height="{{ video.get_height() }}" controls
             {% if video.has_poster %}
-                data-poster="http://assets.localcity.com/video/{{ video.file_name }}.poster.{{ video.extention }}"
+                data-poster="http://assets.localcity.com/video/{{ video.file_name }}.poster.svg"
             {% endif %}
             >
         {% for source in video.files %}
             {% if not source.is_fullscreen %}
                 <source src="http://assets.localcity.com/video/{{ video.file_name }}.{{ source.extention }}"
-    type="{{ source.mime_type }}; codecs={{ source.video_codec }},{{ source.audio_codec }}"
+    type="video/{{ source.mime_type.mime }}; codecs={{ source.video_codec }},{{ source.audio_codec }}"
 
                         {% if source.has_fullscreen %}
                             data-fullscreen="true"
                         {% endif %}
-                        >
             {% endif %}
         {% endfor %}
         >
@@ -38,11 +34,11 @@
     {% for file in video.files %}
         {% if file.is_fullscreen %}
             <li>
-                <a href="http://assets.themetacity.com/video/{{ video.file_name }}.fullscreen.{{ file.extention }}">{{ video.file_name }}.{{ file.extention }}</a> {{ file.resolution }}
+                <a href="http://assets.localcity.com/video/{{ video.file_name }}.fullscreen.{{ file.extention }}">{{ video.file_name }}.{{ file.extention }}</a> {{ file.resolution }}
             </li>
         {% else %}
             <li>
-                <a href="http://assets.themetacity.com/video/{{ video.file_name }}.{{ file.extention }}">{{ video.file_name }}.{{ file.extention }}</a> {{ file.resolution }}
+                <a href="http://assets.localcity.com/video/{{ video.file_name }}.{{ file.extention }}">{{ video.file_name }}.{{ file.extention }}</a> {{ file.resolution }}
             </li>
         {% endif %}
 
