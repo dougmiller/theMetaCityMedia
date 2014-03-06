@@ -3,28 +3,26 @@
 {% block video %}
     <video width="{{ video.get_width() }}" height="{{ video.get_height() }}" controls
             {% if video.has_poster %}
-                data-poster="http://assets.localcity.com/video/{{ video.file_name }}.poster.svg"
+           data-poster="http://assets.localcity.com/video/{{ video.file_name }}.poster.svg"
             {% endif %}
             >
         {% for source in video.files %}
             {% if not source.is_fullscreen %}
                 <source src="http://assets.localcity.com/video/{{ video.file_name }}.{{ source.extention }}"
-    type="video/{{ source.mime_type.mime }}; codecs={{ source.video_codec }},{{ source.audio_codec }}"
+                        type="video/{{ source.mime_type }}; codecs={{ source.video_codec }},{{ source.audio_codec }}"
 
                         {% if source.has_fullscreen %}
-                            data-fullscreen="true"
+                        data-fullscreen="true"
                         {% endif %}
+                        >
             {% endif %}
         {% endfor %}
-        >
     </video>
 {% endblock %}
 
-
-
 {% block poster %}
     {% if not video.has_poster %}
-        <p>No poster.</p>
+        No poster.
     {% else %}
         <a href="{{ video.get_poster_url() }}">{{ super() }}</a>
     {% endif %}
@@ -41,19 +39,21 @@
                 <a href="http://assets.localcity.com/video/{{ video.file_name }}.{{ file.extention }}">{{ video.file_name }}.{{ file.extention }}</a> {{ file.resolution }}
             </li>
         {% endif %}
-
-
     {% endfor %}
 {% endblock %}
 
 {% block tracks %}
-    <ul>
-        {% for track in video.tracks %}
-            <li><a href="{{ track.get_url(video) }}">{{ track.get_description() }}</a></li>
-        {% endfor %}
-    </ul>
+    {% if video.tracks|length %}
+        <ul>
+            {% for track in video.tracks %}
+                <li><a href="{{ track.get_url(video) }}">{{ track.get_description() }}</a></li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No tracks.</p>
+    {% endif %}
 {% endblock %}
 
 {% block about %}
-{{ video.about }}
+    {{ video.about }}
 {% endblock %}

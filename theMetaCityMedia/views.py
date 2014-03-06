@@ -16,6 +16,5 @@ def show_index():
 @app.route('/<video>/')
 def show_specific_video(video):
     vid = Video.query.filter_by(id=video).first_or_404()
-    sources = VideoFile.query.filter_by(id=video)
-    return render_template('video.html', video=vid, sources=sources)
+    return render_template('video.html', video=vid)
 
