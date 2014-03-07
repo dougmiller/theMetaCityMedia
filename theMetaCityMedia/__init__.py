@@ -11,6 +11,9 @@ db = SQLAlchemy(app)
 from theMetaCityMedia import views, models
 
 admin.add_view(ModelView(models.Licence, db.session, 'Licences'))
+admin.add_view(ModelView(models.AudioCodec, db.session, 'Audio Codec'))
+admin.add_view(ModelView(models.VideoCodec, db.session, 'Video Codec'))
+admin.add_view(ModelView(models.MimeType, db.session, 'Mime type'))
 admin.add_view(ModelView(models.VideoFile, db.session, 'Video Files'))
 admin.add_view(ModelView(models.Track, db.session, 'Tracks'))
 admin.add_view(ModelView(models.Video, db.session, 'Videos'))
