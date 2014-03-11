@@ -7,10 +7,13 @@
     <link href="/static/css/common.css" rel="stylesheet"/>
 </head>
 <body>
-<div id="centeredcontainer">
-    <p>
-        There is some junk here.
-    </p>
+<div id="mediaentries">
+    {% for video in videos %}
+        <div class="mediaentry">
+            <p><a href="/{{ video.id }}">{{ video.title }}</a>, {{ video.length }}</p>
+            <p>{{ video.about }}</p>
+        </div>
+    {% endfor %}
 </div>
 <footer class="copyright"></footer>
 </body>

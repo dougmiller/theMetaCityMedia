@@ -75,6 +75,7 @@ class Track(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     type = db.Column(db.Enum('subtitle', 'caption', 'description', 'chapters', 'metadata', name='track_type'))
     src_lang = db.Column(db.String(16), default="en-AU")
+    label = db.Column(db.String(16), default="English")
     parent_video_id = db.Column(db.Integer, db.ForeignKey('video.id'))
 
     def __repr__(self):

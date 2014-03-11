@@ -9,7 +9,7 @@ def page_not_found():
 
 @app.route('/')
 def show_index():
-    videos = Video.query.all()
+    videos = Video.query.order_by(Video.date_published.desc())
     return render_template('index.html', videos=videos)
 
 @app.route('/<video>/')

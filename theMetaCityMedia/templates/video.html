@@ -3,18 +3,23 @@
 {% block video %}
     <video width="{{ video.get_width() }}" height="{{ video.get_height() }}" controls
             {% if video.has_poster %}
-           data-poster="http://assets.localcity.com/video/{{ video.file_name }}.poster.svg"
+           data-poster="https://assets.themetacity.com/video/{{ video.file_name }}.poster.svg"
             {% endif %}
+            preload="auto"
             >
         {% for source in video.files %}
             {% if not source.is_fullscreen %}
-                <source src="http://assets.localcity.com/video/{{ video.file_name }}.{{ source.extention }}"
+                <source src="https://assets.themetacity.com/video/{{ video.file_name }}.{{ source.extention }}"
                         type='video/{{ source.Mime_Type }}; codecs="{{ source.Video_Codec }}{{ source.get_audio_codec_if_present() }}"'
                         {% if source.has_fullscreen %}
                         data-fullscreen="true"
                         {% endif %}
+
                         >
             {% endif %}
+        {% endfor %}
+        {% for track in video.tracks %}
+            <track src="https://assets.themetacity.com/video/{{ track.get_url(video) }}" lang="{{ track.src_lang }}" type="{{ track.type }}" label="{{ track.label }}"/>
         {% endfor %}
     </video>
 {% endblock %}
@@ -23,7 +28,7 @@
     {% if not video.has_poster %}
         No poster.
     {% else %}
-        <a rel="enclosure" href="/video/{{ video.get_poster_url() }}">{{ super() }}</a>
+        <a rel="enclosure" href="https://assets.themetacity.com/video/{{ video.get_poster_url() }}">{{ super() }}</a>
     {% endif %}
 {% endblock %}
 
@@ -31,11 +36,11 @@
     {% for file in video.files %}
         {% if file.is_fullscreen %}
             <li>
-                <a rel="enclosure" href="http://assets.localcity.com/video/{{ video.file_name }}.fullscreen.{{ file.extention }}">{{ video.file_name }}.{{ file.extention }}</a> {{ file.resolution }}
+                <a rel="enclosure" href="https://assets.themetacity.com/video/{{ video.file_name }}.fullscreen.{{ file.extention }}">{{ video.file_name }}.{{ file.extention }}</a> {{ file.resolution }}
             </li>
         {% else %}
             <li>
-                <a rel="enclosure" href="http://assets.localcity.com/video/{{ video.file_name }}.{{ file.extention }}">{{ video.file_name }}.{{ file.extention }}</a> {{ file.resolution }}
+                <a rel="enclosure" href="https://assets.themetacity.com/video/{{ video.file_name }}.{{ file.extention }}">{{ video.file_name }}.{{ file.extention }}</a> {{ file.resolution }}
             </li>
         {% endif %}
     {% endfor %}
@@ -45,7 +50,7 @@
     {% if video.tracks|length %}
         <ul>
             {% for track in video.tracks %}
-                <li><a rel="enclosure" href="{{ track.get_url(video) }}">{{ track.get_description() }}</a></li>
+                <li><a rel="enclosure" href="https://assets.themetacity.com/video/{{ track.get_url(video) }}">{{ track.get_description() }}</a></li>
             {% endfor %}
         </ul>
     {% else %}
@@ -54,11 +59,12 @@
 {% endblock %}
 
 {% block about %}
+    <p>Published: {{ video.date_published }}</p>
     {{ video.about }}
 {% endblock %}
 
 {% block licence %}
-<span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/MovingImage" property="dct:title" rel="dct:type">{{ video.title }}</span>
- by <a xmlns:cc="http://creativecommons.org/ns#" href="http://media.themetacity.com" property="cc:attributionName" rel="cc:attributionURL">
- Douglas Miller</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+<p><span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/MovingImage" property="dct:title" rel="dct:type">{{ video.title }}</span>
+ by <a xmlns:cc="http://creativecommons.org/ns#" href="https://www.themetacity.com" property="cc:attributionName" rel="cc:attributionURL">
+ Douglas Miller</a> is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.</p>
 {% endblock %}
