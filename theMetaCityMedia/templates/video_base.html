@@ -4,20 +4,35 @@
     <title>{{ video.title }}</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
+    <script defer="defer" src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+    <script defer="defer" src="/static/javascript/video.js"></script>
+    <link href='https://fonts.googleapis.com/css?family=Orbitron' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Droid+Sans' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Inconsolata' rel='stylesheet' type='text/css'>
     <link href="/static/css/common.css" rel="stylesheet"/>
 </head>
 <body>
-<div id="centeredcontainer">
+<div id="centeredContainer">
     <main>
         <article>
             <header>
                 <h1>{{ video.title }}</h1>
             </header>
-            <div class="vidcontainer">
-                {% block video %}{% endblock %}
+            <div class="centerer">
+                <div class="vidContainer">
+                    {% block video %}{% endblock %}
+                    <div class="videoControls">
+                        <input type="range" min="0" max="1000" value="0">
+                        <img class="playPauseButton" src="/static/images/smallplay.svg">
+                        <span class="timeSpan"><span class="currentTimeSpan">00:00</span> / <span class="durationTimeSpan">00:00</span></span>
+                        <img class="fullscreenButton" src="/static/images/fullscreen.svg">
+                    </div>
+                </div>
             </div>
+
             <div class="infolhs">
                 <h2>Downloads:</h2>
+
                 <h3>Files:</h3>
                 <ul>
                     {% block videoFiles %}{% endblock %}
@@ -31,13 +46,25 @@
             </div>
             <div class="inforhs">
                 <h2>About this video</h2>
-                {% block about %}{% endblock %}
+
+                <h3>Published:
+                    <time itemprop="dateCreated" datetime="{{ video.date_published }}">{{ video.date_published }}</time>
+                </h3>
+                <div class="aboutContainer">{{ video.about }}</div>
             </div>
         </article>
     </main>
 </div>
 <footer>
-    <div id="licence">{%  block licence %}{% endblock %}</div>
+    <div id="licence">
+        <p><span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/MovingImage"
+                 property="dct:title" rel="dct:type">{{ video.title }}</span>
+            by <a xmlns:cc="http://creativecommons.org/ns#" href="https://www.themetacity.com"
+                  property="cc:attributionName" rel="cc:attributionURL">
+                Douglas Miller</a> is licensed under a <a rel="license"
+                                                          href="https://creativecommons.org/licenses/by-sa/4.0/">Creative
+                Commons Attribution-ShareAlike 4.0 International License</a>.</p>
+    </div>
 </footer>
 </body>
 </html>

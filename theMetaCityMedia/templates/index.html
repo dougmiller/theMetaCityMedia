@@ -4,17 +4,26 @@
     <title>theMetaCity.com Videos</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
+    <link href='https://fonts.googleapis.com/css?family=Orbitron' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Droid+Sans' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Inconsolata' rel='stylesheet' type='text/css'>
     <link href="/static/css/common.css" rel="stylesheet"/>
 </head>
 <body>
-<div id="mediaentries">
     {% for video in videos %}
-        <div class="mediaentry">
-            <p><a href="/{{ video.id }}">{{ video.title }}</a>, {{ video.length }}</p>
+        <div class="mediaEntry">
+            <h1><a href="/{{ video.id }}">{{ video.title }}</a></h1>
+            <h2>{{ video.running_time }}</h2>
+            <h3>Published: {{ video.date_published }}</h3>
             <p>{{ video.about }}</p>
         </div>
     {% endfor %}
-</div>
-<footer class="copyright"></footer>
+<footer class="licence">
+        <p>Work is by <a xmlns:cc="http://creativecommons.org/ns#" href="https://www.themetacity.com"
+                  property="cc:attributionName" rel="cc:attributionURL">
+                Douglas Miller</a> and is licensed under a <a rel="license"
+                                                          href="https://creativecommons.org/licenses/by-sa/4.0/">Creative
+                Commons Attribution-ShareAlike 4.0 International License</a> unless explicitly stated otherwise.</p>
+</footer>
 </body>
 </html>

@@ -1,15 +1,130 @@
 @charset "UTF-8";
 
-#centeredcontainer {
+body {
+    background: transparent url('/static/images/biggestbg.jpg') center center no-repeat fixed;
+    background-size: cover;
+}
+
+h1, h2, h3 {
+    font-family: Orbitron, sans-serif;
+    text-shadow: 0 0 0.2em #187, 0 0 0.2em #F87, 0 0 0.2em #F87;
+}
+
+h1 {
+    text-align: center;
+}
+
+.centerer {
+    text-align: center;
+}
+
+#centeredContainer {
     margin-left: auto;
     margin-right: auto;
-    width: 960px;
+    max-width: 968px;
+    min-width: 500px;
+}
+
+p, li {
+    font-family: "Droid Sans", serif;
+}
+
+.vidContainer {
+    box-shadow: 0 0 50px;
+    background: rgba(0, 0, 0, 0.5);
+    text-shadow: 0 0 0.2em #187, 0 0 0.2em #F87, 0 0 0.2em #F87;
+    display: inline-block;
+    clear: both;
+}
+
+video {
+    display: block;
+}
+
+.inforhs {
+    padding-left: 410px;
 }
 
 .infolhs {
     float: left;
+    max-width: 350px;
 }
 
-#licence {
+.infolhs a {
+    color: orange;
+}
+
+.infolhs h3 {
+    margin-bottom: 0;
+}
+
+.infolhs ul {
+    list-style-type: none;
+    font-size: 1em;
+    padding: 0;
+    text-shadow: 0 0 0.2em #187, 0 0 0.2em #F87, 0 0 0.2em #F87;
+}
+
+li {
+    list-style-position: inside;
+    box-shadow: 0 0 3px;
+    background: rgba(0, 0, 0, 0.5);
+    margin: 5px 0;
+    padding: 2px;
+}
+
+.aboutContainer {
+    box-shadow: 0 0 3px;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 3px;
+    text-shadow: 0 0 0.2em #187, 0 0 0.2em #3e211d, 0 0 0.2em #F87;
+}
+
+.aboutContainer p {
+    margin: 0;
+    font-size: 1.1em;
+}
+
+footer {
+    margin-left: auto;
+    margin-right: auto;
+    width: 968px;
+    max-width: 968px;
+    min-width: 500px;
+    font-size: 0.9em;
     clear: both;
+    text-align: center;
+    text-shadow: 0 0 0.2em #187, 0 0 0.2em #F87, 0 0 0.2em #F87;
+
+}
+
+.videoControls {
+    text-align: center;
+}
+
+.videoControls input[type="range"] {
+    width: 100%;
+    margin: 0;
+}
+
+.timeSpan {
+    font-size: 2em;
+    font-family: "Inconsolata", sans-serif;
+}
+
+.poster {
+    position: absolute;
+}
+
+.mediaEntry {
+    box-shadow: 0 0 50px;
+    background: rgba(0, 0, 0, 0.5);
+    text-shadow: 0 0 0.2em #187, 0 0 0.2em #F87, 0 0 0.2em #F87;
+    margin: 50px auto;
+    width: 500px;
+
+}
+
+.mediaEntry a {
+    color: #2f4f4f;
 }

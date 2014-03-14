@@ -3,13 +3,13 @@
 {% block video %}
     <video width="{{ video.get_width() }}" height="{{ video.get_height() }}" controls
             {% if video.has_poster %}
-           data-poster="https://assets.themetacity.com/video/{{ video.file_name }}.poster.svg"
+           data-poster="http://assets.localcity.com/video/{{ video.file_name }}.poster.svg"
             {% endif %}
             preload="auto"
             >
         {% for source in video.files %}
             {% if not source.is_fullscreen %}
-                <source src="https://assets.themetacity.com/video/{{ video.file_name }}.{{ source.extention }}"
+                <source src="http://assets.localcity.com/video/{{ video.file_name }}.{{ source.extention }}"
                         type='video/{{ source.Mime_Type }}; codecs="{{ source.Video_Codec }}{{ source.get_audio_codec_if_present() }}"'
                         {% if source.has_fullscreen %}
                         data-fullscreen="true"
@@ -19,16 +19,22 @@
             {% endif %}
         {% endfor %}
         {% for track in video.tracks %}
-            <track src="https://assets.themetacity.com/video/{{ track.get_url(video) }}" lang="{{ track.src_lang }}" type="{{ track.type }}" label="{{ track.label }}"/>
+            <track src="http://assets.localcity.com/video/{{ track.get_url(video) }}" lang="{{ track.src_lang }}" type="{{ track.type }}" label="{{ track.label }}"/>
         {% endfor %}
     </video>
 {% endblock %}
 
 {% block poster %}
-    {% if not video.has_poster %}
-        No poster.
+    {% if not video.has_start_poster %}
+        No start poster.
     {% else %}
-        <a rel="enclosure" href="https://assets.themetacity.com/video/{{ video.get_poster_url() }}">{{ super() }}</a>
+        <a rel="enclosure" href="http://assets.localcity.com/video/{{ video.get_start_poster_url() }}">Start poster</a>
+    {% endif %}
+
+    {% if not video.has_end_poster %}
+        No end poster.
+    {% else %}
+        <a rel="enclosure" href="http://assets.localcity.com/video/{{ video.get_end_poster_url() }}">End poster</a>
     {% endif %}
 {% endblock %}
 
@@ -36,11 +42,13 @@
     {% for file in video.files %}
         {% if file.is_fullscreen %}
             <li>
-                <a rel="enclosure" href="https://assets.themetacity.com/video/{{ video.file_name }}.fullscreen.{{ file.extention }}">{{ video.file_name }}.{{ file.extention }}</a> {{ file.resolution }}
+                <a rel="enclosure" href="http://assets.localcity.com/video/{{ video.file_name }}.fullscreen.{{ file.extention }}">{{ video.file_name }}.{{ file.extention }}</a><br>
+                {{ file.resolution }} {{ file.Video_Codec }} {{ file.get_audio_codec_if_present() }}
             </li>
         {% else %}
             <li>
-                <a rel="enclosure" href="https://assets.themetacity.com/video/{{ video.file_name }}.{{ file.extention }}">{{ video.file_name }}.{{ file.extention }}</a> {{ file.resolution }}
+                <a rel="enclosure" href="http://assets.localcity.com/video/{{ video.file_name }}.{{ file.extention }}">{{ video.file_name }}.{{ file.extention }}</a> <br>
+                {{ file.resolution }} {{ file.Video_Codec }} {{ file.get_audio_codec_if_present() }}
             </li>
         {% endif %}
     {% endfor %}
@@ -50,21 +58,10 @@
     {% if video.tracks|length %}
         <ul>
             {% for track in video.tracks %}
-                <li><a rel="enclosure" href="https://assets.themetacity.com/video/{{ track.get_url(video) }}">{{ track.get_description() }}</a></li>
+                <li><a rel="enclosure" href="https://asset.themetacity.com/video/{{ track.get_url(video) }}">{{ track.get_description() }}</a></li>
             {% endfor %}
         </ul>
     {% else %}
         <p>No tracks.</p>
     {% endif %}
-{% endblock %}
-
-{% block about %}
-    <p>Published: {{ video.date_published }}</p>
-    {{ video.about }}
-{% endblock %}
-
-{% block licence %}
-<p><span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/MovingImage" property="dct:title" rel="dct:type">{{ video.title }}</span>
- by <a xmlns:cc="http://creativecommons.org/ns#" href="https://www.themetacity.com" property="cc:attributionName" rel="cc:attributionURL">
- Douglas Miller</a> is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.</p>
 {% endblock %}
