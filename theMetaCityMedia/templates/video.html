@@ -2,8 +2,12 @@
 
 {% block video %}
     <video width="{{ video.get_width() }}" height="{{ video.get_height() }}" controls
-            {% if video.has_poster %}
-           data-poster="http://assets.localcity.com/video/{{ video.file_name }}.poster.svg"
+            {{ has_start_poster }}
+            {% if video.has_start_poster %}
+                data-startposter="http://assets.localcity.com/video/{{ video.file_name }}.startposter.svg"
+            {% endif %}
+            {% if video.has_end_poster %}
+                data-endposter="http://assets.localcity.com/video/{{ video.file_name }}.endposter.svg"
             {% endif %}
             preload="auto"
             >
@@ -19,7 +23,7 @@
             {% endif %}
         {% endfor %}
         {% for track in video.tracks %}
-            <track src="http://assets.localcity.com/video/{{ track.get_url(video) }}" lang="{{ track.src_lang }}" type="{{ track.type }}" label="{{ track.label }}"/>
+            <track src="http://assets.localcity.com/video/{{ track.get_url(video) }}" srclang="{{ track.src_lang }}" type="{{ track.type }}" label="{{ track.label }}"></track>
         {% endfor %}
     </video>
 {% endblock %}
@@ -38,6 +42,18 @@
     {% endif %}
 {% endblock %}
 
+{% block trackMenu %}
+    {% if video.tracks %}
+        <ul id="trackMenu">
+            <li class="activeTrack">None</li>
+        {% for track in video.tracks %}
+            <li>{{ track.type|title }}: {{ track.label }} ({{ track.src_lang }})</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}
+
+
 {% block videoFiles %}
     {% for file in video.files %}
         {% if file.is_fullscreen %}
@@ -48,7 +64,7 @@
         {% else %}
             <li>
                 <a rel="enclosure" href="http://assets.localcity.com/video/{{ video.file_name }}.{{ file.extention }}">{{ video.file_name }}.{{ file.extention }}</a> <br>
-                {{ file.resolution }} {{ file.Video_Codec }} {{ file.get_audio_codec_if_present() }}
+                {{ file.resolution }} {{ file.Video_Codec }} {{ file.get_audio_codec_if_present() }} {{ file.file_size }}
             </li>
         {% endif %}
     {% endfor %}

@@ -42,12 +42,13 @@ $(document).ready(function () {
             $controlsBox,
             $progressBar,
             $poster,
-            customPoster,
+            customStartPoster,
             $endPoster,
             customEndPoster,
             errorPoster,
             $currentTimeSpan,
-            $durationTimeSpan;
+            $durationTimeSpan,
+            tracks;
 
         if (this.controls) {
             this.controls = false;
@@ -168,15 +169,32 @@ $(document).ready(function () {
                 }
             });
 
+        if (video.textTracks.length == 0) {
+            var tb = $(".tracksButton");
+            var src = tb.attr("src").replace("tracks.svg", "notracks.svg");
+            tb.attr("src", src);
+        }
+
+        $("#tracksMenu", function () {
+            console.log(video.tracks);
+            $(video.textTracks).each(function () {
+                console.log(this);
+                console.log(this.kind);
+                console.log(this.label);
+                console.log(this.language);
+            });
+        });
+
+
         // Posters to show before the user plays the video
-        customPoster = this.dataset.poster;
-        if (!customPoster) {
-            customPoster = "/static/images/genericstartposter.svg";  // If none supplied, use our own, generic one
+        customStartPoster = this.dataset.startposter;
+        if (!customStartPoster) {
+            customStartPoster = "/static/images/genericstartposter.svg";  // If none supplied, use our own, generic one
         }
         // Get the poster and make it inline
         // File is SVG so usual jQuery rules may not apply
         // File needs to have at least one element with "playButton" as class
-        $.get(customPoster, function (svg) {
+        $.get(customStartPoster, function (svg) {
             $poster = doc.importNode(svg.documentElement, true);
             $poster = $($poster);
 

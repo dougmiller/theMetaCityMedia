@@ -52,6 +52,7 @@ class VideoFile(db.Model):
     audio_codec_id = db.Column(db.Integer, db.ForeignKey(AudioCodec.id))
     mime_type_id = db.Column(db.Integer, db.ForeignKey(MimeType.id))
     resolution = db.Column(db.String(16))
+    file_size = db.Column(db.String(16))
     is_fullscreen = db.Column(db.Boolean)
     has_fullscreen = db.Column(db.Boolean)
 
@@ -76,11 +77,10 @@ class Track(db.Model):
     type = db.Column(db.Enum('subtitle', 'caption', 'description', 'chapters', 'metadata', name='track_type'))
     src_lang = db.Column(db.String(16), default="en-AU")
     label = db.Column(db.String(16), default="English")
-    file_size = db.Column(db.String(16))
     parent_video_id = db.Column(db.Integer, db.ForeignKey('video.id'))
 
     def __repr__(self):
-        return '<Track %r %r %r>' % (self.parent_video, self.type.encode('utf-8'), self.src_lang.encode('utf-8'))
+        return '<Track %r %r %r>' % (self.parent_video_id, self.type.encode('utf-8'), self.src_lang.encode('utf-8'))
 
     def get_url(self, video):
         return video.file_name + '.' + self.src_lang + '.' + self.type + '.vtt'

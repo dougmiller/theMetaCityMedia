@@ -25,7 +25,10 @@
                         <input type="range" min="0" max="1000" value="0">
                         <img class="playPauseButton" src="/static/images/smallplay.svg">
                         <span class="timeSpan"><span class="currentTimeSpan">00:00</span> / <span class="durationTimeSpan">00:00</span></span>
-                        <img class="fullscreenButton" src="/static/images/fullscreen.svg">
+                        <img class="button fullscreenButton" src="/static/images/fullscreen.svg">
+                        <img class="button tracksButton" src="/static/images/tracks.svg">
+                        <img class="button soundButton" src="/static/images/sound.svg">
+                        {% block trackMenu %}{% endblock %}
                     </div>
                 </div>
             </div>
