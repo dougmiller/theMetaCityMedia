@@ -19,21 +19,22 @@
                 <h1>{{ video.title }}</h1>
             </header>
             <div class="centerer">
-                <div class="vidContainer">
+                <div id="vidContainer">
                     {% block video %}{% endblock %}
-                    <div class="videoControls">
-                        <input type="range" min="0" max="1000" value="0">
-                        <img class="playPauseButton" src="/static/images/smallplay.svg">
+                    <div id="videoControls">
+                        <progress max="100" value="30" id="loadProgress"></progress>
+                        <input type="range" id="playProgress" min="0" max="1000" value="0">
+                        <img id="playPauseButton" class="button" src="/static/images/smallplay.svg" title="Play" alt="Play button">
                         <span class="timeSpan"><span class="currentTimeSpan">00:00</span> / <span class="durationTimeSpan">00:00</span></span>
-                        <img class="button fullscreenButton" src="/static/images/fullscreen.svg">
-                        <img class="button tracksButton" src="/static/images/tracks.svg">
-                        <img class="button soundButton" src="/static/images/sound.svg">
+                        <img id="fullscreenButton" class="button" src="/static/images/fullscreen.svg" title="Go to fullscreen. If there is a higher resolution video available it will load that, otherwise it will upscale the current video." alt="Button to open video in fullscreen">
+                        <img id="tracksButton" class="button" src="/static/images/tracks.svg" title="Change track options" alt="Button to open track options">
+                        <img id="soundButton" class="button" src="/static/images/sound.svg" title="Change sound options" alt="Button to change sound options">
                         {% block trackMenu %}{% endblock %}
                     </div>
                 </div>
             </div>
 
-            <div class="infolhs">
+            <div id="infolhs">
                 <h2>Downloads:</h2>
 
                 <h3>Files:</h3>
@@ -47,7 +48,7 @@
                 {% block tracks %}{% endblock %}
 
             </div>
-            <div class="inforhs">
+            <div id="inforhs">
                 <h2>About this video</h2>
 
                 <h3>Published:

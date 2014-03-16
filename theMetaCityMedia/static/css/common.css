@@ -30,7 +30,7 @@ p, li {
     font-family: "Droid Sans", serif;
 }
 
-.vidContainer {
+#vidContainer {
     box-shadow: 0 0 50px;
     background: rgba(0, 0, 0, 0.5);
     text-shadow: 0 0 0.2em #187, 0 0 0.2em #F87, 0 0 0.2em #F87;
@@ -43,28 +43,32 @@ p, li {
     margin: 10px 0 0 10px;
 }
 
+#playPauseButton {
+    float: left;
+}
+
 video {
     display: block;
 }
 
-.inforhs {
+#inforhs {
     padding-left: 410px;
 }
 
-.infolhs {
+#infolhs {
     float: left;
     max-width: 350px;
 }
 
-.infolhs a {
+#infolhs a {
     color: orange;
 }
 
-.infolhs h3 {
+#infolhs h3 {
     margin-bottom: 0;
 }
 
-.infolhs ul {
+#infolhs ul {
     list-style-type: none;
     font-size: 1em;
     padding: 0;
@@ -83,7 +87,7 @@ li {
     box-shadow: 0 0 3px;
     background: rgba(0, 0, 0, 0.5);
     padding: 3px;
-    text-shadow: 0px 0px 0.2em #187, 0px 0px 0.2em #F87, 0px 0px 0.2em #F87;
+    text-shadow: 0 0 0.2em #187, 0 0 0.2em #F87, 0 0 0.2em #F87;
 }
 
 .aboutContainer p {
@@ -101,17 +105,20 @@ footer {
     clear: both;
     text-align: center;
     text-shadow: 0 0 0.2em #187, 0 0 0.2em #F87, 0 0 0.2em #F87;
-
 }
 
-.videoControls {
-    text-align: center;
-    padding: 10px;
+#loadProgress {
+    width: 100%;
+    height: 2px;
+    border: 0;
+    color: #0063a6;
+    position: absolute;
 }
 
-.videoControls input[type="range"] {
+#playProgress {
     width: 100%;
     margin: 0;
+    opacity: 0.8;
 }
 
 .timeSpan {
@@ -133,4 +140,35 @@ footer {
 
 .mediaEntry a {
     color: #2f4f4f;
+}
+
+#tracksButton:hover ~ #trackMenu, #trackMenu:hover {
+    display: block;
+}
+
+#trackMenu {
+    width: 180px;
+    padding: 0;
+    font-size: 0.8em;
+    box-shadow: 0 0 3px;
+    display: none;
+    position: absolute;
+    margin: 0;
+}
+
+#trackMenu li {
+    list-style: none;
+    text-align: left;
+    margin: 0;
+    padding-left: 5px;
+    box-shadow: none;
+}
+
+#trackMenu li:hover {
+    cursor: pointer;
+    background: rgba(20, 20, 20, 0.7);
+}
+
+#trackMenu li.activeTrack {
+    background: rgba(0, 0, 0, 0.7);
 }

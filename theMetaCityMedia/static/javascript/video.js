@@ -18,13 +18,17 @@ $(document).ready(function () {
 
     // Pass in object of the video to play/pause and the control box associated with it
     function playPause(video) {
-        var playPauseButton = $(".playPauseButton", video.parent)[0];
+        var playPauseButton = $("#playPauseButton", video.parent)[0];
         if (isVideoPlaying(video)) {
             video.pause();
             playPauseButton.src = "/static/images/smallplay.svg";
+            playPauseButton.alt = "Button to play the video";
+            playPauseButton.title = "Play";
         } else {
             video.play();
             playPauseButton.src = "/static/images/smallpause.svg";
+            playPauseButton.alt = "Button to pause the video";
+            playPauseButton.title = "Pause";
         }
     }
 
@@ -34,6 +38,10 @@ $(document).ready(function () {
         seconds = chomped % 60;
         minutes = Math.floor(chomped / 60);
         return minutes.leftZeroPad(2) + ":" + seconds.leftZeroPad(2);
+    }
+
+    function percentLoaded(video) {
+        return true;
     }
 
     $(videos).each(function () {
@@ -101,7 +109,9 @@ $(document).ready(function () {
             }).on("click",function () {
                 playPause(video);
             }).on("ended",function () {
-                $(".playPauseButton", $controlsBox)[0].src = "/static/images/smallplay.svg";
+                $("#playPauseButton", $controlsBox)[0].src = "/static/images/smallplay.svg";
+                $("#playPauseButton", $controlsBox)[0].alt = "Button to play the video";
+                $("#playPauseButton", $controlsBox)[0].title = "Play";
                 // Poster to show at end of movie
                 if (video.dataset.endposter) {
                     customEndPoster = video.dataset.endposter;
@@ -119,7 +129,7 @@ $(document).ready(function () {
                     $endPoster.attr("height", $(video).height());
                     $endPoster.attr("width", $(video).width());
 
-                    $(".playButton", $endPoster).on("click", function () {
+                    $("#playButton", $endPoster).on("click", function () {
                         playPause(video);
                         $endPoster.remove(); // done with poster forever
                     });
@@ -138,10 +148,10 @@ $(document).ready(function () {
                     $poster.attr("width", $(video).width());
                 });
 
-        $controlsBox = $(".videoControls");
+        $controlsBox = $("#videoControls");
 
         // Setup play/pause button
-        $(".playPauseButton", $controlsBox).on("click",function () {
+        $("#playPauseButton", $controlsBox).on("click",function () {
             playPause(video);
         });
 
@@ -159,7 +169,7 @@ $(document).ready(function () {
         $currentTimeSpan = $(".currentTimeSpan");
 
         // Full screen
-        $(".fullscreenButton").on("click",function () {
+        $("#fullscreenButton").on("click",function () {
                 if (video.requestFullScreen) {
                     video.requestFullScreen();
                 } else if (video.webkitRequestFullScreen) {
@@ -170,21 +180,86 @@ $(document).ready(function () {
             });
 
         if (video.textTracks.length == 0) {
-            var tb = $(".tracksButton");
+            var tb = $("#tracksButton");
             var src = tb.attr("src").replace("tracks.svg", "notracks.svg");
             tb.attr("src", src);
+            tb.attr("alt", "No tracks are availible");
+            tb.attr("Title", "No tracks are availible");
         }
 
-        $("#tracksMenu", function () {
-            console.log(video.tracks);
-            $(video.textTracks).each(function () {
-                console.log(this);
-                console.log(this.kind);
-                console.log(this.label);
-                console.log(this.language);
-            });
+        // Work out if there is audio to control
+        // Not the greatest way but doesnt look like there is much other option (if any?)...
+        $("source", video).each(function (){
+            if (this.src === video.currentSrc){
+                if (this.type.split(',').length === 1) { // Split happens on the: codecs="vp8,vorbis"' part
+                    $("#soundButton", $controlsBox)[0].src = "/static/images/nosound.svg";
+                    $("#soundButton", $controlsBox)[0].alt = "Icon showing no sound is available";
+                    $("#soundButton", $controlsBox)[0].title = "No sound available";
+                }
+                return false;
+            }
+            return true;
         });
 
+        var $trackMenu = $("#trackMenu");
+        $(function () {
+            var parent = $trackMenu.parent();
+            $trackMenu.css({top: parent.offset().top + parent.height() + "px", left: parent.offset().left + parent.width() - $trackMenu.width() + "px"});
+        });
+
+        $("li", "#trackMenu").on("click", function (){
+            $(this).parent().children("li").removeClass("activeTrack");
+            $(this).addClass("activeTrack");
+
+            // 'None' <li> is clicked so disable all the tracks
+            if ($(this).text().toLowerCase() === "none") {
+                $("track", video).each(function () {
+                    this.mode = "disabled";
+                });
+            // Find the track referred to and activate it
+            } else {
+                var kind = $(this).text().split(":")[0].toLowerCase(),
+                    srclang = $(this).text().split("(")[1].slice(0,-1);
+
+                $("track", video).each(function () {
+                    if (this.kind === kind && this.srclang === srclang) {
+                        this.mode = "showing";   // change to this track
+                    } else {
+                        this.mode = "disabled";  // Turn off other tracks
+                    }
+                });
+            }
+        });
+
+
+        var progress = $("#loadProgress");
+        var progressInterval = setInterval(function(){
+            var totalBuffered = 0;
+            progress[0].value = (video.duration / video.buffered.end(0)) * 100;
+
+            //console.log(video.buffered.length);
+            for (var i = 0; i < video.buffered.length; i +=1) {
+            //    console.log("Buffer: " + i);
+            //    console.log(video.buffered.start(i));
+            //    console.log(video.buffered.end(i));
+                totalBuffered += video.buffered.start(i) + video.buffered.end(i);
+            }
+            if (totalBuffered === video.duration) {
+                progress.fadeOut();
+                clearInterval(progressInterval);
+            }
+        }, 1000);
+
+
+        $().on("reposition",function (){
+            console.log("ff");
+        });
+
+        $(function () {
+            var parent = progress.parent();
+            progress.css({top: parent.offset().top + "px", left: parent.offset().left + "px"});
+            progress.width(parent.width());
+        });
 
         // Posters to show before the user plays the video
         customStartPoster = this.dataset.startposter;
@@ -202,7 +277,7 @@ $(document).ready(function () {
             $poster.attr("height", $(video).height());
             $poster.attr("width", $(video).width());
 
-            $(".playButton", $poster).on("click", function () {
+            $("#playButton", $poster).on("click", function () {
                 video.load();   // Initial data and metadata load events may have fired before they can be captured so manually fire them
                 playPause(video);
                 $poster.remove(); // done with poster forever

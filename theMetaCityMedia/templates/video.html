@@ -13,7 +13,7 @@
             >
         {% for source in video.files %}
             {% if not source.is_fullscreen %}
-                <source src="http://assets.localcity.com/video/{{ video.file_name }}.{{ source.extention }}"
+                <source src="https://assets.themetacity.com/video/{{ video.file_name }}.{{ source.extention }}"
                         type='video/{{ source.Mime_Type }}; codecs="{{ source.Video_Codec }}{{ source.get_audio_codec_if_present() }}"'
                         {% if source.has_fullscreen %}
                         data-fullscreen="true"
@@ -23,7 +23,7 @@
             {% endif %}
         {% endfor %}
         {% for track in video.tracks %}
-            <track src="http://assets.localcity.com/video/{{ track.get_url(video) }}" srclang="{{ track.src_lang }}" type="{{ track.type }}" label="{{ track.label }}"></track>
+            <track src="http://assets.localcity.com/video/{{ track.get_url(video) }}" srclang="{{ track.src_lang }}" kind="{{ track.type }}" label="{{ track.label }}" mode="disabled"></track>
         {% endfor %}
     </video>
 {% endblock %}
