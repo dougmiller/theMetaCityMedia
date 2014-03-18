@@ -13,7 +13,7 @@
             >
         {% for source in video.files %}
             {% if not source.is_fullscreen %}
-                <source src="https://assets.themetacity.com/video/{{ video.file_name }}.{{ source.extention }}"
+                <source src="http://assets.localcity.com/video/{{ video.file_name }}.{{ source.extention }}"
                         type='video/{{ source.Mime_Type }}; codecs="{{ source.Video_Codec }}{{ source.get_audio_codec_if_present() }}"'
                         {% if source.has_fullscreen %}
                         data-fullscreen="true"
@@ -23,7 +23,7 @@
             {% endif %}
         {% endfor %}
         {% for track in video.tracks %}
-            <track src="http://assets.localcity.com/video/{{ track.get_url(video) }}" srclang="{{ track.src_lang }}" kind="{{ track.type }}" label="{{ track.label }}" mode="disabled"></track>
+            <track src="http://assets.localcity.com/video/{{ track.get_url(video) }}" srclang="{{ track.src_lang }}" kind="{{ track.type }}" label="{{ track.label }}" />
         {% endfor %}
     </video>
 {% endblock %}
@@ -32,13 +32,13 @@
     {% if not video.has_start_poster %}
         No start poster.
     {% else %}
-        <a rel="enclosure" href="http://assets.localcity.com/video/{{ video.get_start_poster_url() }}">Start poster</a>
+        <a href="http://assets.localcity.com/video/{{ video.get_start_poster_url() }}">Start poster</a>
     {% endif %}
 
     {% if not video.has_end_poster %}
         No end poster.
     {% else %}
-        <a rel="enclosure" href="http://assets.localcity.com/video/{{ video.get_end_poster_url() }}">End poster</a>
+        <a href="http://assets.localcity.com/video/{{ video.get_end_poster_url() }}">End poster</a>
     {% endif %}
 {% endblock %}
 
@@ -58,12 +58,12 @@
     {% for file in video.files %}
         {% if file.is_fullscreen %}
             <li>
-                <a rel="enclosure" href="http://assets.localcity.com/video/{{ video.file_name }}.fullscreen.{{ file.extention }}">{{ video.file_name }}.{{ file.extention }}</a><br>
+                <a href="http://assets.localcity.com/video/{{ video.file_name }}.fullscreen.{{ file.extention }}">{{ video.file_name }}.{{ file.extention }}</a><br>
                 {{ file.resolution }} {{ file.Video_Codec }} {{ file.get_audio_codec_if_present() }}
             </li>
         {% else %}
             <li>
-                <a rel="enclosure" href="http://assets.localcity.com/video/{{ video.file_name }}.{{ file.extention }}">{{ video.file_name }}.{{ file.extention }}</a> <br>
+                <a href="http://assets.localcity.com/video/{{ video.file_name }}.{{ file.extention }}">{{ video.file_name }}.{{ file.extention }}</a> <br>
                 {{ file.resolution }} {{ file.Video_Codec }} {{ file.get_audio_codec_if_present() }} {{ file.file_size }}
             </li>
         {% endif %}
@@ -74,7 +74,7 @@
     {% if video.tracks|length %}
         <ul>
             {% for track in video.tracks %}
-                <li><a rel="enclosure" href="https://asset.themetacity.com/video/{{ track.get_url(video) }}">{{ track.get_description() }}</a></li>
+                <li><a href="https://asset.themetacity.com/video/{{ track.get_url(video) }}">{{ track.get_description() }}</a></li>
             {% endfor %}
         </ul>
     {% else %}

@@ -25,7 +25,7 @@
                         <progress max="100" value="30" id="loadProgress"></progress>
                         <input type="range" id="playProgress" min="0" max="1000" value="0">
                         <img id="playPauseButton" class="button" src="/static/images/smallplay.svg" title="Play" alt="Play button">
-                        <span class="timeSpan"><span class="currentTimeSpan">00:00</span> / <span class="durationTimeSpan">00:00</span></span>
+                        <p><span class="timeSpan"><span class="currentTimeSpan">00:00</span> / <span class="durationTimeSpan">00:00</span></span></p>
                         <img id="fullscreenButton" class="button" src="/static/images/fullscreen.svg" title="Go to fullscreen. If there is a higher resolution video available it will load that, otherwise it will upscale the current video." alt="Button to open video in fullscreen">
                         <img id="tracksButton" class="button" src="/static/images/tracks.svg" title="Change track options" alt="Button to open track options">
                         <img id="soundButton" class="button" src="/static/images/sound.svg" title="Change sound options" alt="Button to change sound options">
@@ -48,24 +48,19 @@
                 {% block tracks %}{% endblock %}
 
             </div>
-            <div id="inforhs">
-                <h2>About this video</h2>
-
+            <div id="inforhs" itemscope itemtype="http://schema.org/VideoObject">
+                <h2 itemprop="name">{{ video.title }}</h2>
                 <h3>Published:
-                    <time itemprop="dateCreated" datetime="{{ video.date_published }}">{{ video.date_published }}</time>
+                    <time itemprop="datePublished" datetime="{{ video.date_published }}">{{ video.date_published }}</time>
                 </h3>
-                <div class="aboutContainer">{{ video.about }}</div>
+                <div class="aboutContainer" itemprop="about">{{ video.about }}</div>
             </div>
         </article>
     </main>
 </div>
 <footer>
     <div id="licence">
-        <p><span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/MovingImage"
-                 property="dct:title" rel="dct:type">{{ video.title }}</span>
-            by <a xmlns:cc="http://creativecommons.org/ns#" href="https://www.themetacity.com"
-                  property="cc:attributionName" rel="cc:attributionURL">
-                Douglas Miller</a> is licensed under a <a rel="license"
+        <p>{{ video.title }} by Douglas Miller is licensed under a <a rel="license"
                                                           href="https://creativecommons.org/licenses/by-sa/4.0/">Creative
                 Commons Attribution-ShareAlike 4.0 International License</a>.</p>
     </div>
