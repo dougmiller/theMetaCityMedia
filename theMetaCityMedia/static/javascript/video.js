@@ -42,10 +42,10 @@ $(document).ready(function () {
 
     $(videos).each(function () {
         var video = this,
-            $videoContainer = $(".vidContainer"),
+            $videoContainer = $("#vidContainer"),
             $controlsBox = $("#videoControls"),
             $progressBar = $(":input[type=range]", $controlsBox),
-            $poster = $(".poster"),
+            $poster,
             customStartPoster,
             $endPoster,
             customEndPoster,
@@ -141,9 +141,9 @@ $(document).ready(function () {
         // Setup the div container for the video, controls and poster
         $videoContainer.on("reposition", function () {
             // Move posters and controls back into position after video position updated
-            var videoContainerOffset = $videoContainer.offset();
+            var $poster = $(".poster", this);
 
-            $poster.offset({top: videoContainerOffset.top, left: videoContainerOffset.left});
+            $poster.offset({top: $(this).offset().top, left: $(this).offset().left});
             $poster.attr("height", $(video).height());
             $poster.attr("width", $(video).width());
         });
@@ -276,6 +276,7 @@ $(document).ready(function () {
                 $poster.remove(); // done with poster forever
             });
             $videoContainer.append($poster);
+            console.log($($videoContainer));
             $($videoContainer).trigger("reposition");
         });
 
