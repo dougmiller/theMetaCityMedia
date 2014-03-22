@@ -44,7 +44,7 @@ $(document).ready(function () {
         var video = this,
             $videoContainer = $("#vidContainer"),
             $controlsBox = $("#videoControls"),
-            $progressBar = $(":input[type=range]", $controlsBox),
+            $playProgress = $("#playProgress", $controlsBox),
             $poster,
             customStartPoster,
             $endPoster,
@@ -56,14 +56,15 @@ $(document).ready(function () {
             $tracksButton = $("#tracksButton"),
             $loadingProgress = $("#loadProgress"),
             $playPauseButton = $("#playPauseButton", $controlsBox),
-            $soundButton = $("#soundButton", $controlsBox);
+            $soundButton = $("#soundButton", $controlsBox),
+            $soundVolume = $("#soundLevel", $controlsBox);
 
         if (this.controls) {
             this.controls = false;
         }
 
         $(video).on("timeupdate", function () {
-            $progressBar[0].value = (video.currentTime / video.duration) * 1000;
+            $playProgress[0].value = (video.currentTime / video.duration) * 1000;
             $currentTimeSpan.text(rawTimeToFormattedTime(video.currentTime));
         }).on("play", function () {
             if ($poster.length !== 0) {
@@ -143,9 +144,13 @@ $(document).ready(function () {
             // Move posters and controls back into position after video position updated
             var $poster = $(".poster", this);
 
-            $poster.offset({top: $(this).offset().top, left: $(this).offset().left});
+            $poster.offset({top: $("video", this).offset().top, left: $("video", this).offset().left});
             $poster.attr("height", $(video).height());
             $poster.attr("width", $(video).width());
+
+            $trackMenu.css({top: $tracksButton.offset().top + $tracksButton.height() + "px", left: $tracksButton.offset().left + $tracksButton.width() - $trackMenu.width() + "px"});
+            $soundVolume.css({top: $soundButton.offset().top - $soundVolume.height() + "px", left: $soundButton.offset().left + "px"});
+            $loadingProgress.css({top: $loadingProgress.parent().offset().top + "px", left: $loadingProgress.parent().offset().left + "px"});
         });
 
         // Setup play/pause button
@@ -154,7 +159,7 @@ $(document).ready(function () {
         });
 
         // Setup progress bar
-        $progressBar.on("change", function () {
+        $playProgress.on("change", function () {
             video.currentTime = video.duration * (this.value / 1000);
         }).on("mousedown", function () {
             video.pause();
@@ -184,6 +189,9 @@ $(document).ready(function () {
                     $soundButton[0].src = "/static/images/nosound.svg";
                     $soundButton[0].alt = "Icon showing no sound is available";
                     $soundButton[0].title = "No sound available";
+                    $soundVolume.remove();
+                } else {  // If it DOES have sound
+                    $soundVolume.css({top: $soundButton.offset().top - $soundVolume.height() + "px", left: $soundButton.offset().left + "px"});
                 }
                 return false;
             }
@@ -202,12 +210,6 @@ $(document).ready(function () {
         }
 
         if ($trackMenu.length) {
-            $trackMenu.on("reposition", function () {
-                $trackMenu.css({top: $tracksButton.offset().top + $tracksButton.height() + "px", left: $tracksButton.offset().left + $tracksButton.width() - $trackMenu.width() + "px"});
-            });
-
-            $trackMenu.trigger("reposition"); // Manually trigger now as this often fires too early in other places to get positioning right
-
             $("li", "#trackMenu").on("click", function () {
                 $(this).parent().children("li").removeClass("activeTrack");
                 $(this).addClass("activeTrack");
@@ -229,15 +231,11 @@ $(document).ready(function () {
                     });
                 }
             });
+            $trackMenu.css({top: $tracksButton.offset().top + $tracksButton.height() + "px", left: $tracksButton.offset().left + $tracksButton.width() - $trackMenu.width() + "px"});
         }
 
-        $loadingProgress.on("reposition", function () {
-            var $parent = $loadingProgress.parent();
-            $loadingProgress.width($parent.width());
-            $loadingProgress.css({top: $parent.offset().top + "px", left: $parent.offset().left + "px"});
-        });
-
-        $loadingProgress.trigger("reposition");
+        $loadingProgress.width($controlsBox.width());
+        $loadingProgress.css({top: $controlsBox.offset().top + "px", left: $controlsBox.offset().left + "px"});
 
         (function () {
             var progressInterval = setInterval(function () {
@@ -253,6 +251,13 @@ $(document).ready(function () {
                 }
             }, 1000);
         }());
+
+        $soundVolume.css({top: $soundButton.offset().top - $soundVolume.height() + "px", left: $soundButton.offset().left + "px"});
+
+        $soundVolume.on("change", function (){
+           video.volume = (this.value / 100);
+        });
+
 
         // Posters to show before the user plays the video
         customStartPoster = this.dataset.startposter;
@@ -276,7 +281,6 @@ $(document).ready(function () {
                 $poster.remove(); // done with poster forever
             });
             $videoContainer.append($poster);
-            console.log($($videoContainer));
             $($videoContainer).trigger("reposition");
         });
 

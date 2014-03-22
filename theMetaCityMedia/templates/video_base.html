@@ -29,6 +29,7 @@
                         <img id="fullscreenButton" class="button" src="/static/images/fullscreen.svg" title="Go to fullscreen. If there is a higher resolution video available it will load that, otherwise it will upscale the current video." alt="Button to open video in fullscreen">
                         <img id="tracksButton" class="button" src="/static/images/tracks.svg" title="Change track options" alt="Button to open track options">
                         <img id="soundButton" class="button" src="/static/images/sound.svg" title="Change sound options" alt="Button to change sound options">
+                        <input type="range" id="soundLevel" min="0" max="20" value="20" orient="vertical">
                         {% block trackMenu %}{% endblock %}
                     </div>
                 </div>
@@ -60,9 +61,7 @@
 </div>
 <footer>
     <div id="licence">
-        <p>{{ video.title }} by Douglas Miller is licensed under a <a rel="license"
-                                                          href="https://creativecommons.org/licenses/by-sa/4.0/">Creative
-                Commons Attribution-ShareAlike 4.0 International License</a>.</p>
+        <p>{{ video.title }} by Douglas Miller is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.</p>
     </div>
 </footer>
 </body>

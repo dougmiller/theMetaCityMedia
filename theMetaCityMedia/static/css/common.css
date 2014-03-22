@@ -40,6 +40,7 @@ p, li {
 
 #videoControls p {
     display: inline;
+    margin: 0 0 0 90px;
 }
 
 .button {
@@ -54,6 +55,7 @@ p, li {
 
 video {
     display: block;
+    margin: 0 auto;
 }
 
 #inforhs {
@@ -125,6 +127,14 @@ footer {
     opacity: 0.8;
 }
 
+#soundLevel {
+    height: 80px;
+    width: 20px;
+    margin: 0;
+    position: absolute;
+    display: none;
+}
+
 .timeSpan {
     font-size: 2em;
     font-family: "Inconsolata", sans-serif;
@@ -150,6 +160,9 @@ footer {
     display: block;
 }
 
+#soundButton:hover ~ #soundLevel, #soundLevel:hover {
+    display: block;
+}
 
 #trackMenu {
     width: 180px;
