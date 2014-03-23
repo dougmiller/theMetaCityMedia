@@ -1,10 +1,10 @@
-from flask import render_template
+from flask import render_template, abort
 from theMetaCityMedia import app
-from models import Video, VideoFile
+from models import Video
 
 
 @app.errorhandler(404)
-def page_not_found():
+def page_not_found(self):
     return render_template('404.html'), 404
 
 @app.route('/')
@@ -14,6 +14,8 @@ def show_index():
 
 @app.route('/<video>/')
 def show_specific_video(video):
-    video = Video.query.filter_by(id=video).first_or_404()
-    return render_template('video.html', video=video)
-
+    if video.isnumeric():
+        video = Video.query.filter_by(id=video).first_or_404()
+        return render_template('video.html', video=video)
+    else:
+        abort(404)
