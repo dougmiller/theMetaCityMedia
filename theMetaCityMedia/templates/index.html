@@ -15,7 +15,7 @@
             <h1><a href="/{{ video.id }}">{{ video.title }}</a></h1>
             <h2>{{ video.running_time }}</h2>
             <h3>Published: {{ video.date_published }}</h3>
-            <p>{{ video.about }}</p>
+            {% autoescape false %}{{ video.about }}{% endautoescape %}
         </div>
     {% endfor %}
 <footer class="licence">

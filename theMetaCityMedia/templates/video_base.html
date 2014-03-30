@@ -54,7 +54,11 @@
                 <h3>Published:
                     <time itemprop="datePublished" datetime="{{ video.date_published }}">{{ video.date_published }}</time>
                 </h3>
-                <div class="aboutContainer" itemprop="about">{{ video.about }}</div>
+                <div class="aboutContainer" itemprop="about">
+                    {% autoescape false %}
+                    {{ video.about }}
+                    {% endautoescape %}
+                </div>
             </div>
         </article>
     </main>
