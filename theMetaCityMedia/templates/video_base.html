@@ -22,7 +22,7 @@
                 <div id="vidContainer">
                     {% block video %}{% endblock %}
                     <div id="videoControls">
-                        <progress max="100" value="30" id="loadProgress"></progress>
+                        <div id="loadProgress"></div>
                         <input type="range" id="playProgress" min="0" max="1000" value="0">
                         <img id="playPauseButton" class="button" src="/static/images/smallplay.svg" title="Play" alt="Play button">
                         <p><span class="timeSpan"><span class="currentTimeSpan">00:00</span> / <span class="durationTimeSpan">00:00</span></span></p>

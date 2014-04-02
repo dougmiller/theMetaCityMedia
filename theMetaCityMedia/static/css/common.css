@@ -15,6 +15,10 @@ h1 {
     font-szie: 2em;
 }
 
+a {
+    color: #FFA500;
+}
+
 .centerer {
     text-align: center;
 }
@@ -67,10 +71,6 @@ video {
     max-width: 350px;
 }
 
-#infolhs a {
-    color: orange;
-}
-
 #infolhs h3 {
     margin-bottom: 0;
 }
@@ -117,8 +117,13 @@ footer {
 #loadProgress {
     height: 2px;
     border: 0;
-    color: #0063a6;
     position: absolute;
+}
+
+#loadProgress div {
+    background-color: #0063a6;
+    height: 100%;
+    position: relative;
 }
 
 #playProgress {
@@ -150,17 +155,18 @@ footer {
     text-shadow: 0 0 0.2em #187, 0 0 0.2em #F87, 0 0 0.2em #F87;
     margin: 50px auto;
     width: 500px;
+    padding: 15px;
 }
 
-.mediaEntry a {
-    color: #2f4f4f;
+.mediaEntry h1 a {
+    color: #2F4F4F;
 }
 
 #tracksButton:hover ~ #trackMenu, #trackMenu:hover {
-    display: block;
-}
-
-#soundButton:hover ~ #soundLevel, #soundLevel:hover {
+    display: block
+} {
+    margin-top: 0;
+}#soundLevel, #soundLevel:hover {
     display: block;
 }
 

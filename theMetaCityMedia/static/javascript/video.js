@@ -64,7 +64,7 @@ $(document).ready(function () {
         }
 
         $(video).on("timeupdate", function () {
-            $playProgress.attr("value", (video.currentTime / video.duration) * 1000);
+            $playProgress.prop("value", (video.currentTime / video.duration) * 1000);
             $currentTimeSpan.text(rawTimeToFormattedTime(video.currentTime));
         }).on("play", function () {
             if ($poster.length !== 0) {
@@ -237,19 +237,32 @@ $(document).ready(function () {
         $loadingProgress.width($controlsBox.width());
         $loadingProgress.css({top: $controlsBox.offset().top + "px", left: $controlsBox.offset().left + "px"});
 
+        // Loading progress bars
         (function () {
-            var progressInterval = setInterval(function () {
-                var totalBuffered = 0, i;
-                $loadingProgress.attr("value", (video.duration / video.buffered.end(0)) * 100);
-
-                for (i = 0; i < video.buffered.length; i += 1) {
-                    totalBuffered += video.buffered.start(i) + video.buffered.end(i);
-                }
-                if (totalBuffered === video.duration) {
-                    $loadingProgress.fadeOut();
-                    clearInterval(progressInterval);
-                }
-            }, 1000);
+            var numBufferDisplays = 0,
+                progressInterval = setInterval(function () {
+                    var totalBuffered = 0, i;
+                        //slider[0].width(video.duration / video.buffered.end(0) * $controlsBox.width());
+                    if (numBufferDisplays < video.buffered.length) {
+                        $loadingProgress.append("<div/>");
+                        numBufferDisplays = numBufferDisplays + 1;
+                    } else if (numBufferDisplays > video.buffered.length){
+                        //too many displays, delete one
+                        numBufferDisplays = numBufferDisplays - 1;
+                        $("div:last-child",$loadingProgress).remove();
+                    } else {
+                        // Correct number of buffers, just size them properly
+                        for (i = 0; i < video.buffered.length; i += 1) {
+                            $loadingProgress.children().eq(i).width((video.buffered.end(i) - video.buffered.start(i)) / video.duration * $controlsBox.width());
+                            $loadingProgress.children().eq(i).css({left: video.buffered.start(i) / video.duration * $controlsBox.width()});
+                            totalBuffered += video.buffered.start(i) + video.buffered.end(i);
+                        }
+                        if (totalBuffered === video.duration) {
+                            //$loadingProgress.fadeOut();
+                            clearInterval(progressInterval);
+                        }
+                    }
+                }, 500);
         }());
 
         $soundVolume.css({top: $soundButton.offset().top - $soundVolume.height() + "px", left: $soundButton.offset().left + "px"});
