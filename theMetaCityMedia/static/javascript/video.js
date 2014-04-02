@@ -21,14 +21,14 @@ $(document).ready(function () {
         var $playPauseButton = $("#playPauseButton", video.parent);
         if (isVideoPlaying(video)) {
             video.pause();
-            $playPauseButton[0].src = "/static/images/smallplay.svg";
-            $playPauseButton[0].alt = "Button to play the video";
-            $playPauseButton[0].title = "Play";
+            $playPauseButton.attr("src", "/static/images/smallplay.svg");
+            $playPauseButton.attr("alt", "Option to play the video");
+            $playPauseButton.attr("title", "Play");
         } else {
             video.play();
-            $playPauseButton[0].src = "/static/images/smallpause.svg";
-            $playPauseButton[0].alt = "Button to pause the video";
-            $playPauseButton[0].title = "Pause";
+            $playPauseButton.attr("src", "/static/images/smallpause.svg");
+            $playPauseButton.attr("alt", "Option to pause the video");
+            $playPauseButton.attr("title", "Pause");
         }
     }
 
@@ -64,7 +64,7 @@ $(document).ready(function () {
         }
 
         $(video).on("timeupdate", function () {
-            $playProgress[0].value = (video.currentTime / video.duration) * 1000;
+            $playProgress.attr("value", (video.currentTime / video.duration) * 1000);
             $currentTimeSpan.text(rawTimeToFormattedTime(video.currentTime));
         }).on("play", function () {
             if ($poster.length !== 0) {
@@ -110,9 +110,9 @@ $(document).ready(function () {
         }).on("click", function () {
             playPause(video);
         }).on("ended", function () {
-            $playPauseButton[0].src = "/static/images/smallplay.svg";
-            $playPauseButton[0].alt = "Button to play the video";
-            $playPauseButton[0].title = "Play";
+            $playPauseButton.attr("src", "/static/images/smallplay.svg");
+            $playPauseButton.attr("alt", "Option to play the video");
+            $playPauseButton.attr("title", "Play");
             // Poster to show at end of movie
             if (video.dataset.endposter) {
                 customEndPoster = video.dataset.endposter;
@@ -186,9 +186,9 @@ $(document).ready(function () {
         $("source", video).each(function () {
             if (this.src === video.currentSrc) {
                 if (this.type.split(',').length === 1) { // Split happens on the: codecs="vp8,vorbis"' part
-                    $soundButton[0].src = "/static/images/nosound.svg";
-                    $soundButton[0].alt = "Icon showing no sound is available";
-                    $soundButton[0].title = "No sound available";
+                    $soundButton.attr("src","/static/images/nosound.svg");
+                    $soundButton.attr("alt","Icon showing no sound is available");
+                    $soundButton.attr("title","No sound available");
                     $soundVolume.remove();
                 } else {  // If it DOES have sound
                     $soundVolume.css({top: $soundButton.offset().top - $soundVolume.height() + "px", left: $soundButton.offset().left + "px"});
@@ -240,7 +240,7 @@ $(document).ready(function () {
         (function () {
             var progressInterval = setInterval(function () {
                 var totalBuffered = 0, i;
-                $loadingProgress[0].value = (video.duration / video.buffered.end(0)) * 100;
+                $loadingProgress.attr("value", (video.duration / video.buffered.end(0)) * 100);
 
                 for (i = 0; i < video.buffered.length; i += 1) {
                     totalBuffered += video.buffered.start(i) + video.buffered.end(i);
