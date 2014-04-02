@@ -10,7 +10,7 @@
     <link href="/static/css/common.css" rel="stylesheet"/>
 </head>
 <body>
-    {% for video in videos|reverse %}
+    {% for video in videos %}
         <div class="mediaEntry">
             <h1><a href="/{{ video.id }}">{{ video.title }}</a></h1>
             <h2>{{ video.running_time }}</h2>
