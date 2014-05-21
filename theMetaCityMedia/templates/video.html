@@ -74,7 +74,7 @@
     {% if video.tracks|length %}
         <ul>
             {% for track in video.tracks %}
-                <li><a href="https://asset.themetacity.com/video/{{ track.get_url(video) }}">{{ track.get_description() }}</a></li>
+                <li><a href="http://assets.localcity.com/video/{{ track.get_url(video) }}">{{ track.get_description() }}</a></li>
             {% endfor %}
         </ul>
     {% else %}
