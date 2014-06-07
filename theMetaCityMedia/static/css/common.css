@@ -1,8 +1,7 @@
 @charset "UTF-8";
 
 body {
-    background: transparent url('/static/images/biggestbg.jpg') center center no-repeat fixed;
-    background-size: cover;
+    background: url('/static/images/bgtess.png');
 }
 
 h1, h2, h3 {
