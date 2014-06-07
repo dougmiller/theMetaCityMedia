@@ -1,2 +1,3 @@
 flask/
 configdetails.py
+publisher.config

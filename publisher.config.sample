@@ -1,0 +1,22 @@
+# Configuration file for theMetaCity Doc Publisher
+
+# Development
+dev_hostname="localhost"
+dev_port=5432
+dev_name="dev_db"
+dev_username=""
+# Password handled by .pgpass
+
+dev_psql="psql -U $dev_username -h $dev_hostname -p $dev_port -d $dev_name"
+dev_pg_dump="pg_dump -U $dev_username -h $dev_hostname -p $dev_port -d $dev_name"
+
+
+# Production
+prod_hostname="localhost"
+prod_port=5432
+prod_name="proddb"
+prod_username=""
+# Password handled by .pgpass
+
+prod_psql="psql -U $prod_username -h $prod_hostname -p $prod_port -d $prod_name"
+prod_pg_dump="pg_dump -U $prod_username -h $prod_hostname -p $prod_port -d $prod_name"
