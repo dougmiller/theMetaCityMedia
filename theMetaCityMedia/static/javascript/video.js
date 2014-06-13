@@ -63,14 +63,14 @@ $(document).ready(function () {
             this.controls = false;
         }
 
-        $(video).on("timeupdate", function () {
+        $(video).on("timeupdate",function () {
             $playProgress.prop("value", (video.currentTime / video.duration) * 1000);
             $currentTimeSpan.text(rawTimeToFormattedTime(video.currentTime));
-        }).on("play", function () {
+        }).on("play",function () {
             if ($poster.length !== 0) {
                 $poster.remove();
             }
-        }).on("loadedmetadata", function () {
+        }).on("loadedmetadata",function () {
             var canPlayVid = false;
             $("source", $(video)).each(function () {
                 if (video.canPlayType($(this).attr("type"))) {
@@ -107,7 +107,7 @@ $(document).ready(function () {
                 $($durationTimeSpan).text(rawTimeToFormattedTime(this.duration));
             }
 
-        }).on("click", function () {
+        }).on("click",function () {
             playPause(video);
         }).on("ended", function () {
             $playPauseButton.attr("src", "/static/images/smallplay.svg");
@@ -159,9 +159,9 @@ $(document).ready(function () {
         });
 
         // Setup progress bar
-        $playProgress.on("change", function () {
+        $playProgress.on("change",function () {
             video.currentTime = video.duration * (this.value / 1000);
-        }).on("mousedown", function () {
+        }).on("mousedown",function () {
             video.pause();
         }).on("mouseup", function () {
             video.play();
@@ -186,9 +186,9 @@ $(document).ready(function () {
         $("source", video).each(function () {
             if (this.src === video.currentSrc) {
                 if (this.type.split(',').length === 1) { // Split happens on the: codecs="vp8,vorbis"' part
-                    $soundButton.attr("src","/static/images/nosound.svg");
-                    $soundButton.attr("alt","Icon showing no sound is available");
-                    $soundButton.attr("title","No sound available");
+                    $soundButton.attr("src", "/static/images/nosound.svg");
+                    $soundButton.attr("alt", "Icon showing no sound is available");
+                    $soundButton.attr("title", "No sound available");
                     $soundVolume.remove();
                 } else {  // If it DOES have sound
                     $soundVolume.css({top: $soundButton.offset().top - $soundVolume.height() + "px", left: $soundButton.offset().left + "px"});
@@ -219,7 +219,7 @@ $(document).ready(function () {
                     $(video.textTracks).each(function () {
                         this.mode = "hidden";
                     });
-                // Find the track referred to and activate it
+                    // Find the track referred to and activate it
                 } else {
                     var kind = $(this).text().split(":")[0].toLowerCase(), srclang = $(this).text().split("(")[1].slice(0, -1);
                     $(video.textTracks).each(function () {
@@ -242,14 +242,14 @@ $(document).ready(function () {
             var numBufferDisplays = 0,
                 progressInterval = setInterval(function () {
                     var totalBuffered = 0, i;
-                        //slider[0].width(video.duration / video.buffered.end(0) * $controlsBox.width());
+                    //slider[0].width(video.duration / video.buffered.end(0) * $controlsBox.width());
                     if (numBufferDisplays < video.buffered.length) {
                         $loadingProgress.append("<div/>");
                         numBufferDisplays = numBufferDisplays + 1;
-                    } else if (numBufferDisplays > video.buffered.length){
+                    } else if (numBufferDisplays > video.buffered.length) {
                         //too many displays, delete one
                         numBufferDisplays = numBufferDisplays - 1;
-                        $("div:last-child",$loadingProgress).remove();
+                        $("div:last-child", $loadingProgress).remove();
                     } else {
                         // Correct number of buffers, just size them properly
                         for (i = 0; i < video.buffered.length; i += 1) {
@@ -258,17 +258,17 @@ $(document).ready(function () {
                             totalBuffered += video.buffered.start(i) + video.buffered.end(i);
                         }
                         if (totalBuffered === video.duration) {
-                            //$loadingProgress.fadeOut();
+                            $loadingProgress.fadeOut();
                             clearInterval(progressInterval);
                         }
                     }
-                }, 500);
+                }, 200);
         }());
 
         $soundVolume.css({top: $soundButton.offset().top - $soundVolume.height() + "px", left: $soundButton.offset().left + "px"});
 
-        $soundVolume.on("change", function (){
-           video.volume = (this.value / 100);
+        $soundVolume.on("change", function () {
+            video.volume = (this.value / 100);
         });
 
 

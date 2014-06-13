@@ -131,12 +131,22 @@ footer {
     opacity: 0.8;
 }
 
+#soundButton:hover ~ #soundLevel, #soundLevel:hover {
+    display: block;
+    margin-top: 0;
+}
+
 #soundLevel {
     height: 80px;
     width: 20px;
     margin: 0;
     position: absolute;
     display: none;
+    z-index: 2;
+}
+
+#soundLevel:hover {
+    display: block;
 }
 
 .timeSpan {
@@ -162,11 +172,8 @@ footer {
 }
 
 #tracksButton:hover ~ #trackMenu, #trackMenu:hover {
-    display: block
-} {
-    margin-top: 0;
-}#soundLevel, #soundLevel:hover {
     display: block;
+    margin-top: 0;
 }
 
 #trackMenu {

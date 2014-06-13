@@ -23,7 +23,7 @@
             {% endif %}
         {% endfor %}
         {% for track in video.tracks %}
-            <track src="http://assets.localcity.com/video/{{ track.get_url(video) }}" srclang="{{ track.src_lang }}" kind="{{ track.type }}" label="{{ track.label }}" />
+            <track src="http://assets.localcity.com/video/{{ track.get_url(video) }}" srclang="{{ track.src_lang }}" kind="{{ track.type }}" label="{{ track.label }}"></track>
         {% endfor %}
     </video>
 {% endblock %}
@@ -36,7 +36,7 @@
     {% endif %}
 
     {% if not video.has_end_poster %}
-        No end poster.
+        No end poster
     {% else %}
         <a href="http://assets.localcity.com/video/{{ video.get_end_poster_url() }}">End poster</a>
     {% endif %}
