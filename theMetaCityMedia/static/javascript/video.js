@@ -217,6 +217,7 @@ $(document).ready(function () {
                 // 'None' <li> is clicked so disable all the tracks
                 if ($(this).text().toLowerCase() === "none") {
                     $(video.textTracks).each(function () {
+                        console.log(this);
                         this.mode = "hidden";
                     });
                     // Find the track referred to and activate it

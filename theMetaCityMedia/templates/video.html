@@ -1,6 +1,8 @@
 {% extends "video_base.html" %}
 
 {% block video %}
+    {{ video.get_biggest_filesize() }}
+    {{ video.get_smallest_filesize() }}
     <video width="{{ video.get_width() }}" height="{{ video.get_height() }}" controls
             {{ has_start_poster }}
             {% if video.has_start_poster %}
@@ -10,6 +12,7 @@
                 data-endposter="http://assets.localcity.com/video/{{ video.file_name }}.endposter.svg"
             {% endif %}
             preload="auto"
+            crossorigin
             >
         {% for source in video.files %}
             {% if not source.is_fullscreen %}
@@ -30,7 +33,7 @@
 
 {% block poster %}
     {% if not video.has_start_poster %}
-        No start poster.
+        No start poster
     {% else %}
         <a href="http://assets.localcity.com/video/{{ video.get_start_poster_url() }}">Start poster</a>
     {% endif %}
@@ -58,8 +61,8 @@
     {% for file in video.files %}
         {% if file.is_fullscreen %}
             <li>
-                <a href="http://assets.localcity.com/video/{{ video.file_name }}.fullscreen.{{ file.extention }}">{{ video.file_name }}.{{ file.extention }}</a><br>
-                {{ file.resolution }} {{ file.Video_Codec }} {{ file.get_audio_codec_if_present() }}
+                <a href="http://assets.localcity.com/video/{{ video.file_name }}.fullscreen.{{ file.extention }}">{{ video.file_name }}.fullscreen.{{ file.extention }}</a><br>
+                {{ file.resolution }} {{ file.Video_Codec }} {{ file.get_audio_codec_if_present() }} {{ file.file_size }}
             </li>
         {% else %}
             <li>
