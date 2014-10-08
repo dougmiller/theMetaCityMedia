@@ -52,7 +52,7 @@ class VideoFile(db.Model):
     audio_codec_id = db.Column(db.Integer, db.ForeignKey(AudioCodec.id))
     mime_type_id = db.Column(db.Integer, db.ForeignKey(MimeType.id))
     resolution = db.Column(db.String(16))
-    file_size = db.Column(db.String(16))
+    file_size = db.Column(db.Integer())
     is_fullscreen = db.Column(db.Boolean)
     has_fullscreen = db.Column(db.Boolean)
 
@@ -70,6 +70,7 @@ class VideoFile(db.Model):
             return ',' + self.Audio_Codec.codec
         else:
             return ''
+
 
 class Track(db.Model):
     __tablename__ = 'track'
@@ -118,3 +119,20 @@ class Video(db.Model):
 
     def get_height(self):
         return self.resolution.split('x')[1]
+
+    def get_biggest_filesize(self):
+        biggest_size = 0
+        for x in self.files:
+            if x.file_size > biggest_size:
+                biggest_size = x.file_size
+        return biggest_size
+
+    def get_smallest_filesize(self):
+        smallest_size = 999999999999
+        for x in self.files:
+            if x.file_size < smallest_size:
+                smallest_size = x.file_size
+        return smallest_size
+
+    def make_size_human_readable(self, size):
+        return size
