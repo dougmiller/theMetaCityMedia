@@ -4,7 +4,7 @@ from models import Video
 
 
 @app.errorhandler(404)
-def page_not_found(self):
+def page_not_found():
     return render_template('404.html'), 404
 
 @app.route('/')

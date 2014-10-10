@@ -1,86 +1,151 @@
-{% extends "video_base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{{ video.title }}</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <script defer="defer" src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+    <script defer="defer" src="/static/javascript/video.js"></script>
+    <link href='https://fonts.googleapis.com/css?family=Orbitron' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Droid+Sans' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Inconsolata' rel='stylesheet' type='text/css'>
+    <link href="/static/css/common.css" rel="stylesheet"/>
+</head>
+<body>
+<div id="centeredContainer">
+    <main>
+        <article>
+            <header>
+                <h1>{{ video.title }}</h1>
+            </header>
+            <div class="centerer">
+                <div id="vidContainer">
+                    <video width="{{ video.get_width() }}" height="{{ video.get_height() }}" controls
+                            {{ has_start_poster }}
+                            {% if video.has_start_poster %}
+                           data-startposter="http://assets.localcity.com/video/{{ video.file_name }}.startposter.svg"
+                            {% endif %}
+                            {% if video.has_end_poster %}
+                           data-endposter="http://assets.localcity.com/video/{{ video.file_name }}.endposter.svg"
+                            {% endif %}
+                           preload="auto"
+                           crossorigin
+                            >
+                        {% for source in video.files %}
+                            {% if not source.is_fullscreen %}
+                                <source src="http://assets.localcity.com/video/{{ video.file_name }}.{{ source.extention }}"
+                                        type='video/{{ source.Mime_Type }}; codecs="
+                                                {{ source.Video_Codec }}{{ source.get_audio_codec_if_present() }}"'
+                                        {% if source.has_fullscreen %}
+                                        data-fullscreen="true"
+                                        {% endif %}
 
-{% block video %}
-    {{ video.get_biggest_filesize() }}
-    {{ video.get_smallest_filesize() }}
-    <video width="{{ video.get_width() }}" height="{{ video.get_height() }}" controls
-            {{ has_start_poster }}
-            {% if video.has_start_poster %}
-                data-startposter="http://assets.localcity.com/video/{{ video.file_name }}.startposter.svg"
-            {% endif %}
-            {% if video.has_end_poster %}
-                data-endposter="http://assets.localcity.com/video/{{ video.file_name }}.endposter.svg"
-            {% endif %}
-            preload="auto"
-            crossorigin
-            >
-        {% for source in video.files %}
-            {% if not source.is_fullscreen %}
-                <source src="http://assets.localcity.com/video/{{ video.file_name }}.{{ source.extention }}"
-                        type='video/{{ source.Mime_Type }}; codecs="{{ source.Video_Codec }}{{ source.get_audio_codec_if_present() }}"'
-                        {% if source.has_fullscreen %}
-                        data-fullscreen="true"
+                                        >
+                            {% endif %}
+                        {% endfor %}
+                        {% for track in video.tracks %}
+                            <track src="http://assets.localcity.com/video/{{ track.get_url(video) }}"
+                                   srclang="{{ track.src_lang }}" kind="{{ track.type }}"
+                                   label="{{ track.label }}"></track>
+                        {% endfor %}
+                    </video>
+                    <div id="videoControls">
+                        <div id="loadProgress"></div>
+                        <input type="range" id="playProgress" min="0" max="1000" value="0">
+                        <img id="playPauseButton" class="button" src="/static/images/smallplay.svg" title="Play"
+                             alt="Play button">
+
+                        <p><span class="timeSpan"><span class="currentTimeSpan">00:00</span> / <span
+                                class="durationTimeSpan">00:00</span></span></p>
+                        <img id="fullscreenButton" class="button" src="/static/images/fullscreen.svg"
+                             title="Go to fullscreen. If there is a higher resolution video available it will load that, otherwise it will upscale the current video."
+                             alt="Button to open video in fullscreen">
+                        <img id="tracksButton" class="button" src="/static/images/tracks.svg"
+                             title="Change track options" alt="Button to open track options">
+                        <img id="soundButton" class="button" src="/static/images/sound.svg" title="Change sound options"
+                             alt="Button to change sound options">
+                        <input type="range" id="soundLevel" min="0" max="20" value="20" orient="vertical">
+                            {% if video.tracks|length %}
+                                <ul>
+                                    {% for track in video.tracks %}
+                                        <li><a href="http://assets.localcity.com/video/{{ track.get_url(video) }}">{{ track.get_description() }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <p>No tracks.</p>
+                            {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div id="infolhs">
+                <h2>Downloads:</h2>
+
+                <h3>Files:</h3>
+                <ul>
+                    {% for file in video.files %}
+                        {% if file.is_fullscreen %}
+                            <li>
+                                <a href="http://assets.localcity.com/video/{{ video.file_name }}.fullscreen.{{ file.extention }}">{{ video.file_name }}.fullscreen.{{ file.extention }}</a><br>
+                                {{ file.resolution }} {{ file.Video_Codec }} {{ file.get_audio_codec_if_present() }} {{ file.file_size }}
+                            </li>
+                        {% else %}
+                            <li>
+                                <a href="http://assets.localcity.com/video/{{ video.file_name }}.{{ file.extention }}">{{ video.file_name }}.{{ file.extention }}</a>
+                                <br>
+                                {{ file.resolution }} {{ file.Video_Codec }} {{ file.get_audio_codec_if_present() }} {{ file.file_size }}
+                            </li>
                         {% endif %}
+                    {% endfor %}
+                </ul>
 
-                        >
-            {% endif %}
-        {% endfor %}
-        {% for track in video.tracks %}
-            <track src="http://assets.localcity.com/video/{{ track.get_url(video) }}" srclang="{{ track.src_lang }}" kind="{{ track.type }}" label="{{ track.label }}"></track>
-        {% endfor %}
-    </video>
-{% endblock %}
+                <h3>
+                    {% if not video.has_start_poster %}
+                        No start poster
+                    {% else %}
+                        <a href="http://assets.localcity.com/video/{{ video.get_start_poster_url() }}">Start poster</a>
+                    {% endif %}
 
-{% block poster %}
-    {% if not video.has_start_poster %}
-        No start poster
-    {% else %}
-        <a href="http://assets.localcity.com/video/{{ video.get_start_poster_url() }}">Start poster</a>
-    {% endif %}
+                    {% if not video.has_end_poster %}
+                        No end poster
+                    {% else %}
+                        <a href="http://assets.localcity.com/video/{{ video.get_end_poster_url() }}">End poster</a>
+                    {% endif %}
+                </h3>
 
-    {% if not video.has_end_poster %}
-        No end poster
-    {% else %}
-        <a href="http://assets.localcity.com/video/{{ video.get_end_poster_url() }}">End poster</a>
-    {% endif %}
-{% endblock %}
+                <h3>Tracks</h3>
+                {% if video.tracks %}
+                    <ul id="trackMenu">
+                        <li class="activeTrack">None</li>
+                        {% for track in video.tracks %}
+                            <li>{{ track.type|title }}: {{ track.label }} ({{ track.src_lang }})</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
 
-{% block trackMenu %}
-    {% if video.tracks %}
-        <ul id="trackMenu">
-            <li class="activeTrack">None</li>
-        {% for track in video.tracks %}
-            <li>{{ track.type|title }}: {{ track.label }} ({{ track.src_lang }})</li>
-        {% endfor %}
-        </ul>
-    {% endif %}
-{% endblock %}
+            </div>
+            <div id="inforhs" itemscope itemtype="http://schema.org/VideoObject">
+                <h2 itemprop="name">{{ video.title }}</h2>
 
-
-{% block videoFiles %}
-    {% for file in video.files %}
-        {% if file.is_fullscreen %}
-            <li>
-                <a href="http://assets.localcity.com/video/{{ video.file_name }}.fullscreen.{{ file.extention }}">{{ video.file_name }}.fullscreen.{{ file.extention }}</a><br>
-                {{ file.resolution }} {{ file.Video_Codec }} {{ file.get_audio_codec_if_present() }} {{ file.file_size }}
-            </li>
-        {% else %}
-            <li>
-                <a href="http://assets.localcity.com/video/{{ video.file_name }}.{{ file.extention }}">{{ video.file_name }}.{{ file.extention }}</a> <br>
-                {{ file.resolution }} {{ file.Video_Codec }} {{ file.get_audio_codec_if_present() }} {{ file.file_size }}
-            </li>
-        {% endif %}
-    {% endfor %}
-{% endblock %}
-
-{% block tracks %}
-    {% if video.tracks|length %}
-        <ul>
-            {% for track in video.tracks %}
-                <li><a href="http://assets.localcity.com/video/{{ track.get_url(video) }}">{{ track.get_description() }}</a></li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No tracks.</p>
-    {% endif %}
-{% endblock %}
+                <h3>Published:
+                    <time itemprop="datePublished"
+                          datetime="{{ video.date_published }}">{{ video.date_published }}</time>
+                </h3>
+                <div class="aboutContainer" itemprop="about">
+                    {% autoescape false %}
+                    {{ video.about }}
+                    {% endautoescape %}
+                </div>
+            </div>
+        </article>
+    </main>
+</div>
+<footer>
+    <div id="licence">
+        <p>{{ video.title }} by Douglas Miller is licensed under a <a rel="license"
+                                                                      href="https://creativecommons.org/licenses/by-sa/4.0/">Creative
+            Commons Attribution-ShareAlike 4.0 International License</a>.</p>
+    </div>
+</footer>
+</body>
+</html>
