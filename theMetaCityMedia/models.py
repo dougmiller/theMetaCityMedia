@@ -1,6 +1,18 @@
 from theMetaCityMedia import db
 
 
+def format_size_to_human_readable(size):
+    if size < 1024:
+        return size + 'b'
+    if size < 1048576:
+        return str(int(round(size/1024))) + 'KB'
+    if size < 1073741824:
+        return str(int(round(size/1048576))) + 'MB'
+    if size < 1099511627776:
+        return str(int(round(size/1073741824))) + 'GB'
+    return "Huge fucking file"
+
+
 class Licence(db.Model):
     __tablename__ = 'licence'
     id = db.Column(db.Integer, primary_key=True)
@@ -66,7 +78,7 @@ class VideoFile(db.Model):
         return self.resolution.split('x')[1]
 
     def get_audio_codec_if_present(self):
-        if (self.Audio_Codec != None):
+        if self.Audio_Codec is not None:
             return ',' + self.Audio_Codec.codec
         else:
             return ''
@@ -104,6 +116,7 @@ class Video(db.Model):
     date_published = db.Column(db.Date)
     licence_id = db.Column(db.Integer, db.ForeignKey('licence.id'))
     resolution = db.Column(db.String(16))
+    postcard = db.Column(db.String(30))
 
     def __repr__(self):
         return self.title
@@ -120,19 +133,24 @@ class Video(db.Model):
     def get_height(self):
         return self.resolution.split('x')[1]
 
-    def get_biggest_filesize(self):
-        biggest_size = 0
-        for x in self.files:
-            if x.file_size > biggest_size:
-                biggest_size = x.file_size
-        return biggest_size
+    def format_time_to_human_readable(self):
+        return "{0}m {1}s".format(str(int((int(self.running_time) / 60))), str(int(self.running_time) % 60))
+
+    def get_largest_filesize(self):
+        sizes = []
+        for f in self.files:
+            sizes.append(f.file_size)
+        return format_size_to_human_readable(max(sizes))
 
     def get_smallest_filesize(self):
-        smallest_size = 999999999999
-        for x in self.files:
-            if x.file_size < smallest_size:
-                smallest_size = x.file_size
-        return smallest_size
+        sizes = []
+        for f in self.files:
+            sizes.append(f.file_size)
+        return format_size_to_human_readable(min(sizes))
 
-    def make_size_human_readable(self, size):
-        return size
+    def get_mime_types(self):
+        types = []
+        for f in self.files:
+            if f.Mime_Type not in types:
+                types.append(f.Mime_Type)
+        return types

@@ -157,7 +157,7 @@ footer {
 }
 
 @media (max-width: 320px) {
-    .mediaEntry {
+    .videoEntry {
         box-shadow: 0 0 50px;
         background: rgba(0, 0, 0, 0.5);
         text-shadow: 0 0 0.2em #187, 0 0 0.2em #F87, 0 0 0.2em #F87;
@@ -168,7 +168,7 @@ footer {
 }
 
 @media (min-width: 321px) {
-    .mediaEntry {
+    .videoEntry {
         box-shadow: 0 0 50px;
         background: rgba(0, 0, 0, 0.5);
         text-shadow: 0 0 0.2em #187, 0 0 0.2em #F87, 0 0 0.2em #F87;
@@ -178,7 +178,7 @@ footer {
     }
 }
 
-.mediaEntry h1 a {
+.videoEntry h1 a {
     color: #2F4F4F;
 }
 

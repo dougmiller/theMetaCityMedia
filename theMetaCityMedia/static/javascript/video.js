@@ -276,7 +276,7 @@ $(document).ready(function () {
         // Posters to show before the user plays the video
         customStartPoster = this.dataset.startposter;
         if (!customStartPoster) {
-            customStartPoster = "/static/images/genericstartposter.svg";  // If none supplied, use our own, generic one
+            customStartPoster = "http://assets.localcity.com/video/startposters/genericstartposter.svg";  // If none supplied, use our own, generic one
         }
         // Get the poster and make it inline
         // File is SVG so usual jQuery rules may not apply

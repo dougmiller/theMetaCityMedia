@@ -23,10 +23,10 @@
                     <video width="{{ video.get_width() }}" height="{{ video.get_height() }}" controls
                             {{ has_start_poster }}
                             {% if video.has_start_poster %}
-                           data-startposter="http://assets.localcity.com/video/{{ video.file_name }}.startposter.svg"
+                           data-startposter="http://assets.localcity.com/video/startposters/{{ video.file_name }}.startposter.svg"
                             {% endif %}
                             {% if video.has_end_poster %}
-                           data-endposter="http://assets.localcity.com/video/{{ video.file_name }}.endposter.svg"
+                           data-endposter="http://assets.localcity.com/video/endposters/{{ video.file_name }}.endposter.svg"
                             {% endif %}
                            preload="auto"
                            crossorigin
@@ -44,7 +44,7 @@
                             {% endif %}
                         {% endfor %}
                         {% for track in video.tracks %}
-                            <track src="http://assets.localcity.com/video/{{ track.get_url(video) }}"
+                            <track src="http://assets.localcity.com/video/tracks/{{ track.get_url(video) }}"
                                    srclang="{{ track.src_lang }}" kind="{{ track.type }}"
                                    label="{{ track.label }}"></track>
                         {% endfor %}
@@ -103,13 +103,13 @@
                     {% if not video.has_start_poster %}
                         No start poster
                     {% else %}
-                        <a href="http://assets.localcity.com/video/{{ video.get_start_poster_url() }}">Start poster</a>
+                        <a href="http://assets.localcity.com/video/startposter/{{ video.get_start_poster_url() }}">Start poster</a>
                     {% endif %}
 
                     {% if not video.has_end_poster %}
                         No end poster
                     {% else %}
-                        <a href="http://assets.localcity.com/video/{{ video.get_end_poster_url() }}">End poster</a>
+                        <a href="http://assets.localcity.com/video/endposter/{{ video.get_end_poster_url() }}">End poster</a>
                     {% endif %}
                 </h3>
 
