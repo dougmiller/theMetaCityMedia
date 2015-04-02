@@ -4,6 +4,7 @@
     <title>theMetaCity.com Videos</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
+    <script defer="defer" src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
     <link href='https://fonts.googleapis.com/css?family=Orbitron' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Droid+Sans' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Inconsolata' rel='stylesheet' type='text/css'>
@@ -14,10 +15,10 @@
 <div class="videoEntry">
     <h1><a href="/{{ video.id }}">{{ video.title }}</a></h1>
     {% if video.postcard %}
-        <img src="http://assets.themetacity.com/video/postcards/{{ postcard }}" title="Look at this lovely...thing."
+        <img src="https://assets.themetacity.com/video/postcards/{{ postcard }}" title="Look at this lovely...thing."
              alt="There is no helpful alt here. It was probably a still frame of the video. Or a pig?">
     {% else %}
-        <img src="http://assets.themetacity.com/video/postcards/genericpostcard.jpg"
+        <img src="https://assets.themetacity.com/video/postcards/genericpostcard.jpg"
              title="What are you expecting from this?"
              alt="There was no image for this video so you get this great thing instead.">
     {% endif %}
