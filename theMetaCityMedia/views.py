@@ -1,6 +1,6 @@
 from flask import render_template, abort
 from theMetaCityMedia import app
-from models import Video
+from models import Video, Audio, Code, Picture
 
 
 @app.errorhandler(404)
@@ -21,25 +21,25 @@ def show_specific_video(video):
         abort(404)
 
 @app.route('/code/<code_id>')
-def show_specific_video(code_id):
+def show_specific_code(code_id):
     if code_id.isnumeric():
-        code_snippet = Video.query.filter_by(id=code_id).first_or_404()
+        code_snippet = Code.query.filter_by(id=code_id).first_or_404()
         return render_template('detailed/code.jinja2', code_snippet=code_snippet)
     else:
         abort(404)
 
 @app.route('/audio/<audio_id>')
-def show_specific_video(audio_id):
+def show_specific_audio(audio_id):
     if audio_id.isnumeric():
-        audio_clip = Video.query.filter_by(id=audio_id).first_or_404()
+        audio_clip = Audio.query.filter_by(id=audio_id).first_or_404()
         return render_template('detailed/audio.jinja2', audio_clip=audio_clip)
     else:
         abort(404)
 
 @app.route('/picture/<picture_id>')
-def show_specific_video(picture_id):
+def show_specific_picture(picture_id):
     if picture_id.isnumeric():
-        picture = Video.query.filter_by(id=picture_id).first_or_404()
+        picture = Picture.query.filter_by(id=picture_id).first_or_404()
         return render_template('detailed/picture.jinja2', picture=picture)
     else:
         abort(404)

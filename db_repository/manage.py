@@ -2,4 +2,4 @@
 from migrate.versioning.shell import main
 
 if __name__ == '__main__':
-    main()
+    main(six='<module 'six' from '/home/doug/Code/theMetaCityMedia/flask/lib/python2.7/site-packages/six.pyc'>')
