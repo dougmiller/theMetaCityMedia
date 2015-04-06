@@ -7,18 +7,24 @@ from models import Video, Audio, Code, Picture
 def page_not_found():
     return render_template('404.html'), 404
 
+
 @app.route('/')
 def show_index():
     videos = Video.query.order_by(Video.date_published.desc())
-    return render_template('index.jinja2', videos=videos)
+    audios = Audio.query.order_by(Audio.date_published.desc())
+    pictures = Picture.query.order_by(Picture.date_published.desc())
+    codes = Code.query.order_by(Code.date_published.desc())
+    return render_template('index.jinja2', videos=videos, audios=audios, pictues=pictures, codes=codes)
 
-@app.route('/<video>/')
+
+@app.route('/video/<video>/')
 def show_specific_video(video):
     if video.isnumeric():
         video = Video.query.filter_by(id=video).first_or_404()
-        return render_template('detailed.jinja2', video=video)
+        return render_template('detailed/video.jinja2', video=video)
     else:
         abort(404)
+
 
 @app.route('/code/<code_id>')
 def show_specific_code(code_id):
@@ -28,6 +34,7 @@ def show_specific_code(code_id):
     else:
         abort(404)
 
+
 @app.route('/audio/<audio_id>')
 def show_specific_audio(audio_id):
     if audio_id.isnumeric():
@@ -35,6 +42,7 @@ def show_specific_audio(audio_id):
         return render_template('detailed/audio.jinja2', audio_clip=audio_clip)
     else:
         abort(404)
+
 
 @app.route('/picture/<picture_id>')
 def show_specific_picture(picture_id):
