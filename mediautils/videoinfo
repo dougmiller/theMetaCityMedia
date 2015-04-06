@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+if [[ $# -ne 1 ]]
+then
+    echo "Usage: ./videoinfo filename"
+    echo "This outputs the info about one particular file"
+    exit 1
+fi
+
+DELIM="|"
+
+cd /srv/http/tmcassets/video/
+ALL=$(ffmpeg -i $1 2>&1)
+
+# Rate and duration info happen to be on same line
+RAW_RATE_AND_DURATION=$(egrep 'Duration' <<< "${ALL}")
+
+# Duration of track
+RAW_DURATION=$(egrep -o 'Duration: [0-9]+:[0-9]+:[0-9]+\.[0-9]+' <<< "${RAW_RATE_AND_DURATION}")
+DURATION=$(egrep -o '[0-9]+:[0-9]+:[0-9]+\.[0-9]+' <<< "${RAW_DURATION}")
+
+# Bitrate of track
+RAW_RATE=$(egrep -o 'bitrate: [0-9]+ .+/s' <<< "${RAW_RATE_AND_DURATION}")
+RATE=$(egrep -o '[0-9]+ ../s' <<< "${RAW_RATE}")
+
+# Track info and resolution are on same line
+# Sometimes a track is marked as ': Data'
+RAW_TRACK_AND_RESOLUTION=$(egrep '#0:[0-9](\(.+\))?: Video' <<< "${ALL}")
+
+IFS=',' read -ra EaR <<< "$RAW_TRACK_AND_RESOLUTION"
+# Resolution and encoding
+ENCODING=$(egrep -o 'h264|vp8|theora' <<< ${EaR[0]})
+RESOLUTION=$(egrep -o '[0-9]+x[0-9]+' <<< ${EaR[2]})
+
+echo "${1}${DELIM}${DURATION}${DELIM}${RATE}${DELIM}${ENCODING}${DELIM}${RESOLUTION}"

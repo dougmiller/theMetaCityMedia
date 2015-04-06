@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+if [[ $# -ne 1 ]]
+then
+    echo "Usage: ./videolister videoname"
+    echo "Do not include extention"
+    echo "Gather and output all the info about each file associated with a video name"
+    exit 1
+fi
+
+WORK_DIR=$(pwd)
+DELIM="|"
+
+cd /srv/http/tmcassets/video/
+
+FILES=$(find . -maxdepth 1 -type f -name "${1}*")
+
+for FILE in ${FILES}; do
+    declare -a FILEINFO
+    FILEINFO=$(${WORK_DIR}/videoinfo "${FILE}")
+    FILESIZE=$(stat -c%s "${FILE}")
+    echo "${FILEINFO}${DELIM}${FILESIZE}"
+done
