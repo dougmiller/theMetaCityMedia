@@ -1,0 +1,19 @@
+{% macro video(title, id, postcard, date_published, about, time, mimetypes, sizes, tracks, licence) -%}
+<div class="mediaPerview video">
+    <h1><a href="/video/{{ id }}">{{ title }}</a></h1>
+        <img src="https://assets.themetacity.com/video/postcards/{{ postcard.url }}"
+             title="{{ postcard.title }}"
+             alt="{{ postcard.alt_text }}">
+    <h3>Published: {{ date_published }}</h3>
+    <div class="about">
+        {% autoescape false %}{{ about }}{% endautoescape %}
+    </div>
+    <ul class="meta">
+        <li class="running_time">{{ time }}</li>
+        <li class="mime_types">{% for mt in mimetypes %} {{ mt }} {% endfor %}</li>
+        <li class="sizes">{{ sizes.smallest }} {% if sizes.smallest !=  sizes.biggest %} {{ - sizes.biggest }} {% endif %}</li>
+        <li class="tracks">{{ tracks }}</li>
+        <li class="licence">{{ licence }}</li>
+    </ul>
+</div>
+{%- endmacro %}

@@ -11,31 +11,9 @@
     <link href="/static/css/common.css" rel="stylesheet"/>
 </head>
 <body>
+{% from 'fp_macros.jinja2' import video %}
 {% for video in videos %}
-<div class="videoEntry">
-    <h1><a href="/{{ video.id }}">{{ video.title }}</a></h1>
-    {% if video.postcard %}
-        <img src="https://assets.themetacity.com/video/postcards/{{ postcard }}" title="Look at this lovely...thing."
-             alt="There is no helpful alt here. It was probably a still frame of the video. Or a pig?">
-    {% else %}
-        <img src="https://assets.themetacity.com/video/postcards/genericpostcard.jpg"
-             title="What are you expecting from this?"
-             alt="There was no image for this video so you get this great thing instead.">
-    {% endif %}
-
-    <h3>Published: {{ video.date_published }}</h3>
-
-    <div class="about">
-        {% autoescape false %}{{ video.about }}{% endautoescape %}
-    </div>
-    <ul class="meta">
-        <li class="running_time">{{ video.format_time_to_human_readable() }}</li>
-        <li class="mime_types">{% for mt in video.get_mime_types() %} {{ mt }} {% endfor %}</li>
-        <li class="sizes">{{ video.get_smallest_filesize() }}{% if video.get_smallest_filesize() ==  video.get_largest_filesize() %} - {{ video.get_largest_filesize() }}{{% endif %}}</li>
-        <li class="tracks">{{ video.format_time_to_human_readable() }}</li>
-        <li class="licence">{{ video.Licence.licence_url }}</li>
-    </ul>
-</div>
+<p>a</p>
 {% endfor %}
 <footer class="licence">
     <p>Work is by <a xmlns:cc="http://creativecommons.org/ns#" href="https://www.themetacity.com"

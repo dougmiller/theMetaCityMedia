@@ -28,9 +28,31 @@ class Licence(db.Model):
     licence_url = db.Column(db.String(64), unique=True)
     videos = db.relationship('Video', backref='Licence')
     audios = db.relationship('Audio', backref='Licence')
+    picture = db.relationship('Picture', backref='Licence')
+    code = db.relationship('Code', backref='Licence')
 
     def __repr__(self):
         return self.licence_name
+
+
+class Postcards(db.Model):
+    """
+    A collection of the postcards used on the front page of media.
+    Broken out so that title and alt text can be used as well as
+    reduced redundancy when a different project uses the same postcard
+    """
+    __tablename__ = 'postcard'
+    id = db.Column(db.Integer, primary_key=True)
+    url = db.Column(db.String(64), unique=True)
+    title = db.Column(db.String(64), unique=True)
+    alt_text = db.Column(db.String(128), unique=True)
+    videos = db.relationship('Video', backref='Postcard')
+    audios = db.relationship('Audio', backref='Postcard')
+    picture = db.relationship('Picture', backref='Postcard')
+    code = db.relationship('Code', backref='Postcard')
+
+    def __repr__(self):
+        return self.url + ': ' + self.title
 
 
 class Video(db.Model):
@@ -51,9 +73,9 @@ class Video(db.Model):
     has_start_poster = db.Column(db.Boolean)
     has_end_poster = db.Column(db.Boolean)
     date_published = db.Column(db.Date)
-    licence_id = db.Column(db.Integer, db.ForeignKey('licence.id'))
     resolution = db.Column(db.String(16))
-    postcard = db.Column(db.String(30))
+    licence = db.Column(db.Integer, db.ForeignKey('licence.id'), default=1)
+    postcard = db.Column(db.Integer, db.ForeignKey('postcard.id'), default=1)
 
     def __repr__(self):
         return self.title
@@ -106,10 +128,10 @@ class VideoFile(db.Model):
     """
     __tablename__ = 'video_file'
     id = db.Column(db.Integer, primary_key=True)
-    parent_video_id = db.Column(db.Integer, db.ForeignKey('video.id'))
+    parent_video = db.Column(db.Integer, db.ForeignKey('video.id'))
     video_codec = db.Column(db.Enum('vp8', 'h264', 'theora', name='video_video_codec'))
-    audio_codec = db.Column(db.Enum('nill', 'vorbis', 'mp3', name='video_audio_codec'))
-    mime_type_id = db.Column(db.Enum('webm', 'mp4', 'ogg', name='video_mime_type'))
+    audio_codec = db.Column(db.Enum('nill', 'vorbis', 'mp3', 'wav', name='video_audio_codec'))
+    mime_type = db.Column(db.Enum('webm', 'mp4', 'ogg', name='video_mime_type'))
     extension = db.Column(db.Enum('webm', 'ogv', 'mp4', name='video_file_extension'))
     resolution = db.Column(db.String(16))
     file_size = db.Column(db.Integer())
@@ -138,7 +160,7 @@ class VideoTrack(db.Model):
     """
     __tablename__ = 'video_track'
     id = db.Column(db.Integer, primary_key=True)
-    parent_video_id = db.Column(db.Integer, db.ForeignKey('video.id'))
+    parent_video = db.Column(db.Integer, db.ForeignKey('video.id'))
     type = db.Column(db.Enum('subtitles', 'captions', 'descriptions', 'chapters', 'metadata', name='video_track_type'))
     src_lang = db.Column(db.String(16), default="en-AU")
     label = db.Column(db.String(16), default="English")
@@ -171,8 +193,8 @@ class Audio(db.Model):
     has_start_poster = db.Column(db.Boolean)
     has_end_poster = db.Column(db.Boolean)
     date_published = db.Column(db.Date)
-    postcard = db.Column(db.String(30))
-    licence_id = db.Column(db.Integer, db.ForeignKey('licence.id'))
+    licence = db.Column(db.Integer, db.ForeignKey('licence.id'), default=1)
+    postcard = db.Column(db.Integer, db.ForeignKey('postcard.id'), default=2)
 
     def __repr__(self):
         return self.title
@@ -218,10 +240,14 @@ class AudioFile(db.Model):
     """
     __tablename__ = 'audio_file'
     id = db.Column(db.Integer, primary_key=True)
-    parent_audio_id = db.Column(db.Integer, db.ForeignKey('audio.id'))
-    audio_codec = db.Column(db.Enum('vorbis', 'mp3', name='audio_audio_codec'))
-    mime_type_id = db.Column(db.Enum('webm', 'mp4', 'ogg', name='audio_mime_type'))
-    extension = db.Column(db.Enum('ogg', 'mp3', name='audio_file_extension'))
+    parent_audio = db.Column(db.Integer, db.ForeignKey('audio.id'))
+    audio_codec = db.Column(db.Enum('vorbis', 'mp3', 'wav', name='audio_audio_codec'))
+    mime_type = db.Column(db.Enum('ogg', 'webm', 'mp3', 'wav', name='audio_mime_type'))
+    extension = db.Column(db.Enum('ogg', 'mp3', 'wav', name='audio_file_extension'))
+    bit_rate = db.Column(db.Integer())
+    bit_depth = db.Column(db.Integer())
+    sample_rate = db.Column(db.Integer())
+    vbr_encoded = db.Column(db.Boolean)
     file_size = db.Column(db.Integer())
 
     def __repr__(self):
@@ -234,7 +260,7 @@ class AudioTrack(db.Model):
     """
     __tablename__ = 'audio_track'
     id = db.Column(db.Integer, primary_key=True)
-    parent_audio_id = db.Column(db.Integer, db.ForeignKey('audio.id'))
+    parent_audio = db.Column(db.Integer, db.ForeignKey('audio.id'))
     type = db.Column(db.Enum('subtitles', 'captions', 'descriptions', 'chapters', 'metadata', name='audio_track_type'))
     src_lang = db.Column(db.String(16), default="en-AU")
     label = db.Column(db.String(16), default="English")
@@ -260,11 +286,10 @@ class Picture(db.Model):
     about = db.Column(db.String(512))
     file_name = db.Column(db.String(64), unique=True)
     date_published = db.Column(db.Date)
-    licence_id = db.Column(db.Integer, db.ForeignKey('licence.id'))
     resolution = db.Column(db.String(16))
     file_size = db.Column(db.Integer())
-    thumbnail = db.Column(db.String(30))
-    thumbnail_resolution = db.Column(db.String(16))
+    licence = db.Column(db.Integer, db.ForeignKey('licence.id'), default=1)
+    postcard = db.Column(db.Integer, db.ForeignKey('postcard.id'), default=3)
 
     def __repr__(self):
         return self.title
@@ -287,12 +312,13 @@ class Code(db.Model):
     __tablename__ = 'code'
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(64), unique=True)
+    language = db.Column(db.String(30))
     about = db.Column(db.String(512))
     file_name = db.Column(db.String(64), unique=True)
     date_published = db.Column(db.Date)
-    licence_id = db.Column(db.Integer, db.ForeignKey('licence.id'))
     file_size = db.Column(db.Integer())
-    language = db.Column(db.String(30))
+    licence = db.Column(db.Integer, db.ForeignKey('licence.id'), default=2)
+    postcard = db.Column(db.Integer, db.ForeignKey('postcard.id'), default=4)
 
     def __repr__(self):
         return self.title
