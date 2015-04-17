@@ -100,12 +100,14 @@ class Video(db.Model):
         sizes = []
         for f in self.files:
             sizes.append(f.file_size)
+        print 'largest' + sizes
         return format_size_to_human_readable(max(sizes))
 
     def get_smallest_filesize(self):
         sizes = []
         for f in self.files:
             sizes.append(f.file_size)
+        print 'smallest' + sizes
         return format_size_to_human_readable(min(sizes))
 
     def get_mime_types(self):
