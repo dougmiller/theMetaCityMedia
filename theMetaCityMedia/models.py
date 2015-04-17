@@ -76,6 +76,7 @@ class Video(db.Model):
     resolution = db.Column(db.String(16))
     licence = db.Column(db.Integer, db.ForeignKey('licence.id'), default=1)
     postcard = db.Column(db.Integer, db.ForeignKey('postcard.id'), default=1)
+    media_type = 'video'
 
     def __repr__(self):
         return self.title
@@ -195,6 +196,7 @@ class Audio(db.Model):
     date_published = db.Column(db.Date)
     licence = db.Column(db.Integer, db.ForeignKey('licence.id'), default=1)
     postcard = db.Column(db.Integer, db.ForeignKey('postcard.id'), default=2)
+    media_type = 'audio'
 
     def __repr__(self):
         return self.title
@@ -290,6 +292,7 @@ class Picture(db.Model):
     file_size = db.Column(db.Integer())
     licence = db.Column(db.Integer, db.ForeignKey('licence.id'), default=1)
     postcard = db.Column(db.Integer, db.ForeignKey('postcard.id'), default=3)
+    media_type = 'picture'
 
     def __repr__(self):
         return self.title
@@ -319,6 +322,7 @@ class Code(db.Model):
     file_size = db.Column(db.Integer())
     licence = db.Column(db.Integer, db.ForeignKey('licence.id'), default=2)
     postcard = db.Column(db.Integer, db.ForeignKey('postcard.id'), default=4)
+    media_type = 'code'
 
     def __repr__(self):
         return self.title

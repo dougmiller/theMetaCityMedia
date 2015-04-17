@@ -10,11 +10,13 @@ def page_not_found():
 
 @app.route('/')
 def show_index():
-    videos = Video.query.order_by(Video.date_published.desc())
-    audios = Audio.query.order_by(Audio.date_published.desc())
-    pictures = Picture.query.order_by(Picture.date_published.desc())
-    codes = Code.query.order_by(Code.date_published.desc())
-    return render_template('index.jinja2', videos=videos, audios=audios, pictues=pictures, codes=codes)
+    media = []
+    media += Video.query.all()
+    media += Audio.query.all()
+    media += Picture.query.all()
+    media += Code.query.all()
+    media.sort(key=lambda media_entry: media_entry.date_published)
+    return render_template('index.jinja2', media=media)
 
 
 @app.route('/video/<video>/')

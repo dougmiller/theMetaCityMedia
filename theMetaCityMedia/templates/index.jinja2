@@ -12,8 +12,10 @@
 </head>
 <body>
 {% from 'fp_macros.jinja2' import video %}
-{% for video in videos %}
-<p>a</p>
+{% for element in media %}
+    {% if element.media_type == 'video' %}
+        {{ video(element) }}
+    {% endif %}
 {% endfor %}
 <footer class="licence">
     <p>Work is by <a xmlns:cc="http://creativecommons.org/ns#" href="https://www.themetacity.com"
