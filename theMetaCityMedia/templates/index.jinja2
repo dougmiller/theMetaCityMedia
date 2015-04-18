@@ -11,7 +11,7 @@
     <link href="/static/css/common.css" rel="stylesheet"/>
 </head>
 <body>
-{% from 'fp_macros.jinja2' import video %}
+{% from 'macros/fp_video.jinja2' import video %}
 {% for element in media %}
     {% if element.media_type == 'video' %}
         {{ video(element) }}

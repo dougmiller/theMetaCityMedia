@@ -1,3 +1,4 @@
+{% macro video(video) -%}
 <div class="mediaPoster video">
     <h1><a href="/video/{{ video.id }}">{{ video.title }}</a></h1>
         <img src="https://assets.themetacity.com/video/postcards/{{ video.postcard.url }}"
@@ -15,3 +16,4 @@
         <li class="licence">{{ video.licence }}</li>
     </ul>
 </div>
+{%- endmacro %}

@@ -69,7 +69,7 @@ class Video(db.Model):
     file_name = db.Column(db.String(64), unique=True)
     files = db.relationship('VideoFile', backref='File_Parent')
     tracks = db.relationship('VideoTrack', backref='Video_Parent')
-    running_time = db.Column(db.String(64))
+    running_time = db.Column(db.Float)
     has_start_poster = db.Column(db.Boolean)
     has_end_poster = db.Column(db.Boolean)
     date_published = db.Column(db.Date)
@@ -97,25 +97,22 @@ class Video(db.Model):
         return "{0}m {1}s".format(str(int((int(self.running_time) / 60))), str(int(self.running_time) % 60))
 
     def get_largest_filesize(self):
-        sizes = []
-        for f in self.files:
-            sizes.append(f.file_size)
-        print 'largest' + sizes
-        return format_size_to_human_readable(max(sizes))
+        return max(video_file.file_size for video_file in self.files)
 
     def get_smallest_filesize(self):
-        sizes = []
-        for f in self.files:
-            sizes.append(f.file_size)
-        print 'smallest' + sizes
-        return format_size_to_human_readable(min(sizes))
+        return min(video_file.file_size for video_file in self.files)
+
+    def get_smallest_filesize_formatted(self):
+        return format_size_to_human_readable(min(video_file.file_size for video_file in self.files))
+
+    def get_largest_filesize_formatted(self):
+        return format_size_to_human_readable(max(video_file.file_size for video_file in self.files))
+
+    def difference_between_max_and_min_filesize(self):
+        return self.get_largest_filesize() - self.get_smallest_filesize()
 
     def get_mime_types(self):
-        types = []
-        for f in self.files:
-            if f.Mime_Type not in types:
-                types.append(f.Mime_Type)
-        return types
+        return list(set(video_file.mime_type for video_file in self.files))
 
 
 class VideoFile(db.Model):
@@ -192,7 +189,7 @@ class Audio(db.Model):
     file_name = db.Column(db.String(64), unique=True)
     files = db.relationship('AudioFile', backref='File_Parent')
     tracks = db.relationship('AudioTrack', backref='Audio_Parent')
-    running_time = db.Column(db.String(64))
+    running_time = db.Column(db.Float)
     has_start_poster = db.Column(db.Boolean)
     has_end_poster = db.Column(db.Boolean)
     date_published = db.Column(db.Date)

@@ -16,6 +16,7 @@ def show_index():
     media += Picture.query.all()
     media += Code.query.all()
     media.sort(key=lambda media_entry: media_entry.date_published)
+    media = media[::-1]
     return render_template('index.jinja2', media=media)
 
 
