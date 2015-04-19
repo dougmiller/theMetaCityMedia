@@ -82,10 +82,16 @@ class Video(db.Model):
         return self.title
 
     def get_start_poster_url(self):
-        return self.file_name + '.startposter.svg'
+        if self.has_start_poster:
+            return self.file_name + '.startposter.svg'
+        else:
+            return 'generic.startposter.svg'
 
     def get_end_poster_url(self):
-        return self.file_name + '.endposter.svg'
+        if self.has_end_poster:
+            return self.file_name + '.endposter.svg'
+        else:
+            return 'generic.endposter.svg'
 
     def get_width(self):
         return self.resolution.split('x')[0]
@@ -112,7 +118,8 @@ class Video(db.Model):
         return self.get_largest_filesize() - self.get_smallest_filesize()
 
     def get_mime_types(self):
-        return list(set(video_file.mime_type for video_file in self.files))
+        temp = list(set(video_file.mime_type for video_file in self.files))
+        return temp
 
 
 class VideoFile(db.Model):
@@ -148,8 +155,8 @@ class VideoFile(db.Model):
         return self.resolution.split('x')[1]
 
     def get_audio_codec_if_present(self):
-        if self.Audio_Codec is not 'None':
-            return ',' + self.Audio_Codec.codec
+        if self.audio_codec != 'nill':
+            return ',' + self.audio_codec
         else:
             return ''
 
