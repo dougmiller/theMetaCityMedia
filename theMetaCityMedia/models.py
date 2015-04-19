@@ -26,10 +26,10 @@ class Licence(db.Model):
     licence_name = db.Column(db.String(64), unique=True)
     licence_text = db.Column(db.String(128), unique=True)
     licence_url = db.Column(db.String(64), unique=True)
-    videos = db.relationship('Video', backref='Licence')
-    audios = db.relationship('Audio', backref='Licence')
-    picture = db.relationship('Picture', backref='Licence')
-    code = db.relationship('Code', backref='Licence')
+    videos = db.relationship('Video', backref='Licence', lazy='dynamic')
+    audios = db.relationship('Audio', backref='Licence', lazy='dynamic')
+    picture = db.relationship('Picture', backref='Licence', lazy='dynamic')
+    code = db.relationship('Code', backref='Licence', lazy='dynamic')
 
     def __repr__(self):
         return self.licence_name
@@ -46,10 +46,10 @@ class Postcards(db.Model):
     url = db.Column(db.String(64), unique=True)
     title = db.Column(db.String(64), unique=True)
     alt_text = db.Column(db.String(128), unique=True)
-    videos = db.relationship('Video', backref='Postcard')
-    audios = db.relationship('Audio', backref='Postcard')
-    picture = db.relationship('Picture', backref='Postcard')
-    code = db.relationship('Code', backref='Postcard')
+    videos = db.relationship('Video', backref='Postcard', lazy='dynamic')
+    audios = db.relationship('Audio', backref='Postcard', lazy='dynamic')
+    picture = db.relationship('Picture', backref='Postcard', lazy='dynamic')
+    code = db.relationship('Code', backref='Postcard', lazy='dynamic')
 
     def __repr__(self):
         return self.url + ': ' + self.title
@@ -74,8 +74,8 @@ class Video(db.Model):
     has_end_poster = db.Column(db.Boolean)
     date_published = db.Column(db.Date)
     resolution = db.Column(db.String(16))
-    licence = db.Column(db.Integer, db.ForeignKey('licence.id'), default=1)
-    postcard = db.Column(db.Integer, db.ForeignKey('postcard.id'), default=1)
+    licence = db.Column(db.Integer, db.ForeignKey('licence.id'))
+    postcard = db.Column(db.Integer, db.ForeignKey('postcard.id'))
     media_type = 'video'
 
     def __repr__(self):

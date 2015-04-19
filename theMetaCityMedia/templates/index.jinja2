@@ -11,10 +11,16 @@
     <link href="/static/css/common.css" rel="stylesheet"/>
 </head>
 <body>
-{% from 'macros/fp_video.jinja2' import video %}
+{% from 'macros/fp_media.jinja2' import video, audio, code, picture %}
 {% for element in media %}
     {% if element.media_type == 'video' %}
         {{ video(element) }}
+    {% elif element.media_type == 'audio' %}
+        {{ audio(element) }}
+    {% elif element.media_type == 'code' %}
+        {{ code(element) }}
+    {% elif element.media_type == 'picture' %}
+        {{ picture(element) }}
     {% endif %}
 {% endfor %}
 <footer class="licence">
