@@ -39,7 +39,7 @@
         {% if video.tracks|length %}
             <ul>
                 {% for track in video.tracks %}
-                    <li><a href="http://assets.localcity.com/video/{{ track.get_url(video) }}">{{ track.get_description() }}</a></li>
+                    <li><a href="http://assets.localcity.com/video/{{ track.get_url() }}">{{ track.get_description() }}</a></li>
                 {% endfor %}
             </ul>
         {% else %}
@@ -56,13 +56,13 @@
             {% if file.is_fullscreen %}
                 <li>
                     <a href="http://assets.localcity.com/video/{{ video.file_name }}.fullscreen.{{ file.extention }}">{{ video.file_name }}.fullscreen.{{ file.extention }}</a><br>
-                    {{ file.resolution }} {{ file.Video_Codec }} {{ file.get_audio_codec_if_present() }} {{ file.file_size }}
+                    {{ file.resolution }} {{ file.Video_Codec }} {{ file.get_audio_codec_if_present() }} {{ file.human_readable_size() }}
                 </li>
             {% else %}
                 <li>
                     <a href="http://assets.localcity.com/video/{{ video.file_name }}.{{ file.extention }}">{{ video.file_name }}.{{ file.extention }}</a>
                     <br>
-                    {{ file.resolution }} {{ file.video_codec }}{{ file.get_audio_codec_if_present() }} {{ file.file_size }}
+                    {{ file.resolution }} {{ file.video_codec }}{{ file.get_audio_codec_if_present() }} {{ file.human_readable_size() }}
                 </li>
             {% endif %}
         {% endfor %}
@@ -70,7 +70,7 @@
 
     <h3>
         {% if not video.has_start_poster %}
-            No start poster
+            No start poster,
         {% else %}
             <a href="http://assets.localcity.com/video/startposter/{{ video.get_start_poster_url() }}">Start poster</a>
         {% endif %}
@@ -82,14 +82,15 @@
         {% endif %}
     </h3>
 
-    <h3>Tracks</h3>
     {% if video.tracks %}
-        <ul id="trackMenu">
-            <li class="activeTrack">None</li>
+        <h3>Tracks</h3>
+        <ul>
             {% for track in video.tracks %}
-                <li>{{ track.type|title }}: {{ track.label }} ({{ track.src_lang }})</li>
+                <li><a href="{{ track.get_url() }}">{{ track.get_description() }}</a></li>
             {% endfor %}
         </ul>
+    {% else %}
+        <h3>No tracks</h3>
     {% endif %}
 
 </div>

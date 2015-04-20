@@ -160,6 +160,9 @@ class VideoFile(db.Model):
         else:
             return ''
 
+    def human_readable_size(self):
+        return format_size_to_human_readable(self.file_size)
+
 
 class VideoTrack(db.Model):
     """
@@ -175,11 +178,11 @@ class VideoTrack(db.Model):
     def __repr__(self):
         return '<Video track: %r>' % self.id
 
-    def get_url(self, video):
-        return video.file_name + '.' + self.src_lang + '.' + self.type + '.vtt'
+    def get_url(self):
+        return self.Video_Parent.file_name + '.' + self.src_lang + '.' + self.type + '.vtt'
 
     def get_description(self):
-        return self.type.title() + ': ' + self.src_lang
+        return self.type.title() + ': (' + self.label + ') ' + self.src_lang
 
 
 class Audio(db.Model):
@@ -217,16 +220,10 @@ class Audio(db.Model):
         return "{0}m {1}s".format(str(int((int(self.running_time) / 60))), str(int(self.running_time) % 60))
 
     def get_largest_filesize(self):
-        sizes = []
-        for f in self.files:
-            sizes.append(f.file_size)
-        return format_size_to_human_readable(max(sizes))
+        return format_size_to_human_readable(max(audio_file.file_size for audio_file in self.files))
 
     def get_smallest_filesize(self):
-        sizes = []
-        for f in self.files:
-            sizes.append(f.file_size)
-        return format_size_to_human_readable(min(sizes))
+        return format_size_to_human_readable(min(audio_file.file_size for audio_file in self.files))
 
     def get_mime_types(self):
         types = []
