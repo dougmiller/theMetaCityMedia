@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>{{ video.title }}</title>
+    <title>{% block title %}{% endblock %}</title>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <script defer="defer" src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
-    <script defer="defer" src="/static/javascript/video.js"></script>
+    {% block includes %}{% endblock %}
     <link href='https://fonts.googleapis.com/css?family=Orbitron' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Droid+Sans' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Inconsolata' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
+    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/grids-responsive-min.css">
     <link href="/static/css/common.css" rel="stylesheet"/>
 </head>
 <body>
@@ -21,7 +23,7 @@
 </div>
 <footer>
     <div id="licence">
-        <p>{{ video.title }} by Douglas Miller is licensed under a <a rel="license"
+        <p>{% block licence %}{% endblock %} by Douglas Miller is licensed under a <a rel="license"
                                                                       href="https://creativecommons.org/licenses/by-sa/4.0/">Creative
             Commons Attribution-ShareAlike 4.0 International License</a>.</p>
     </div>

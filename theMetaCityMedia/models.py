@@ -82,13 +82,13 @@ class Video(db.Model):
         return self.title
 
     def get_start_poster_url(self):
-        if self.has_start_poster:
+        if self.has_start_poster is True:
             return self.file_name + '.startposter.svg'
         else:
             return 'generic.startposter.svg'
 
     def get_end_poster_url(self):
-        if self.has_end_poster:
+        if self.has_end_poster is True:
             return self.file_name + '.endposter.svg'
         else:
             return 'generic.endposter.svg'
