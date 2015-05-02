@@ -1,36 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <title>theMetaCity.com Media</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script defer="defer" src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
-    <link href='https://fonts.googleapis.com/css?family=Orbitron' rel='stylesheet' type='text/css'>
-    <link href='https://fonts.googleapis.com/css?family=Droid+Sans' rel='stylesheet' type='text/css'>
-    <link href='https://fonts.googleapis.com/css?family=Inconsolata' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
-    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/grids-responsive-min.css">
-    <link href="/static/css/common.css" rel="stylesheet"/>
-</head>
-<body>
-{% from 'macros/fp_media.jinja2' import video, audio, code, picture %}
-{% for element in media %}
-    {% if element.media_type == 'video' %}
-        {{ video(element) }}
-    {% elif element.media_type == 'audio' %}
-        {{ audio(element) }}
-    {% elif element.media_type == 'code' %}
-        {{ code(element) }}
-    {% elif element.media_type == 'picture' %}
-        {{ picture(element) }}
-    {% endif %}
-{% endfor %}
-<footer class="licence">
-    <p>Work is by <a xmlns:cc="http://creativecommons.org/ns#" href="https://www.themetacity.com"
-                     property="cc:attributionName" rel="cc:attributionURL">
-        Douglas Miller</a> and is licensed under a <a rel="license"
-                                                      href="https://creativecommons.org/licenses/by-sa/4.0/">Creative
-        Commons Attribution-ShareAlike 4.0 International License</a> unless explicitly stated otherwise.</p>
-</footer>
-</body>
+    <head>
+        <title>theMetaCity.com Media</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script defer="defer" src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+        <link href='https://fonts.googleapis.com/css?family=Orbitron' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Droid+Sans' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Inconsolata' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="https://yui.yahooapis.com/pure/0.6.0/pure-min.css">
+        <link rel="stylesheet" href="https://yui.yahooapis.com/pure/0.6.0/grids-responsive-min.css">
+        <link href="/static/css/style.css" rel="stylesheet"/>
+    </head>
+    <body>
+        <header>
+            <h1>theMetaCity<span>Media</span></h1>
+            <nav>
+                <input type="text" id="search" placeholder="Search name, keyword, tag">
+            </nav>
+        </header>
+        <main>
+            {% from 'macros/fp_media.jinja2' import video, audio, code, picture %}
+            {% for element in media %}
+                {% if element.media_type == 'video' %}
+                    {{ video(element) }}
+                {% elif element.media_type == 'audio' %}
+                    {{ audio(element) }}
+                {% elif element.media_type == 'code' %}
+                    {{ code(element) }}
+                {% elif element.media_type == 'picture' %}
+                    {{ picture(element) }}
+                {% endif %}
+            {% endfor %}
+        </main>
+        <footer class="licence">
+            <p>Work is by <a xmlns:cc="http://creativecommons.org/ns#" href="https://www.themetacity.com"
+                             property="cc:attributionName" rel="cc:attributionURL">
+                Douglas Miller</a> and is licensed under a <a rel="license"
+                                                              href="https://creativecommons.org/licenses/by-sa/4.0/">Creative
+                Commons Attribution-ShareAlike 4.0 International License</a> unless explicitly stated otherwise.</p>
+        </footer>
+    </body>
 </html>

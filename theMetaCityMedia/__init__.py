@@ -10,13 +10,17 @@ db = SQLAlchemy(app)
 
 from theMetaCityMedia import views, models
 
+admin.add_view(ModelView(models.VideoTag, db.session, 'Video Tags'))
 admin.add_view(ModelView(models.VideoFile, db.session, 'Video Files'))
 admin.add_view(ModelView(models.VideoTrack, db.session, 'Video Tracks'))
 admin.add_view(ModelView(models.Video, db.session, 'Video'))
+admin.add_view(ModelView(models.AudioTag, db.session, 'Audio Tags'))
 admin.add_view(ModelView(models.AudioFile, db.session, 'Audio Files'))
 admin.add_view(ModelView(models.AudioTrack, db.session, 'Audio Tracks'))
 admin.add_view(ModelView(models.Audio, db.session, 'Audio'))
+admin.add_view(ModelView(models.PictureTag, db.session, 'Picture Tags'))
 admin.add_view(ModelView(models.Picture, db.session, 'Pictures'))
+admin.add_view(ModelView(models.CodeTag, db.session, 'Code Tags'))
 admin.add_view(ModelView(models.Code, db.session, 'Code'))
 admin.add_view(ModelView(models.Postcards, db.session, 'Postcards'))
 admin.add_view(ModelView(models.Licence, db.session, 'Licences'))

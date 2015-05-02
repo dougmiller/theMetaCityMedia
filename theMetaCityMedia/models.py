@@ -68,7 +68,8 @@ class Video(db.Model):
     about = db.Column(db.String(512))
     file_name = db.Column(db.String(64), unique=True)
     files = db.relationship('VideoFile', backref='File_Parent')
-    tracks = db.relationship('VideoTrack', backref='Video_Parent')
+    tracks = db.relationship('VideoTrack', backref='Track_Parent')
+    tags = db.relationship('VideoTag', backref='Tag_Parent')
     running_time = db.Column(db.Float)
     has_start_poster = db.Column(db.Boolean)
     has_end_poster = db.Column(db.Boolean)
@@ -185,6 +186,16 @@ class VideoTrack(db.Model):
         return self.type.title() + ': (' + self.label + ') ' + self.src_lang
 
 
+class VideoTag(db.Model):
+    """
+    Tags associated with the video
+    """
+    __tablename__ = 'video_tags'
+    id = db.Column(db.Integer, primary_key=True)
+    parent_video = db.Column(db.Integer, db.ForeignKey('video.id'))
+    tag = db.Column(db.String(30), unique=True)
+
+
 class Audio(db.Model):
     """
     This is a collection of files that make up the different
@@ -280,6 +291,16 @@ class AudioTrack(db.Model):
         return self.type.title() + ': ' + self.src_lang
 
 
+class AudioTag(db.Model):
+    """
+    Tags associated with the audio
+    """
+    __tablename__ = 'audio_tag'
+    id = db.Column(db.Integer, primary_key=True)
+    parent_video = db.Column(db.Integer, db.ForeignKey('audio.id'))
+    tag = db.Column(db.String(30), unique=True)
+
+
 class Picture(db.Model):
     """
     This is the details of a picture including:
@@ -310,6 +331,16 @@ class Picture(db.Model):
         return format_size_to_human_readable(self.file_size)
 
 
+class PictureTag(db.Model):
+    """
+    Tags associated with the picture
+    """
+    __tablename__ = 'picture_tag'
+    id = db.Column(db.Integer, primary_key=True)
+    parent_video = db.Column(db.Integer, db.ForeignKey('picture.id'))
+    tag = db.Column(db.String(30), unique=True)
+
+
 class Code(db.Model):
     """
     This is the details of a picture including:
@@ -332,3 +363,14 @@ class Code(db.Model):
 
     def get_size(self):
         return format_size_to_human_readable(self.file_size)
+
+
+class CodeTag(db.Model):
+    """
+    Tags associated with the code
+    """
+    __tablename__ = 'code_tag'
+    id = db.Column(db.Integer, primary_key=True)
+    parent_video = db.Column(db.Integer, db.ForeignKey('code.id'))
+    tag = db.Column(db.String(30), unique=True)
+
