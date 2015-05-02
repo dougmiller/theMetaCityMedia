@@ -1,0 +1,12 @@
+/*
+ * Common styles for front page media elements
+ * Each element has a specific style for it in their respective files
+ */
+
+.mediaPoster {
+    width: 340px;
+    float: left;
+    border: 1px solid;
+    padding: 1rem;
+    margin: 1rem;
+}
