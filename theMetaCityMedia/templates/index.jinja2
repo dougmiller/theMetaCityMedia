@@ -9,36 +9,35 @@
         <link href='https://fonts.googleapis.com/css?family=Orbitron' rel='stylesheet' type='text/css'>
         <link href='https://fonts.googleapis.com/css?family=Droid+Sans' rel='stylesheet' type='text/css'>
         <link href='https://fonts.googleapis.com/css?family=Inconsolata' rel='stylesheet' type='text/css'>
-        <link rel="stylesheet" href="https://yui.yahooapis.com/pure/0.6.0/pure-min.css">
-        <link rel="stylesheet" href="https://yui.yahooapis.com/pure/0.6.0/grids-responsive-min.css">
         <link href="/static/css/style.css" rel="stylesheet"/>
     </head>
     <body>
         <header>
-            <h1>theMetaCity<span>Media</span></h1>
+            <h1>theMetaCity<wbr><span>Media</span></h1>
             <nav>
                 <input type="text" id="search" placeholder="Search name, keyword, tag">
             </nav>
         </header>
         <main>
-            {% from 'macros/fp_media.jinja2' import video, audio, code, picture %}
             {% for element in media %}
                 {% if element.media_type == 'video' %}
-                    {{ video(element) }}
+                    {% from 'macros/fp_media/video.jinja2' import fp_video %}
+                    {{ fp_video(element) }}
                 {% elif element.media_type == 'audio' %}
-                    {{ audio(element) }}
+                    {% from 'macros/fp_media/audio.jinja2' import fp_audio %}
+                    {{ fp_audio(element) }}
                 {% elif element.media_type == 'code' %}
-                    {{ code(element) }}
+                    {% from 'macros/fp_media/code.jinja2' import fp_code %}
+                    {{ fp_code(element) }}
                 {% elif element.media_type == 'picture' %}
-                    {{ picture(element) }}
+                    {% from 'macros/fp_media/picture.jinja2' import fp_picture %}
+                    {{ fp_picture(element) }}
                 {% endif %}
             {% endfor %}
         </main>
         <footer class="licence">
-            <p>Work is by <a xmlns:cc="http://creativecommons.org/ns#" href="https://www.themetacity.com"
-                             property="cc:attributionName" rel="cc:attributionURL">
-                Douglas Miller</a> and is licensed under a <a rel="license"
-                                                              href="https://creativecommons.org/licenses/by-sa/4.0/">Creative
+            <p>Work is by <a href="https://www.themetacity.com" rel="home">
+                Douglas Miller</a> and is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">Creative
                 Commons Attribution-ShareAlike 4.0 International License</a> unless explicitly stated otherwise.</p>
         </footer>
     </body>

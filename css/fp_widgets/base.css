@@ -3,6 +3,17 @@
  * Each element has a specific style for it in their respective files
  */
 
+
+
+@import "audio.css";
+@import "code.css";
+@import "picture.css";
+@import "video.css";
+
+@import "large/base.css";
+@import "medium/base.css";
+@import "small/base.css";
+
 .mediaPoster {
     border: 1px solid;
     float: left;

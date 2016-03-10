@@ -1,3 +1,8 @@
-@import "base.css";
+@import "variables.css";
 @import "ui-toolkit.css";
+@import "detailed.css";
 @import "fp_widgets.css";
+
+html {
+    background: var(--colour-float);
+}

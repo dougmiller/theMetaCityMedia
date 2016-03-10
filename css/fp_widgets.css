@@ -3,3 +3,16 @@
 @import "fp_widgets/audio.css";
 @import "fp_widgets/picture.css";
 @import "fp_widgets/code.css";
+
+@media (max-width: var(--small-upper-bound)) {
+    div{ width: var(--small-upper-bound);}
+    @import "fp_widgets/small/base.css";
+}
+
+@media (min-width: var(--medium-lower-bound)) and (max-width: var(--medium-upper-bound)) {
+    @import "fp_widgets/medium/base.css";
+}
+
+@media (min-width: var(--large-lower-bound)) {
+    @import "fp_widgets/large/base.css";
+}

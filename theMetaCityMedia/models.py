@@ -26,6 +26,7 @@ class Licence(db.Model):
     licence_name = db.Column(db.String(64), unique=True)
     licence_text = db.Column(db.String(128), unique=True)
     licence_url = db.Column(db.String(64), unique=True)
+    image_url = db.Column(db.String(64), unique=True)
     videos = db.relationship('Video', backref='Licence', lazy='dynamic')
     audios = db.relationship('Audio', backref='Licence', lazy='dynamic')
     picture = db.relationship('Picture', backref='Licence', lazy='dynamic')
@@ -117,6 +118,12 @@ class Video(db.Model):
 
     def difference_between_max_and_min_filesize(self):
         return self.get_largest_filesize() - self.get_smallest_filesize()
+
+    def format_filesizes(self):
+        if self.difference_between_max_and_min_filesize():
+            return self.get_smallest_filesize_formatted() + " - " + self.get_largest_filesize_formatted()
+        else:
+            return self.get_largest_filesize_formatted()
 
     def get_mime_types(self):
         temp = list(set(video_file.mime_type for video_file in self.files))
