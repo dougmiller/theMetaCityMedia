@@ -1,0 +1,15 @@
+{% macro fp_video(video) -%}
+<article class="mediaPoster video">
+    <h2><a href="/video/{{ video.id }}">{{ video.title }}</a></h2>
+    <img src="https://assets.themetacity.com/video/postcards/{{ video.Postcard.url }}" title="{{ video.Postcard.title }}" alt="{{ video.Postcard.alt_text }}">
+    <h3>Published: {{ video.date_published }}</h3>
+    <div class="about">{% autoescape false %}{{ video.about }}{% endautoescape %}</div>
+    <div class="meta">
+        <div class="running_time">{{ video.format_time_to_human_readable() }}</div>
+        <div class="mime_types">{% for mt in video.get_mime_types() %} {{ mt }} {% endfor %}</div>
+        <div class="sizes">{{ video.format_filesizes() }}</div>
+        <div class="tracks">{% for track in video.tracks %} {{ track.type }} {% endfor %}{% if not video.tracks %} No tracks {% endif %}</div>
+        <div class="licence"><a href="{{ video.Licence.licence_url }}" rel="license"><img src="{{ video.Licence.image_url }}" alt="{{ video.Licence.licence_name }}" title="{{ video.Licence.licence_name }}"/></a></div>
+    </div>
+</article>
+{%- endmacro %}

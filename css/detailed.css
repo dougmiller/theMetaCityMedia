@@ -1,0 +1,14 @@
+@import "detailed/base.css";
+
+@media (max-width: var(--small-upper-bound)) {
+    div { width: var(--small-upper-bound);}
+    @import "detailed/small/base.css";
+}
+
+@media (min-width: var(--medium-lower-bound)) and (max-width: var(--medium-upper-bound)) {
+    @import "detailed/medium/base.css";
+}
+
+@media (min-width: var(--large-lower-bound)) {
+    @import "detailed/large/base.css";
+}

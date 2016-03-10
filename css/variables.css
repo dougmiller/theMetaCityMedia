@@ -1,0 +1,14 @@
+:root {
+    /* Media query sizes
+     3 sizes */
+    --small-upper-bound: 600px; 
+    --medium-lower-bound: 601px;
+    --medium-upper-bound: 900px;
+    --large-lower-bound: 901px;
+
+    /* Colours */
+    --colour-float:         hsla(0, 0%, 100%, 1);
+    --colour-work:          hsla(20, 75%, 50%, 1);
+    --colour-soft:          hsla(170, 50%, 45%, 1);
+    --colour-unforgiving:   hsla(180, 50%, 10%, 1);
+}
