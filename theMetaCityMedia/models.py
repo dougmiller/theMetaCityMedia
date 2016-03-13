@@ -187,7 +187,7 @@ class VideoTrack(db.Model):
         return '<Video track: %r>' % self.id
 
     def get_url(self):
-        return self.Video_Parent.file_name + '.' + self.src_lang + '.' + self.type + '.vtt'
+        return '.' + self.src_lang + '.' + self.type + '.vtt'
 
     def get_description(self):
         return self.type.title() + ': (' + self.label + ') ' + self.src_lang
