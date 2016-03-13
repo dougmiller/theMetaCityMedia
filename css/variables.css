@@ -7,8 +7,9 @@
     --large-lower-bound: 901px;
 
     /* Colours */
+    --colour-deep:          hsla(210, 30%, 15%, 1);
+    --colour-explore:       hsla(170, 50%, 45%, 1);
     --colour-float:         hsla(0, 0%, 100%, 1);
+    --colour-unforgiving:   hsla(180, 20%, 10%, 1);
     --colour-work:          hsla(20, 75%, 50%, 1);
-    --colour-soft:          hsla(170, 50%, 45%, 1);
-    --colour-unforgiving:   hsla(180, 50%, 10%, 1);
 }

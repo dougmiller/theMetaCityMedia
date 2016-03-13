@@ -11,7 +11,9 @@ var postcss_discard_comments = require('postcss-discard-comments');
 var postcss_autoprefixer = require('autoprefixer');
 
 var options = {
-    from: 'css/style.css'
+    from: 'css/style.css',
+    to: 'theMetaCityMedia/static/css/style.css',
+    map: { inline: true }
 };
 
 var css = fs.readFileSync("css/style.css", "utf8");
