@@ -2,60 +2,52 @@
 
 {% block title %}{{ video.title }}{% endblock %}
 {% block includes %}
-    <script defer="defer" src="/static/javascript/video.js"></script>
+    <script src="/static/javascript/video-build.js"></script>
 {% endblock %}
 
 {% block media %}
-<header>
-    <h1><a href="/video/{{ video.id }}">{{ video.title }}</a></h1>
-</header>
-<video height="{{ video.get_height() }}"
-       width="{{ video.get_width() }}"
-       controls
-       data-startposter="https://assets.themetacity.com/video/startposters/{{ video.get_start_poster_url() }}"
-       data-endposter="https://assets.themetacity.com/video/endposters/{{ video.get_end_poster_url() }}"
-       preload="auto">
+<h1><a href="/video/{{ video.id }}">{{ video.title }}</a></h1>
+<div id="videoContainer">
+    <video height="{{ video.get_height() }}"
+           width="{{ video.get_width() }}"
+           controls
+           data-filename="{{ video.file_name }}"
+           data-startposter="{{ video.has_start_poster }}"
+           data-endposter="{{ video.has_end_poster_url }}"
+           preload="auto"
+           id="detailed_video">
 
-    {% for source in video.files %}
-        <source src="https://assets.themetacity.com/video/{{ video.file_name }}.{{ source.extension }}"
-                type='video/{{ source.mime_type }}; codecs="
-                        {{ source.video_codec }}{% if source.audio_codec != 'nill' %},{{ source.audio_codec }}{% endif %}"'>
-    {% endfor %}
+        {% for source in video.files %}
+            <source src="https://assets.themetacity.com/video/{{ video.file_name }}.{{ source.extension }}"
+                    type='video/{{ source.mime_type }}; codecs="
+                            {{ source.video_codec }}{% if source.audio_codec != 'nill' %},{{ source.audio_codec }}{% endif %}"' />
+        {% endfor %}
 
-    {% for track in video.tracks %}
-        <track src="https://assets.themetacity.com/video/{{ video.file_name }}.{{ track.src_lang }}.{{ track.type }}.vtt"
-               srclang="{{ track.src_lang }}" kind="{{ track.type }}" label="{{ track.label }}">
-    {% endfor %}
-</video>
+        {% for track in video.tracks %}
+            <track src="https://assets.themetacity.com/video/tracks/{{ video.file_name }}.{{ track.src_lang }}.{{ track.type }}.vtt"
+                   srclang="{{ track.src_lang }}" kind="{{ track.type }}" label="{{ track.label }}">
+        {% endfor %}
+    </video>
 
-<div id="videoControls">
-    <div id="loadProgress"></div>
     <input type="range" id="playProgress" min="0" max="1000" value="0">
-    <img id="playPauseButton" class="button" src="/static/images/smallplay.svg" title="Play" alt="Play/pause video">
-
-    <p><span class="timeSpan"><span class="currentTimeSpan">00:00</span> / <span
-            class="durationTimeSpan">00:00</span></span></p>
-    <img id="fullscreenButton" class="button" src="/static/images/fullscreen.svg"
-         title="Go to fullscreen. If there is a higher resolution video available it will load that, otherwise it will upscale the current video."
-         alt="Button to open video in fullscreen">
-    <img id="tracksButton" class="button" src="/static/images/tracks.svg"
-         title="Change track options" alt="Button to open track options">
-    <img id="soundButton" class="button" src="/static/images/sound.svg" title="Change sound options"
-         alt="Button to change sound options">
-    <input type="range" id="soundLevel" min="0" max="20" value="20">
-    {% if video.tracks|length %}
-        <ul>
-            {% for track in video.tracks %}
-                <li><a href="http://assets.localcity.com/video/tracks/{{ video.file_name }}{{ track.get_url() }}">{{ track.get_description() }}</a>
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No tracks.</p>
-    {% endif %}
+    <div id="videoControls">
+        <img id="playPauseButton" class="button" src="/static/images/smallplay.svg" title="Play" alt="Play/pause video">
+        <p id="timeSpan"><span id="currentTimeSpan">00:00</span> / <span id="runningTimeSpan">{{ video.running_time }}</span></p>
+        <img id="fullscreenButton" class="button" src="/static/images/fullscreen.svg" title="Go to fullscreen. If there is a higher resolution video available it will load that, otherwise it will upscale the current video." alt="Button to open video in fullscreen">
+        <img id="tracksButton" class="button" src="/static/images/tracks.svg" title="Change track options" alt="Button to open track options">
+        <img id="soundButton" class="button" src="/static/images/sound.svg" title="Change sound options" alt="Button to change sound options">
+        {% if video.tracks|length %}
+            <ul id="tracksList">
+                {% for track in video.tracks %}
+                    <li><a href="http://assets.localcity.com/video/tracks/{{ video.file_name }}{{ track.get_url() }}">{{ track.get_description() }}</a></li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No tracks.</p>
+        {% endif %}
+    </div>
 </div>
-
-<div id="infolhs">
+<div>
     <h2>Downloads:</h2>
 
     <h3>Files:</h3>
@@ -81,13 +73,13 @@
         {% if not video.has_start_poster %}
             No start poster,
         {% else %}
-            <a href="http://assets.localcity.com/video/startposters/{{ video.get_start_poster_url() }}">Start poster</a>
+            <a href="http://assets.localcity.com/video/startposters/{{ video.file_name }}.startposter.svg">Start poster</a>
         {% endif %}
 
         {% if not video.has_end_poster %}
             No end poster
         {% else %}
-            <a href="http://assets.localcity.com/video/endposters/{{ video.get_end_poster_url() }}">End poster</a>
+            <a href="http://assets.localcity.com/video/endposters/{{ video.file_name }}.endposter.svg">End poster</a>
         {% endif %}
     </h3>
 

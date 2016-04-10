@@ -4,7 +4,6 @@
     <title>{% block title %}{% endblock %}</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script defer="defer" src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
     {% block includes %}{% endblock %}
     <link href='https://fonts.googleapis.com/css?family=Orbitron' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Droid+Sans' rel='stylesheet' type='text/css'>
@@ -12,18 +11,16 @@
     <link href="/static/css/style.css" rel="stylesheet"/>
 </head>
 <body>
-<div id="centeredContainer">
-    <main>
-        <article>
-            {% block media %}{% endblock %}
-        </article>
-    </main>
-</div>
+<main>
+    {% block media %}{% endblock %}
+</main>
 <footer>
     <div id="licence">
-        <p>{% block licence %}{% endblock %} by Douglas Miller is licensed under a <a rel="license"
-                                                                      href="https://creativecommons.org/licenses/by-sa/4.0/">Creative
-            Commons Attribution-ShareAlike 4.0 International License</a>.</p>
+        <p>{% block licence %}{% endblock %} by Douglas Miller is licensed under a
+            <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">
+                Creative Commons Attribution-ShareAlike 4.0 International License
+            </a>.
+        </p>
     </div>
 </footer>
 </body>

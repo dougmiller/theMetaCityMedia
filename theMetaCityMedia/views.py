@@ -19,6 +19,10 @@ def show_index():
     media = media[::-1]
     return render_template('index.jinja2', media=media)
 
+@app.route('/favicon.ico')
+def show_favicon():
+    return ''
+
 
 @app.route('/video/<video>/')
 def show_specific_video(video):

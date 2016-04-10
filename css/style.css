@@ -3,6 +3,8 @@
 @import "detailed.css";
 @import "fp_widgets.css";
 
+/* Global styles*/
+
 html {
-    background: var(--colour-float);
+    background-color: var(--colour-explore);
 }

@@ -1,1 +1,10 @@
 /**/
+
+@import "audio.css";
+@import "code.css";
+@import "picture.css";
+@import "video.css";
+
+main {
+    margin: 0 auto;
+}

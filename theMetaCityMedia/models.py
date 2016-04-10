@@ -83,18 +83,6 @@ class Video(db.Model):
     def __repr__(self):
         return self.title
 
-    def get_start_poster_url(self):
-        if self.has_start_poster is True:
-            return self.file_name + '.startposter.svg'
-        else:
-            return 'generic.startposter.svg'
-
-    def get_end_poster_url(self):
-        if self.has_end_poster is True:
-            return self.file_name + '.endposter.svg'
-        else:
-            return 'generic.endposter.svg'
-
     def get_width(self):
         return self.resolution.split('x')[0]
 
@@ -103,6 +91,9 @@ class Video(db.Model):
 
     def format_time_to_human_readable(self):
         return "{0}m {1}s".format(str(int((int(self.running_time) / 60))), str(int(self.running_time) % 60))
+
+    def format_time_to_progress_format(self):
+        return "{0}:{1}".format(str(int((int(self.running_time) / 60))), str(int(self.running_time) % 60))
 
     def get_largest_filesize(self):
         return max(video_file.file_size for video_file in self.files)

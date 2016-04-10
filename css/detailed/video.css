@@ -1,0 +1,64 @@
+#videoContainer {
+
+    max-width: var(--medium-upper-bound);
+    margin: 0 auto;
+    position: relative;
+
+    .videoPoster {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    .loadingBar {
+        position: absolute;
+        left: 0;
+        transition: opacity 2s ease-out;
+    }
+
+    .loadingProgressChild {
+
+    }
+
+    #videoControls {
+        display: flex;
+        align-items: center;
+
+
+        input[type=range]::-range-track {
+          width: 100%;
+          height: 8.4px;
+          cursor: pointer;
+          box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+          background: #3071a9;
+          border-radius: 1.3px;
+          border: 0.2px solid #010101;
+        }
+
+        #playProgress {
+            width: 100%;
+        }
+
+        #playPauseButton {
+            flex: 0 auto;
+        }
+        #timeSpan {
+            flex: 1 auto;
+        }
+        #fullscreenButton {
+            flex: 0 auto;
+        }
+        #tracksButton {
+            flex: 0 auto;
+        }
+        #soundButton {
+            flex: 0 auto;
+        }
+        #tracksList {
+            display: none;
+        }
+        .button {
+            margin: 0 5px;
+        }
+    }
+}
