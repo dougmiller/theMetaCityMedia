@@ -24,17 +24,6 @@
         display: flex;
         align-items: center;
 
-
-        input[type=range]::-range-track {
-          width: 100%;
-          height: 8.4px;
-          cursor: pointer;
-          box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
-          background: #3071a9;
-          border-radius: 1.3px;
-          border: 0.2px solid #010101;
-        }
-
         #playProgress {
             width: 100%;
         }
@@ -44,17 +33,59 @@
         }
         #timeSpan {
             flex: 1 auto;
+            text-align: center;
         }
         #fullscreenButton {
             flex: 0 auto;
         }
-        #tracksButton {
+        #tracksControl {
             flex: 0 auto;
+            position: relative;
         }
-        #soundButton {
-            flex: 0 auto;
+        #tracksControl:hover #tracksList {
+            display: block;
         }
         #tracksList {
+            display: none;
+            position: absolute;
+            top: 20px;
+            left: 0;
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            white-space: nowrap;
+            li {
+                display: block;
+            }
+        }
+        #tracksList:hover {
+            display: block;
+        }
+        #noTracksList {
+            display: none;
+        }
+        #soundControl {
+            flex: 0 auto;
+            position: relative;
+        }
+        #soundButton:hover {
+            background-color: #dd514c;
+        }
+        #soundControl:hover #soundSlider {
+            display: block;
+            background-color: #707070;
+        }
+        #soundSlider {
+            display: none;
+            position: absolute;
+            top: -100px;
+            right: 5px;
+            -webkit-appearance: slider-vertical;
+            width: 20px;
+            height: 100px;
+            z-index: 100;
+        }
+        #noSoundSlider {
             display: none;
         }
         .button {

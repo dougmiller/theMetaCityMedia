@@ -74,6 +74,7 @@ class Video(db.Model):
     running_time = db.Column(db.Float)
     has_start_poster = db.Column(db.Boolean)
     has_end_poster = db.Column(db.Boolean)
+    has_fullscreen = db.Column(db.Boolean)
     date_published = db.Column(db.Date)
     resolution = db.Column(db.String(16))
     licence = db.Column(db.Integer, db.ForeignKey('licence.id'))
@@ -142,7 +143,6 @@ class VideoFile(db.Model):
     resolution = db.Column(db.String(16))
     file_size = db.Column(db.Integer())
     is_fullscreen = db.Column(db.Boolean)
-    has_fullscreen = db.Column(db.Boolean)
 
     def __repr__(self):
         return '<Video File %r>' % self.id
