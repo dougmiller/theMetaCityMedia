@@ -145,8 +145,26 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
 
-        checkTracks();
-        attachTrackSelectorListeners();
+        if (video.textTracks.length === 0) {
+            tracksButton.src = "/static/images/notracks.svg";
+            tracksButton.alt = "Icon showing no tracks are available";
+            tracksButton.title = "No tracks available";
+            tracksList.id = "noTracksList";
+        }
+
+        for (var i = 0; i < tracksList.children.length; i++) {
+            (function (index) {
+                tracksList.children[index].addEventListener("click", function () {
+                    if (index === 0) {
+                        for (var j = 0; j < video.textTracks.length; j++) {
+                            video.textTracks[j].mode = "disabled";
+                        }
+                    } else {
+                        video.textTracks[index - 1].mode = "showing";
+                    }
+                });
+            }(i));
+        }
     });
 
     video.addEventListener("loadedmetadata", function () {
@@ -238,7 +256,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.addEventListener("mozfullscreenchange", function () {
         var pos = getCurretlyPlayingSourceIndex();
-        var splitSrc = sources[getCurretlyPlayingSourceIndex()].src.split(".");
+        var splitSrc = sources[pos].src.split(".");
         var playTime = 0;
         fullscreenFlag = true; // Used to flag to the load event that we do not need to load the start poster again
 
@@ -321,6 +339,10 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    /**
+     * Checks if the source being used has audio available
+     * If not then the sound button is disabled
+     */
     function checkAudio() {
         var pos = getCurretlyPlayingSourceIndex();
 
@@ -340,36 +362,10 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    function checkTracks() {
-        if (video.textTracks.length) {
-            tracksButton.src = "/static/images/tracks.svg";
-            tracksButton.alt = "Button to change track options";
-            tracksButton.title = "Change track options";
-            tracksList.id = "tracksList";
-        } else {
-            tracksButton.src = "/static/images/notracks.svg";
-            tracksButton.alt = "Icon showing no tracks are available";
-            tracksButton.title = "No tracks available";
-            tracksList.id = "noTracksList";
-        }
-    }
-
-    function attachTrackSelectorListeners() {
-        for (var i = 0; i < tracksList.children.length; i++) {
-            (function (index) {
-                tracksList.children[index].addEventListener("click", function () {
-                    if (index === 0) {
-                        for (var j = 0; j < video.textTracks.length; j++) {
-                            video.textTracks[j].mode = "disabled";
-                        }
-                    } else {
-                        video.textTracks[index - 1].mode = "showing";
-                    }
-                });
-            }(i));
-        }
-    }
-
+    /**
+     * Finds and returns the position of the source (0 indexed) in the sources object
+     * @returns {number}
+     */
     function getCurretlyPlayingSourceIndex() {
         return [].slice.call(sources).map(function (source) {
             return source.src;

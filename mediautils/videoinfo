@@ -1,35 +1,38 @@
 #!/usr/bin/env bash
 
-if [[ $# -ne 1 ]]
-then
-    echo "Usage: ./videoinfo filename"
-    echo "This outputs the info about one particular file"
-    exit 1
-fi
-
+WORK_DIR=$(pwd)
 DELIM="|"
 
 cd /srv/http/tmcassets/video/
-ALL=$(ffmpeg -i $1 2>&1)
 
-# Rate and duration info happen to be on same line
-RAW_RATE_AND_DURATION=$(egrep 'Duration' <<< "${ALL}")
+if [ -t 0 ]; then
+    if [[ $# -ne 1 ]]
+    then
+        echo "Usage: ./listvideofiles videoname"
+        echo "Do not include extention"
+        echo "Gather and output all the info about each file associated with a video name"
+        exit 1
+    fi
 
-# Duration of track
-RAW_DURATION=$(egrep -o 'Duration: [0-9]+:[0-9]+:[0-9]+\.[0-9]+' <<< "${RAW_RATE_AND_DURATION}")
-DURATION=$(egrep -o '[0-9]+:[0-9]+:[0-9]+\.[0-9]+' <<< "${RAW_DURATION}")
+    FILES=$(find . -maxdepth 1 -type f -name "${1}*")
 
-# Bitrate of track
-RAW_RATE=$(egrep -o 'bitrate: [0-9]+ .+/s' <<< "${RAW_RATE_AND_DURATION}")
-RATE=$(egrep -o '[0-9]+ ../s' <<< "${RAW_RATE}")
+    for FILE in ${FILES}; do
+    declare -a FILEINFO
+    FILEINFO=$(${WORK_DIR}/videofileinfo "${FILE}")
+    FILESIZE=$(stat -c%s "${FILE}")
+    echo "${FILEINFO}${DELIM}${FILESIZE}"
+done
 
-# Track info and resolution are on same line
-# Sometimes a track is marked as ': Data'
-RAW_TRACK_AND_RESOLUTION=$(egrep '#0:[0-9](\(.+\))?: Video' <<< "${ALL}")
+else
+    while read -r line ; do
+        FILES=$(find . -maxdepth 1 -type f -name "${line}*")
+        for FILE in ${FILES}; do
+            declare -a FILEINFO
+            FILEINFO=$(${WORK_DIR}/videofileinfo "${FILE}")
+            FILESIZE=$(stat -c%s "${FILE}")
+            echo "${FILEINFO}${DELIM}${FILESIZE}"
+        done
+    done
+fi
 
-IFS=',' read -ra EaR <<< "$RAW_TRACK_AND_RESOLUTION"
-# Resolution and encoding
-ENCODING=$(egrep -o 'h264|vp8|theora' <<< ${EaR[0]})
-RESOLUTION=$(egrep -o '[0-9]+x[0-9]+' <<< ${EaR[2]})
 
-echo "${1}${DELIM}${DURATION}${DELIM}${RATE}${DELIM}${ENCODING}${DELIM}${RESOLUTION}"
