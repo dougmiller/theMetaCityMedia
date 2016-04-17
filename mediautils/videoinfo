@@ -14,25 +14,15 @@ if [ -t 0 ]; then
         exit 1
     fi
 
-    FILES=$(find . -maxdepth 1 -type f -name "${1}*")
-
+    FILES=$(find . -maxdepth 1 -type f -name "${1}.*")
     for FILE in ${FILES}; do
-    declare -a FILEINFO
-    FILEINFO=$(${WORK_DIR}/videofileinfo "${FILE}")
-    FILESIZE=$(stat -c%s "${FILE}")
-    echo "${FILEINFO}${DELIM}${FILESIZE}"
-done
-
+        ${WORK_DIR}/videofileinfo ${FILE}
+    done
 else
     while read -r line ; do
-        FILES=$(find . -maxdepth 1 -type f -name "${line}*")
+        FILES=$(find . -maxdepth 1 -type f -name "${line}.*")
         for FILE in ${FILES}; do
-            declare -a FILEINFO
-            FILEINFO=$(${WORK_DIR}/videofileinfo "${FILE}")
-            FILESIZE=$(stat -c%s "${FILE}")
-            echo "${FILEINFO}${DELIM}${FILESIZE}"
+            ${WORK_DIR}/videofileinfo ${FILE}
         done
     done
 fi
-
-

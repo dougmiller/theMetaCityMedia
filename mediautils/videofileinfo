@@ -32,4 +32,4 @@ IFS=',' read -ra EaR <<< "$RAW_TRACK_AND_RESOLUTION"
 ENCODING=$(egrep -o 'h264|vp8|theora' <<< ${EaR[0]})
 RESOLUTION=$(egrep -o '[0-9]+x[0-9]+' <<< ${EaR[2]})
 
-echo "${1}${DELIM}${DURATION}${DELIM}${RATE}${DELIM}${ENCODING}${DELIM}${RESOLUTION}"
+echo "${1}${DELIM}${DURATION}${DELIM}${RATE}${DELIM}${ENCODING}${DELIM}${RESOLUTION}${DELIM}$(stat -c%s "${1}")"
