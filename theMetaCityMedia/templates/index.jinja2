@@ -13,12 +13,12 @@
     </head>
     <body>
         <header>
-            <h1>theMetaCity<wbr><span>Media</span></h1>
+            <h1>theMetaCity<wbr><span class="titleHighlight">Media</span></h1>
             <nav>
                 <input type="text" id="search" placeholder="Search name, keyword, tag">
             </nav>
         </header>
-        <main>
+        <main class="mediaEntries">
             {% for element in media %}
                 {% if element.media_type == 'video' %}
                     {% from 'macros/fp_media/video.jinja2' import fp_video %}

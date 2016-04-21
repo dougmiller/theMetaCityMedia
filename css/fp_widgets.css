@@ -5,7 +5,6 @@
 @import "fp_widgets/code.css";
 
 @media (max-width: var(--small-upper-bound)) {
-    div{ width: var(--small-upper-bound);}
     @import "fp_widgets/small/base.css";
 }
 

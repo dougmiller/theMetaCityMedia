@@ -1,7 +1,6 @@
 @import "detailed/base.css";
 
 @media (max-width: var(--small-upper-bound)) {
-    div { width: var(--small-upper-bound);}
     @import "detailed/small/base.css";
 }
 
