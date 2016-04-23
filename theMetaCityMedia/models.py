@@ -23,10 +23,10 @@ class Licence(db.Model):
     """
     __tablename__ = 'licence'
     id = db.Column(db.Integer, primary_key=True)
-    licence_name = db.Column(db.String(64), unique=True)
-    licence_text = db.Column(db.String(128), unique=True)
-    licence_url = db.Column(db.String(64), unique=True)
-    image_url = db.Column(db.String(64), unique=True)
+    licence_name = db.Column(db.String, unique=True)
+    licence_text = db.Column(db.String, unique=True)
+    licence_url = db.Column(db.String, unique=True)
+    image_url = db.Column(db.String, unique=True)
     items = db.relationship('MediaItem', backref='Licence', lazy='dynamic')
 
     def __repr__(self):
@@ -41,9 +41,9 @@ class Postcards(db.Model):
     """
     __tablename__ = 'postcard'
     id = db.Column(db.Integer, primary_key=True)
-    url = db.Column(db.String(64), unique=True)
-    title = db.Column(db.String(64), unique=True)
-    alt_text = db.Column(db.String(128), unique=True)
+    url = db.Column(db.String, unique=True)
+    title = db.Column(db.String, unique=True)
+    alt_text = db.Column(db.String, unique=True)
     items = db.relationship('MediaItem', backref='Postcard', lazy='dynamic')
 
     def __repr__(self):
@@ -183,7 +183,7 @@ class Audio(db.Model):
     __tablename__ = 'audio'
     id = db.Column(db.Integer, primary_key=True)
     parent_id = db.Column(db.Integer, db.ForeignKey('mediaitem.id'))
-    file_name = db.Column(db.String(64), unique=True)
+    file_name = db.Column(db.String, unique=True)
     files = db.relationship('AudioFile', backref='File_Parent')
     tracks = db.relationship('AudioTrack', backref='Audio_Parent')
     running_time = db.Column(db.Float)
@@ -251,8 +251,8 @@ class AudioTrack(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     parent_audio = db.Column(db.Integer, db.ForeignKey('audio.id'))
     type = db.Column(db.Enum('subtitles', 'captions', 'descriptions', 'chapters', 'metadata', name='audio_track_type'))
-    src_lang = db.Column(db.String(16), default="en-AU")
-    label = db.Column(db.String(16), default="English")
+    src_lang = db.Column(db.String, default="en-AU")
+    label = db.Column(db.String, default="English")
 
     def __repr__(self):
         return '<Audio track: %r>' % self.id
@@ -272,9 +272,9 @@ class Picture(db.Model):
     __tablename__ = 'picture'
     id = db.Column(db.Integer, primary_key=True)
     parent_id = db.Column(db.Integer, db.ForeignKey('mediaitem.id'))
-    file_name = db.Column(db.String(64), unique=True)
+    file_name = db.Column(db.String, unique=True)
     date_published = db.Column(db.Date)
-    resolution = db.Column(db.String(16))
+    resolution = db.Column(db.String)
     file_size = db.Column(db.Integer())
 
     def __repr__(self):
@@ -298,8 +298,8 @@ class Code(db.Model):
     __tablename__ = 'code'
     id = db.Column(db.Integer, primary_key=True)
     parent_id = db.Column(db.Integer, db.ForeignKey('mediaitem.id'))
-    language = db.Column(db.String(30))
-    file_name = db.Column(db.String(64), unique=True)
+    language = db.Column(db.String),
+    file_name = db.Column(db.String, unique=True)
     date_published = db.Column(db.Date)
     file_size = db.Column(db.Integer())
 
@@ -311,6 +311,9 @@ class Code(db.Model):
 
 
 class Tags(db.Model):
+    """
+    Tags table
+    """
     __tablename__ = 'tags'
     id = db.Column(db.Integer, primary_key=True)
     tag = db.Column(db.String, unique=True, nullable=False)
@@ -327,10 +330,13 @@ tags_joiner = db.Table('tags_joiner',
 
 
 class MediaItem(db.Model):
+    """
+    The model that media items (videos, pictures etc) are parented from
+    """
     __tablename__ = "mediaitem"
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(128), unique=True)
-    about = db.Column(db.String(512))
+    title = db.Column(db.String, unique=True)
+    about = db.Column(db.String)
     licence = db.Column(db.Integer, db.ForeignKey('licence.id'))
     postcard = db.Column(db.Integer, db.ForeignKey('postcard.id'))
     tags = db.relationship('Tags', secondary=tags_joiner, backref='mediaItems')
