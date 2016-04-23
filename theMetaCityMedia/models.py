@@ -27,10 +27,7 @@ class Licence(db.Model):
     licence_text = db.Column(db.String(128), unique=True)
     licence_url = db.Column(db.String(64), unique=True)
     image_url = db.Column(db.String(64), unique=True)
-    videos = db.relationship('Video', backref='Licence', lazy='dynamic')
-    audios = db.relationship('Audio', backref='Licence', lazy='dynamic')
-    picture = db.relationship('Picture', backref='Licence', lazy='dynamic')
-    code = db.relationship('Code', backref='Licence', lazy='dynamic')
+    items = db.relationship('MediaItem', backref='Licence', lazy='dynamic')
 
     def __repr__(self):
         return self.licence_name
@@ -47,10 +44,7 @@ class Postcards(db.Model):
     url = db.Column(db.String(64), unique=True)
     title = db.Column(db.String(64), unique=True)
     alt_text = db.Column(db.String(128), unique=True)
-    videos = db.relationship('Video', backref='Postcard', lazy='dynamic')
-    audios = db.relationship('Audio', backref='Postcard', lazy='dynamic')
-    picture = db.relationship('Picture', backref='Postcard', lazy='dynamic')
-    code = db.relationship('Code', backref='Postcard', lazy='dynamic')
+    items = db.relationship('MediaItem', backref='Postcard', lazy='dynamic')
 
     def __repr__(self):
         return self.url + ': ' + self.title
@@ -65,21 +59,16 @@ class Video(db.Model):
     """
     __tablename__ = 'video'
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(64), unique=True)
-    about = db.Column(db.String(512))
+    parent_id = db.Column(db.Integer, db.ForeignKey('mediaitem.id'))
     file_name = db.Column(db.String(64), unique=True)
     files = db.relationship('VideoFile', backref='File_Parent')
     tracks = db.relationship('VideoTrack', backref='Track_Parent')
-    tags = db.relationship('VideoTag', backref='Tag_Parent')
     running_time = db.Column(db.Float)
     has_start_poster = db.Column(db.Boolean)
     has_end_poster = db.Column(db.Boolean)
     has_fullscreen = db.Column(db.Boolean)
     date_published = db.Column(db.Date)
     resolution = db.Column(db.String(16))
-    licence = db.Column(db.Integer, db.ForeignKey('licence.id'))
-    postcard = db.Column(db.Integer, db.ForeignKey('postcard.id'))
-    media_type = 'video'
 
     def __repr__(self):
         return self.title
@@ -184,16 +173,6 @@ class VideoTrack(db.Model):
         return self.type.title() + ': (' + self.label + ') ' + self.src_lang
 
 
-class VideoTag(db.Model):
-    """
-    Tags associated with the video
-    """
-    __tablename__ = 'video_tags'
-    id = db.Column(db.Integer, primary_key=True)
-    parent_video = db.Column(db.Integer, db.ForeignKey('video.id'))
-    tag = db.Column(db.String(30), unique=True)
-
-
 class Audio(db.Model):
     """
     This is a collection of files that make up the different
@@ -203,8 +182,7 @@ class Audio(db.Model):
     """
     __tablename__ = 'audio'
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(64), unique=True)
-    about = db.Column(db.String(512))
+    parent_id = db.Column(db.Integer, db.ForeignKey('mediaitem.id'))
     file_name = db.Column(db.String(64), unique=True)
     files = db.relationship('AudioFile', backref='File_Parent')
     tracks = db.relationship('AudioTrack', backref='Audio_Parent')
@@ -212,9 +190,6 @@ class Audio(db.Model):
     has_start_poster = db.Column(db.Boolean)
     has_end_poster = db.Column(db.Boolean)
     date_published = db.Column(db.Date)
-    licence = db.Column(db.Integer, db.ForeignKey('licence.id'), default=1)
-    postcard = db.Column(db.Integer, db.ForeignKey('postcard.id'), default=2)
-    media_type = 'audio'
 
     def __repr__(self):
         return self.title
@@ -289,16 +264,6 @@ class AudioTrack(db.Model):
         return self.type.title() + ': ' + self.src_lang
 
 
-class AudioTag(db.Model):
-    """
-    Tags associated with the audio
-    """
-    __tablename__ = 'audio_tag'
-    id = db.Column(db.Integer, primary_key=True)
-    parent_video = db.Column(db.Integer, db.ForeignKey('audio.id'))
-    tag = db.Column(db.String(30), unique=True)
-
-
 class Picture(db.Model):
     """
     This is the details of a picture including:
@@ -306,15 +271,11 @@ class Picture(db.Model):
     """
     __tablename__ = 'picture'
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(64), unique=True)
-    about = db.Column(db.String(512))
+    parent_id = db.Column(db.Integer, db.ForeignKey('mediaitem.id'))
     file_name = db.Column(db.String(64), unique=True)
     date_published = db.Column(db.Date)
     resolution = db.Column(db.String(16))
     file_size = db.Column(db.Integer())
-    licence = db.Column(db.Integer, db.ForeignKey('licence.id'), default=1)
-    postcard = db.Column(db.Integer, db.ForeignKey('postcard.id'), default=3)
-    media_type = 'picture'
 
     def __repr__(self):
         return self.title
@@ -329,16 +290,6 @@ class Picture(db.Model):
         return format_size_to_human_readable(self.file_size)
 
 
-class PictureTag(db.Model):
-    """
-    Tags associated with the picture
-    """
-    __tablename__ = 'picture_tag'
-    id = db.Column(db.Integer, primary_key=True)
-    parent_video = db.Column(db.Integer, db.ForeignKey('picture.id'))
-    tag = db.Column(db.String(30), unique=True)
-
-
 class Code(db.Model):
     """
     This is the details of a picture including:
@@ -346,15 +297,11 @@ class Code(db.Model):
     """
     __tablename__ = 'code'
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(64), unique=True)
+    parent_id = db.Column(db.Integer, db.ForeignKey('mediaitem.id'))
     language = db.Column(db.String(30))
-    about = db.Column(db.String(512))
     file_name = db.Column(db.String(64), unique=True)
     date_published = db.Column(db.Date)
     file_size = db.Column(db.Integer())
-    licence = db.Column(db.Integer, db.ForeignKey('licence.id'), default=2)
-    postcard = db.Column(db.Integer, db.ForeignKey('postcard.id'), default=4)
-    media_type = 'code'
 
     def __repr__(self):
         return self.title
@@ -363,12 +310,28 @@ class Code(db.Model):
         return format_size_to_human_readable(self.file_size)
 
 
-class CodeTag(db.Model):
-    """
-    Tags associated with the code
-    """
-    __tablename__ = 'code_tag'
+class Tags(db.Model):
+    __tablename__ = 'tags'
     id = db.Column(db.Integer, primary_key=True)
-    parent_video = db.Column(db.Integer, db.ForeignKey('code.id'))
-    tag = db.Column(db.String(30), unique=True)
+    tag = db.Column(db.String, unique=True, nullable=False)
+
+    def __repr__(self):
+        return '%s' % self.tag
+
+
+tags_joiner = db.Table('tags_joiner',
+                       db.Column('tag_id', db.Integer, db.ForeignKey('tags.id'), nullable=False),
+                       db.Column('mediaitem_id', db.Integer, db.ForeignKey('mediaitem.id'), nullable=False),
+                       db.PrimaryKeyConstraint('tag_id', 'mediaitem_id')
+                       )
+
+
+class MediaItem(db.Model):
+    __tablename__ = "mediaitem"
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(128), unique=True)
+    about = db.Column(db.String(512))
+    licence = db.Column(db.Integer, db.ForeignKey('licence.id'))
+    postcard = db.Column(db.Integer, db.ForeignKey('postcard.id'))
+    tags = db.relationship('Tags', secondary=tags_joiner, backref='mediaItems')
 
