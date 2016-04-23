@@ -36,7 +36,7 @@ body > header {
 
 .mediaEntries {
     padding: 1em;
-    
+
     .mediaEntry {
         background: var(--colour-float);
         border: var(--colour-work) 1px solid;
@@ -73,7 +73,7 @@ body > header {
         }
 
         p {
-            font-family: 'Roboto', serif;
+            font-family: "Droid Sans", serrif;
             font-size: 1em;
         }
 
@@ -93,12 +93,20 @@ body > header {
 
         .metaBox {
             border-top: 1px solid var(--colour-forgotten);
+            margin-bottom: 1em;
 
             .meta {
                 display: flex;
+                font-size: 0.8em;
 
                 .metaEntry {
                     flex: 1 1 auto;
+
+                    img {
+                        height: auto;
+                        width: 1em;
+                        font-size: 1.5em;
+                    }
                 }
             }
         }
