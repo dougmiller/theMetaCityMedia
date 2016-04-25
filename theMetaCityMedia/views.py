@@ -15,7 +15,7 @@ def show_index():
     media += Audio.query.all()
     media += Picture.query.all()
     media += Code.query.all()
-    media.sort(key=lambda media_entry: media_entry.date_published)
+    media.sort(key=lambda media_entry: media_entry.parent_id)
     media = media[::-1]
     return render_template('index.jinja2', media=media)
 
@@ -24,6 +24,13 @@ def show_favicon():
     return ''
 
 
+@app.route('/video/')
+def show_all_videos():
+    media = Video.query.all()
+    media.sort(key=lambda media_entry: media_entry.parent_id)
+    media = media[::-1]
+    return render_template('index.jinja2', media=media)
+
 @app.route('/video/<video>/')
 def show_specific_video(video):
     if video.isnumeric():
@@ -31,6 +38,14 @@ def show_specific_video(video):
         return render_template('detailed/video.jinja2', video=video)
     else:
         abort(404)
+
+
+@app.route('/code/')
+def show_all_code():
+    media = Code.query.all()
+    media.sort(key=lambda media_entry: media_entry.parent_id)
+    media = media[::-1]
+    return render_template('index.jinja2', media=media)
 
 
 @app.route('/code/<code_id>')
@@ -42,6 +57,14 @@ def show_specific_code(code_id):
         abort(404)
 
 
+@app.route('/audio/')
+def show_all_audio():
+    media = Audio.query.all()
+    media.sort(key=lambda media_entry: media_entry.parent_id)
+    media = media[::-1]
+    return render_template('index.jinja2', media=media)
+
+
 @app.route('/audio/<audio_id>')
 def show_specific_audio(audio_id):
     if audio_id.isnumeric():
@@ -49,6 +72,14 @@ def show_specific_audio(audio_id):
         return render_template('detailed/audio.jinja2', audio_clip=audio_clip)
     else:
         abort(404)
+
+
+@app.route('/picture/')
+def show_all_pictures():
+    media = Picture.query.all()
+    media.sort(key=lambda media_entry: media_entry.parent_id)
+    media = media[::-1]
+    return render_template('index.jinja2', media=media)
 
 
 @app.route('/picture/<picture_id>')

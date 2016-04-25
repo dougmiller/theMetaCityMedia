@@ -1,12 +1,12 @@
 {% extends "detailed/media_base.html" %}
 
-{% block title %}{{ video.title }}{% endblock %}
+{% block title %}{{ video.Parent.title }}{% endblock %}
 {% block includes %}
     <script src="/static/javascript/video-build.js"></script>
 {% endblock %}
 
 {% block media %}
-<h1><a href="/video/{{ video.id }}">{{ video.title }}</a></h1>
+<h1><a href="/video/{{ video.id }}">{{ video.Parent.title }}</a></h1>
 <div id="videoContainer">
     <div id="videoBox">
         <video height="{{ video.get_height() }}"
