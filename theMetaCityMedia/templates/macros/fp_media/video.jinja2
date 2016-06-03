@@ -1,18 +1,14 @@
 {% macro fp_video(video) -%}
 <article class="mediaEntry video">
-    <img src="https://assets.themetacity.com/video/postcards/{{ video.Parent.Postcard.url }}" title="{{ video.Parent.Postcard.title }}" alt="{{ video.Parent.Postcard.alt_text }}">
+    <a href="/video/{{ video.id }}"><img src="https://assets.themetacity.com/video/postcards/{{ video.Parent.Postcard.url }}" title="{{ video.Parent.Postcard.title }}" alt="{{ video.Parent.Postcard.alt_text }}"></a>
     <h1><a href="/video/{{ video.id }}">{{ video.Parent.title }}</a></h1>
     {% autoescape false %}{{ video.Parent.about }}{% endautoescape %}
-    <div class="metaBox">
-        <h2 class="published">Published: {{ video.Parent.date_published }}</h2>
-        <div class="meta">
-            <div class="metaEntry running_time">{{ video.format_time_to_human_readable() }}</div>
-            <div class="metaEntry mime_types">{% for mt in video.get_mime_types() %} {{ mt }} {% endfor %}</div>
-            <div class="metaEntry sizes">{{ video.format_filesizes() }}</div>
-            <div class="metaEntry tracks">
-                {% for track in video.tracks %} {{ track.type }} {% endfor %}{% if not video.tracks %} No tracks {% endif %}</div>
-            <div class="metaEntry licence"><a href="{{ video.Parent.Licence.licence_url }}" rel="license"><img src="/static/images/{{ video.Parent.Licence.image_url }}" /></a></div>
-        </div>
-    </div>
+    <h2 class="metaEntry published">{{ video.Parent.date_published }}</h2>
+    <h2 class="metaEntry running_time">{{ video.format_time_to_human_readable() }}</h2>
+    <ul class="tags">
+        {% for tag in video.Parent.tags %}
+            <li><a href="/tag/{{ tag }}">{{ tag }}</a></li>
+        {% endfor %}
+    </ul>
 </article>
 {%- endmacro %}

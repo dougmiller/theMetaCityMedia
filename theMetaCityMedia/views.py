@@ -1,6 +1,6 @@
 from flask import render_template, abort
-from theMetaCityMedia import app
-from models import Video, Audio, Code, Picture
+from theMetaCityMedia import app, db
+from models import Video, Audio, Code, Picture, MediaItem, Tags
 
 
 @app.errorhandler(404)
@@ -89,3 +89,15 @@ def show_specific_picture(picture_id):
         return render_template('detailed/picture.jinja2', picture=picture)
     else:
         abort(404)
+
+
+@app.route('/tag/<tag>')
+def show_specific_tag(tag):
+    media = []
+    media += db.session.query(Video).join(MediaItem, Video.Parent).filter(MediaItem.tags.any(Tags.tag == tag))
+    media += db.session.query(Audio).join(MediaItem, Audio.Parent).filter(MediaItem.tags.any(Tags.tag == tag))
+    media += db.session.query(Picture).join(MediaItem, Picture.Parent).filter(MediaItem.tags.any(Tags.tag == tag))
+    media += db.session.query(Code).join(MediaItem, Code.Parent).filter(MediaItem.tags.any(Tags.tag == tag))
+    media.sort(key=lambda media_entry: media_entry.parent_id)
+    media = media[::-1]
+    return render_template('tags.jinja2', media=media)

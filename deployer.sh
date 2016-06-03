@@ -30,10 +30,10 @@ if [ $1 == "development" ]; then
   echo "Finished deploying"
 elif [ $1 == "production" ]; then
   echo "Checking if mount available"
-  if mountpoint -q /media/tmcmedia ; then
-    echo "tmcMedia is not mounted. Exiting."
-    exit 3
-  fi
+  #if mountpoint -q /media/tmcmedia ; then
+  #  echo "tmcMedia is not mounted. Exiting."
+  #  exit 3
+  #fi
 
   echo "Starting deployment to production environment"
   echo "Starting to copy files"
@@ -44,7 +44,7 @@ elif [ $1 == "production" ]; then
   sed -i '/admin/d' /media/tmcmedia/theMetaCityMedia/__init__.py
   cd /media/tmcmedia/theMetaCityMedia/templates
 
-  for i in *; do
+  for i in *.* ; do
     sed -i 's/http:\/\/assets.localcity.com/https:\/\/assets.themetacity.com/g' ${i}
   done
 

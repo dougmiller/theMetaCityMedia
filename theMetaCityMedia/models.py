@@ -277,7 +277,6 @@ class Picture(db.Model):
     file_size = db.Column(db.Integer())
     media_type = 'picture'
 
-
     def __repr__(self):
         return self.title
 
@@ -320,7 +319,7 @@ class Tags(db.Model):
     tag = db.Column(db.String, unique=True, nullable=False)
 
     def __repr__(self):
-        return '%r' % self.tag
+        return '%s' % self.tag
 
 
 tags_joiner = db.Table('tags_joiner',

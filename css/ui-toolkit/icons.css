@@ -1,0 +1,5 @@
+.video-icon {
+    stroke: var(--colour-forgive);
+    fill: blue;
+    stroke-width:2;
+}

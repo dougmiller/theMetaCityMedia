@@ -5,6 +5,8 @@
 @import "picture.css";
 @import "video.css";
 
-main {
-    margin: 0 auto;
+#licence {
+    text-align: center;
+    background-color: var(--colour-float);
+    padding: 0.5em;
 }

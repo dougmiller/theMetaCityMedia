@@ -13,3 +13,23 @@ body {
     padding: 0;
     margin: 0;
 }
+
+h1 {
+    font-family: var(--font-heading);
+}
+
+p {
+    font-family: var(--font-bulk);
+}
+
+footer {
+    text-align: center;
+    font-size: 0.8em;
+    background-color: var(--colour-float);
+
+    .licence p {
+        margin: 0;
+        padding: 2em;
+        font-family: var(--font-bulk);
+    }
+}

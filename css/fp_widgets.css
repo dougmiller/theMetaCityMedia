@@ -15,3 +15,30 @@
 @media (min-width: var(--large-lower-bound)) {
     @import "fp_widgets/large/base.css";
 }
+
+body > header {
+    background: var(--colour-float);
+    box-shadow: 10px 10px 15px 0 var(--colour-forgotten);
+    margin-bottom: 0.5em;
+    padding: 0.5em;
+    text-align: center;
+
+    h1 {
+        font-family: var(--font-heading);
+        margin: 0;
+
+        .titleHighlight {
+            color: var(--colour-work);
+        }
+    }
+
+    nav {
+        margin: 1em 0;
+        padding: 1em;
+        text-align: center;
+
+        input {
+            font-size: 1.5em;
+        }
+    }
+}

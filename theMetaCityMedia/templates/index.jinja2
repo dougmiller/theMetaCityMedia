@@ -5,7 +5,6 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="data:;base64,iVBORw0KGgo=">
-        <script defer="defer" src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
         <link href='https://fonts.googleapis.com/css?family=Orbitron' rel='stylesheet' type='text/css'>
         <link href='https://fonts.googleapis.com/css?family=Droid+Sans' rel='stylesheet' type='text/css'>
         <link href='https://fonts.googleapis.com/css?family=Inconsolata' rel='stylesheet' type='text/css'>
@@ -14,9 +13,7 @@
     <body>
         <header>
             <h1>theMetaCity<wbr><span class="titleHighlight">Media</span></h1>
-            <nav>
-                <input type="text" id="search" placeholder="Search name, keyword, tag">
-            </nav>
+            {% block extraTopNav%}{%  endblock %}
         </header>
         <main class="mediaEntries">
             {% for element in media %}
@@ -35,6 +32,7 @@
                 {% endif %}
             {% endfor %}
         </main>
+        {% block extraBottomNav%}{%  endblock %}
         <footer class="licence">
             <p>Work is by <a href="https://www.themetacity.com" rel="home">
                 Douglas Miller</a> and is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">Creative

@@ -12,28 +12,6 @@
 @import "medium/base.css";
 @import "small/base.css";
 
-
-body > header {
-    background: var(--colour-deep) url('/static/images/headerbackground.png');
-    box-shadow: 10px 10px 15px 0px var(--colour-forgotten);
-    margin-bottom: 0.5em;
-    padding: 0.5em;
-
-    h1 {
-        font-family: "Orbitron", Verdana, Arial, sans-serif;
-        margin-top: 0;
-
-        .titleHighlight {
-            color: var(--colour-work);
-        }
-    }
-
-    nav {
-        margin: 0;
-    }
-}
-
-
 .mediaEntries {
     padding: 1em;
 
@@ -41,7 +19,7 @@ body > header {
         background: var(--colour-float);
         border: var(--colour-work) 1px solid;
         box-shadow: 10px 10px 15px 0px var(--colour-forgotten);
-        break-inside: avoid-column;
+        break-inside: avoid;
         margin: 1em;
 
         img {
@@ -49,7 +27,7 @@ body > header {
             width: 100%;
         }
 
-        h1, h2, p, .meta, .about {
+        h1, h2, p, ul, .meta, .about {
             padding: 0 1em;
         }
 
@@ -57,7 +35,7 @@ body > header {
             background: var(--colour-float);
             border-radius: 5px;
             border: 1px solid;
-            font-family: "Orbitron", Verdana, Arial, sans-serif;
+            font-family: var(--font-heading);
             font-size: 1.5em;
             margin: 0 auto;
             padding: 0.5em;
@@ -68,13 +46,17 @@ body > header {
         }
 
         h2 {
-            font-family: "Inconsolata", Verdana, Arial, sans-serif;
+            font-family: var(--font-lead);
             font-size: 1em;
         }
 
+        li {
+            font-family: var(--font-lead);
+        }
+
         p {
-            font-family: "Droid Sans", serrif;
-            font-size: 1em;
+            font-size: 1.2em;
+            line-height: 1.4em;
         }
 
         a {
@@ -91,24 +73,12 @@ body > header {
             color: var(--colour-explore);
         }
 
-        .metaBox {
-            border-top: 1px solid var(--colour-forgotten);
-            margin-bottom: 1em;
+        ul.tags {
+            list-style-type: none;
+            margin: 1em 0;
 
-            .meta {
-                text-align: center;
-                display: flex;
-                font-size: 0.8em;
-
-                .metaEntry {
-                    flex: 1 1 auto;
-
-                    img {
-                        height: auto;
-                        width: 1em;
-                        font-size: 1.5em;
-                    }
-                }
+            li {
+                display: inline;
             }
         }
     }
@@ -118,6 +88,28 @@ body > header {
     }
 }
 
-nav {
-    margin: 1em 0;
+.goBackOption {
+    font-family: var(--font-lead);
+    padding: 0.5em;
+    background-color: var(--colour-float);
+    font-size: 1.4em;
+
+    a {
+        color: var(--colour-explore);
+    }
+    a:visited {
+        color: var(--colour-forgive);
+    }
+    a:hover {
+        color: var(--colour-work);
+    }
+    a:active {
+        color: var(--colour-explore);
+    }
+
+}
+.goBackOptionTop {}
+.goBackOptionBottom {
+    text-align: center;
+    margin-bottom: 0;
 }

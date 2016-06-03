@@ -30,6 +30,9 @@ postcss([
     .process(css, options)
     .then(function (result) {
         fs.writeFileSync('theMetaCityMedia/static/css/style.css', result.css);
+        console.log("CSS finished");
+    }, function(error) {
+        console.log(error);
+        console.log("CSS error");
     });
 
-console.log("CSS processed");

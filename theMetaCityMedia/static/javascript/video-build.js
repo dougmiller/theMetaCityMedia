@@ -36,11 +36,11 @@ document.addEventListener("DOMContentLoaded", function () {
             endPoster.setAttribute("class", "videoPoster");
             endPoster.setAttribute("height", video.getAttribute("height"));
             endPoster.setAttribute("width", video.getAttribute("width"));
-            videoContainer.appendChild(endPoster);
+            videoBox.appendChild(endPoster);
 
             endPoster.getElementById('playButton').addEventListener("click", function () {
                 video.playPause();
-                videoContainer.removeChild(endPoster);
+                videoBox.removeChild(endPoster);
             });
 
         }, function(error){
@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", function () {
         var posters = videoContainer.getElementsByClassName("videoPoster");
 
         for (var i = 0; i < posters.length; i++) {
-            videoContainer.removeChild(posters[i]);
+            videoBox.removeChild(posters[i]);
         }
 
         checkAudio();
@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 errorPoster.setAttribute("class", "videoPoster");
                 errorPoster.setAttribute("height", video.getAttribute("height"));
                 errorPoster.setAttribute("width", video.getAttribute("width"));
-                videoContainer.appendChild(errorPoster);
+                videoBox.appendChild(errorPoster);
             }, function(error){
                 console.log("No end poster: ");
             });
@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     startPoster.setAttribute("class", "videoPoster");
                     startPoster.setAttribute("height", video.getAttribute("height"));
                     startPoster.setAttribute("width", video.getAttribute("width"));
-                    videoContainer.appendChild(startPoster);
+                    videoBox.appendChild(startPoster);
 
                     startPoster.getElementById('playButton').addEventListener("click", function () {
                         video.playPause();
@@ -101,7 +101,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     loadingBar.setAttribute("class", "loadingBar");
                     loadingBar.style.top = video.height + "px";
                     loadingBar.setAttributeNS(null, "width", video.width + "px");
-                    videoContainer.appendChild(loadingBar);
+                    videoBox.appendChild(loadingBar);
 
                     function makeNewBufferBar() {
                         var newRect = document.createElementNS('http://www.w3.org/2000/svg',"rect");
@@ -152,7 +152,7 @@ document.addEventListener("DOMContentLoaded", function () {
             tracksList.id = "noTracksList";
         }
 
-        for (var i = 0; i < tracksList.children.length; i++) {
+        for (var j = 0; j < tracksList.children.length; j++) {
             (function (index) {
                 tracksList.children[index].addEventListener("click", function () {
                     if (index === 0) {
@@ -163,7 +163,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         video.textTracks[index - 1].mode = "showing";
                     }
                 });
-            }(i));
+            }(j));
         }
     });
 
@@ -186,6 +186,7 @@ document.addEventListener("DOMContentLoaded", function () {
     video.playPause = function () {
         if (canPlayVid) {
             if (this.isPlaying()) {
+
                 this.pause();
                 playPauseButton.src = "/static/images/smallplay.svg";
                 playPauseButton.alt = "Option to play the video";
