@@ -9,7 +9,6 @@ document.addEventListener("DOMContentLoaded", function () {
         playPauseButton = document.getElementById("playPauseButton"),
         fullscreenButton = document.getElementById("fullscreenButton"),
         currentTimeSpan = document.getElementById("currentTimeSpan"),
-        durationTimeSpan = document.getElementById("runningTimeSpan"),
         playProgress = document.getElementById("playProgress"),
         soundButton = document.getElementById("soundButton"),
         soundSlider = document.getElementById("soundSlider"),
@@ -54,8 +53,6 @@ document.addEventListener("DOMContentLoaded", function () {
         for (var i = 0; i < posters.length; i++) {
             videoBox.removeChild(posters[i]);
         }
-
-        checkAudio();
     });
 
     video.addEventListener("loadstart", function () {
@@ -155,6 +152,14 @@ document.addEventListener("DOMContentLoaded", function () {
         for (var j = 0; j < tracksList.children.length; j++) {
             (function (index) {
                 tracksList.children[index].addEventListener("click", function () {
+
+                    for (var k = 0; k < tracksList.children.length; k++) {
+                       tracksList.children[k].classList.remove('active');
+                    }
+
+                    this.classList.add('active');
+                    tracksList.classList.remove('emulateHover');
+
                     if (index === 0) {
                         for (var j = 0; j < video.textTracks.length; j++) {
                             video.textTracks[j].mode = "disabled";
@@ -168,9 +173,16 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     video.addEventListener("loadedmetadata", function () {
-        currentTimeSpan.innerHTML = "00:00";
-        durationTimeSpan.innerHTML = rawTimeToFormattedTime(this.duration);
-        checkAudio();
+        var pos = getCurretlyPlayingSourceIndex();
+        // Split happens on the: codecs="vp8,vorbis"' part
+        // If we have a length of 2 then we have an audio codec and might be able to play it so we put in the option
+        // Length of 1 obviously means no audio codec specified so remove the option to control audio
+        if (sources[pos].type.split(',').length === 2) {
+            soundButton.src = "/static/images/sound-3.svg";
+            soundButton.alt = "Button to change sound options";
+            soundButton.title = "Change sound options";
+            soundSlider.id = "soundSlider";
+        }
     });
 
     video.addEventListener("timeupdate", function () {
@@ -186,7 +198,6 @@ document.addEventListener("DOMContentLoaded", function () {
     video.playPause = function () {
         if (canPlayVid) {
             if (this.isPlaying()) {
-
                 this.pause();
                 playPauseButton.src = "/static/images/smallplay.svg";
                 playPauseButton.alt = "Option to play the video";
@@ -202,6 +213,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     playPauseButton.addEventListener("click", function () {
         video.playPause();
+    });
+
+    tracksButton.addEventListener("touchstart", function () {
+        tracksList.classList.add('emulateHover');
     });
 
     fullscreenButton.addEventListener("click", function () {
@@ -224,34 +239,69 @@ document.addEventListener("DOMContentLoaded", function () {
 
     playProgress.addEventListener("mouseup", function () {
         video.play();
-    })
+    });
 
     soundSlider.addEventListener("change", function () {
         video.volume = (this.value / this.max);
+
+        soundButton.alt = "Button to change sound options";
+        soundButton.title = "Change sound options";
+
+        if (video.volume === 1) {
+             soundButton.src = "/static/images/sound-3.svg";
+        }
+
+        if (video.volume < 0.66) {
+             soundButton.src = "/static/images/sound-2.svg";
+        }
+
+        if (video.volume < 0.33) {
+             soundButton.src = "/static/images/sound-1.svg";
+        }
+
         if (video.volume === 0) {
-            soundButton.src = "/static/images/nosound.svg";
+            soundButton.src = "/static/images/sound-0.svg";
             soundButton.alt = "Icon showing no sound is available";
             soundButton.title = "Sound muted.";
-        } else {
-            soundButton.src = "/static/images/sound.svg";
-            soundButton.alt = "Button to change sound options";
-            soundButton.title = "Change sound options";
         }
     });
 
+    var hideSlderTimout;
+    soundSlider.addEventListener("touchend", function () {
+        hideSlderTimout = setTimeout(function(){
+            soundSlider.classList.remove('emulateHover');
+        }, 1500);
+    });
+
+    soundSlider.addEventListener("touchstart", function () {
+        clearTimeout(hideSlderTimout);
+    });
+
+    soundButton.addEventListener("touchend", function (event) {
+        console.log("sound button touchended");
+        event.stopImmediatePropagation(); // Stop click event from happening and muting the track
+        hideSlderTimout = setTimeout(function(){
+            soundSlider.classList.remove('emulateHover');
+        }, 3000);
+        soundSlider.classList.add('emulateHover');
+    });
+
     soundButton.addEventListener("click", function () {
-        if (video.muted === false) {
-            video.muted = true;
-            soundButton.src = "/static/images/nosound.svg";
-            soundButton.alt = "Icon showing no sound is available";
-            soundButton.title = "Sound muted.";
-            soundSlider.id = "noSoundSlider";
-        } else {
-            video.muted = false;
-            soundButton.src = "/static/images/sound.svg";
-            soundButton.alt = "Button to change sound options";
-            soundButton.title = "Change sound options";
-            soundSlider.id = "soundSlider";
+        console.log("sound button click");
+        if (sources[getCurretlyPlayingSourceIndex()].type.split(',').length === 2) {
+            if (video.muted === false) {
+                video.muted = true;
+                soundButton.src = "/static/images/sound-0.svg";
+                soundButton.alt = "Icon showing no sound is available";
+                soundButton.title = "Sound muted.";
+                soundSlider.id = "noSoundSlider";
+            } else {
+                video.muted = false;
+                soundButton.src = "/static/images/sound-3.svg";
+                soundButton.alt = "Button to change sound options";
+                soundButton.title = "Change sound options";
+                soundSlider.id = "soundSlider";
+            }
         }
     });
 
@@ -338,29 +388,6 @@ document.addEventListener("DOMContentLoaded", function () {
             };
             request.send();
         });
-    }
-
-    /**
-     * Checks if the source being used has audio available
-     * If not then the sound button is disabled
-     */
-    function checkAudio() {
-        var pos = getCurretlyPlayingSourceIndex();
-
-        // Split happens on the: codecs="vp8,vorbis"' part
-        // If we have a length of 2 then we have an audio codec and might be able to play it so we put in the option
-        // Length of 1 obviously means no audio codec specified so remove the option to control audio
-        if (sources[pos].type.split(',').length === 1) {
-            soundButton.src = "/static/images/nosound.svg";
-            soundButton.alt = "Icon showing no sound is available";
-            soundButton.title = "No sound available";
-            soundSlider.id = "noSoundSlider";
-        } else {
-            soundButton.src = "/static/images/sound.svg";
-            soundButton.alt = "Button to change sound options";
-            soundButton.title = "Change sound options";
-            soundSlider.id = "soundSlider";
-        }
     }
 
     /**

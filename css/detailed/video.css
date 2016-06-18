@@ -8,12 +8,6 @@ main.video > h1 {
 
 }
 
-#mediaTitle {
-    margin: 0;
-    padding: 1em 0;
-    text-align: center;
-}
-
 #videoContainer {
     max-width: var(--medium-upper-bound);
     margin: 0 auto;
@@ -42,90 +36,121 @@ main.video > h1 {
     }
 
     #videoControls {
-
-        padding: 5px;
+        display: flex;
+        align-items: center;
+        padding: 15px 5px;
         background: var(--colour-deep);
 
         #playProgress {
-            width: 100%;
-            margin: 0 auto;
+            width: 60%;
         }
 
-        #videoControlsActions {
-            display: flex;
-            align-items: center;
+        #playPauseButton {
+            flex: 0 auto;
+        }
+        .timeSpan {
+            font-family: var(--font-bulk);
+            font-size: 1em;
+            margin: 0.2em;
+            flex: 1 auto;
+            text-align: center;
+            color: var(--colour-float);
+        }
+        #fullscreenButton {
+            flex: 0 auto;
+        }
+        #tracksControl {
+            flex: 0 auto;
+            position: relative;
+        }
+        #tracksControl:hover #tracksList {
+            display: block;
+        }
+        #tracksList {
+            display: none;
+            position: absolute;
+            top: 20px;
+            right: 0;
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            white-space: nowrap;
+            text-align: left;
+            border: 2px solid var(--colour-work);
+            background: var(--colour-glide);
 
-            #playPauseButton {
-                flex: 0 auto;
+            li {
+                padding: 0.4em;
+                background: var(--colour-float);
+                margin: 0.6em;
+                font-family: var(--font-bulk);
+                border: 1px solid var(--colour-float);
+
             }
-            #timeSpan {
-                font-size: 1.8em;
-                margin: 0.2em;
-                flex: 1 auto;
-                text-align: center;
-                color: var(--colour-float);
+
+            li.active {
+                border: 1px solid var(--colour-work);
+                color: var(--colour-work);
             }
-            #fullscreenButton {
-                flex: 0 auto;
+
+            li:hover {
+                cursor: pointer;
+                border: 1px solid var(--colour-explore);
             }
-            #tracksControl {
-                flex: 0 auto;
-                position: relative;
-            }
-            #tracksControl:hover #tracksList {
-                display: block;
-            }
-            #tracksList {
-                display: none;
-                position: absolute;
-                top: 20px;
-                left: 0;
-                list-style-type: none;
-                margin: 0;
-                padding: 0;
-                white-space: nowrap;
-                li {
-                    display: block;
-                }
-            }
-            #tracksList:hover {
-                display: block;
-            }
-            #noTracksList {
-                display: none;
-            }
-            #soundControl {
-                flex: 0 auto;
-                position: relative;
-            }
-            #soundButton:hover {
-                background-color: #dd514c;
-            }
-            #soundControl:hover #soundSlider {
-                display: block;
-                background-color: #707070;
-            }
-            #soundSlider {
-                display: none;
-                position: absolute;
-                top: -100px;
-                right: 5px;
-                -webkit-appearance: slider-vertical;
-                width: 20px;
-                height: 100px;
-                z-index: 100;
-            }
-            #noSoundSlider {
-                display: none;
-            }
-            .button {
-                margin: 0 5px;
-            }
+        }
+        #tracksList:hover {
+            display: block;
+        }
+
+        #tracksList.emulateHover {
+            display: block;
+        }
+
+        #noTracksList {
+            display: none;
+        }
+        #soundControl {
+            flex: 0 auto;
+            position: relative;
+        }
+        #soundControl:hover #soundSlider {
+            display: block;
+        }
+        #soundSlider {
+            display: none;
+            position: absolute;
+            top: -100px;
+            right: 5px;
+            -webkit-appearance: slider-vertical;
+            width: 20px;
+            height: 100px;
+            z-index: 100;
+        }
+
+        #soundSlider.emulateHover {
+            display: block;
+        }
+
+        #noSoundSlider {
+            display: none;
+        }
+        .button {
+            margin: 0 5px;
         }
     }
 }
 
-#videoMeta {
+.mediaInfo {
     padding: 1em;
-}
 
+    ul {
+        list-style-type: none;
+        margin: 1em 0;
+        padding: 0;
+
+        li {
+            display: inline;
+            font-family: var(--font-bulk);
+        }
+    }
+}

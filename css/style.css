@@ -23,9 +23,11 @@ p {
 }
 
 footer {
+    max-width: var(--size-media-default);
+    margin: 0 auto;
+    background-color: var(--colour-float);
     text-align: center;
     font-size: 0.8em;
-    background-color: var(--colour-float);
 
     .licence p {
         margin: 0;

@@ -1,1 +1,5 @@
-/**/
+.mediaEntries {
+    .mediaEntry.code {
+        border: var(--colour-rest) 1px solid;
+    }
+}

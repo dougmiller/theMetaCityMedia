@@ -5,6 +5,37 @@
 @import "picture.css";
 @import "video.css";
 
+.mediaItem {
+    h1 {font-family: var(--font-heading);}
+    h2 {font-family: var(--font-lead);}
+    h3 {font-family: var(--font-lead);}
+    h4 {font-family: var(--font-lead);}
+    h5 {font-family: var(--font-lead);}
+}
+
+#mediaTitle {
+    margin: 0;
+    padding: 1em 0;
+    text-align: center;
+
+    a {
+        color: var(--colour-explore);
+        text-decoration: none;
+    }
+
+    a:hover {
+        color: var(--colour-work);
+    }
+
+    a:active {
+        color: var(--colour-rest);
+    }
+
+    a:visited {
+        color: var(--colour-explore);
+    }
+}
+
 #licence {
     text-align: center;
     background-color: var(--colour-float);

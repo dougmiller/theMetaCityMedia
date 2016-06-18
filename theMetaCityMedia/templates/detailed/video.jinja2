@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block media %}
-<main class="video">
+<main class="mediaItem video">
     <h1 id="mediaTitle"><a href="/video/{{ video.id }}">{{ video.Parent.title }}</a></h1>
     <div id="videoContainer">
         <div id="videoBox">
@@ -33,46 +33,55 @@
                 {% endfor %}
             </video>
             <div id="videoControls">
+                <img id="playPauseButton" class="button video-icon" src="/static/images/smallplay.svg" title="Play" alt="Play/pause video">
+                <span id="currentTimeSpan" class="timeSpan">00:00</span>
                 <input type="range" id="playProgress" min="0" max="1000" value="0">
-                <div id="videoControlsActions">
-                    <img id="playPauseButton" class="button video-icon" src="/static/images/smallplay.svg" title="Play" alt="Play/pause video">
-                    <p id="timeSpan"><span id="currentTimeSpan">00:00</span> / <span id="runningTimeSpan">{{ video.running_time }}</span></p>
-                    <img id="fullscreenButton" class="button video-icon" src="/static/images/fullscreen.svg" title="Go to fullscreen. If there is a higher resolution video available it will load that, otherwise it will upscale the current video." alt="Button to open video in fullscreen">
-                    <div id="tracksControl" class="video-icon">
-                        <img id="tracksButton" class="button video-icon" src="/static/images/tracks.svg" title="Change track options" alt="Button to open track options">
-                        <ul id="tracksList">
-                            <li>No track</li>
-                            {% for track in video.tracks %}
-                                <li>{{ track.get_description() }}</li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-
-                    <div id="soundControl">
-                        <img id="soundButton" class="button" src="/static/images/sound.svg" title="Change sound options" alt="Button to change sound options">
-                        <input id="soundSlider" type="range" min="0" max="10" value="10" orient="vertical">
-                    </div>
+                <span id="runningTimeSpan" class="timeSpan">{{ video.format_running_time_to_human_readable() }}</span>
+                <img id="fullscreenButton" class="button video-icon" src="/static/images/fullscreen.svg" title="Go to fullscreen. If there is a higher resolution video available it will load that, otherwise it will upscale the current video." alt="Button to open video in fullscreen">
+                <div id="tracksControl" class="video-icon">
+                    <img id="tracksButton" class="button video-icon" src="/static/images/tracks.svg" title="Change track options" alt="Button to open track options">
+                    <ul id="tracksList">
+                        <li class="active">No track</li>
+                        {% for track in video.tracks %}
+                            <li>{{ track.get_description() }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div id="soundControl">
+                    <img id="soundButton" class="button" src="/static/images/sound-0.svg" title="No sound availiable" alt="Icon showing no sound is available">
+                    <input id="soundSlider" type="range" min="0" max="10" value="10" orient="vertical">
                 </div>
             </div>
         </div>
     </div>
-    <div id="videoMeta">
-        <h2>Downloads:</h2>
 
+    <div id="" class="mediaInfo" itemscope itemtype="http://schema.org/VideoObject">
+        <h2 itemprop="name">{{ video.Parent.title }}</h2>
+
+        <h3>Published:
+            <time itemprop="uploadDate" datetime="{{ video.Parent.date_published }}">{{ video.Parent.date_published }}</time>
+        </h3>
+        <div class="aboutContainer" itemprop="description">
+            {% autoescape false %}
+                {{ video.Parent.about }}
+            {% endautoescape %}
+        </div>
+    </div>
+
+    <div id="videoMeta" class="mediaInfo">
+        <h2>Downloads:</h2>
         <h3>Files:</h3>
         <ul>
             {% for file in video.files %}
                 {% if file.is_fullscreen %}
                     <li>
-                        <a href="http://assets.localcity.com/video/{{ video.file_name }}.fullscreen.{{ file.extension }}">{{ video.file_name }}.fullscreen.{{ file.extension }}</a><br>
+                        <a href="https://assets.localcity.com/video/{{ video.file_name }}.fullscreen.{{ file.extension }}">{{ video.file_name }}.fullscreen.{{ file.extension }}</a><br>
                         {{ file.resolution }} {{ file.Video_Codec }} {{ file.get_audio_codec_if_present() }} {{ file.human_readable_size() }}
                     </li>
                 {% else %}
                     <li>
-                        <a href="http://assets.localcity.com/video/{{ video.file_name }}.{{ file.extension }}">{{ video.file_name }}.{{ file.extension }}</a>
-                        <br>
-                        {{ file.resolution }}
-                        {{ file.video_codec }}{{ file.get_audio_codec_if_present() }} {{ file.human_readable_size() }}
+                        <a href="https://assets.localcity.com/video/{{ video.file_name }}.{{ file.extension }}">{{ video.file_name }}.{{ file.extension }}</a><br>
+                        {{ file.resolution }} {{ file.video_codec }}{{ file.get_audio_codec_if_present() }} {{ file.human_readable_size() }}
                     </li>
                 {% endif %}
             {% endfor %}
@@ -102,19 +111,6 @@
         {% else %}
             <h3>No tracks</h3>
         {% endif %}
-
-    </div>
-    <div id="inforhs" itemscope itemtype="http://schema.org/VideoObject">
-        <h2 itemprop="name">{{ video.Parent.title }}</h2>
-
-        <h3>Published:
-            <time itemprop="uploadDate" datetime="{{ video.Parent.date_published }}">{{ video.Parent.date_published }}</time>
-        </h3>
-        <div class="aboutContainer" itemprop="description">
-            {% autoescape false %}
-            {{ video.Parent.about }}
-            {% endautoescape %}
-        </div>
     </div>
 </main>
 {% endblock %}
