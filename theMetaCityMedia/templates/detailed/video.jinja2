@@ -8,7 +8,7 @@
 {% block media %}
 <main class="mediaItem video">
     <h1 id="mediaTitle"><a href="/video/{{ video.id }}">{{ video.Parent.title }}</a></h1>
-    <div id="videoContainer">
+    <div id="videoContainer" class="mediaContainer">
         <div id="videoBox">
             <video height="{{ video.get_height() }}"
                    width="{{ video.get_width() }}"
@@ -18,7 +18,7 @@
                    data-endposter="{{ video.has_end_poster_url }}"
                    data-hasfullscreen="{{ video.has_fullscreen }}"
                    preload="auto"
-                   id="detailed_video">
+                   id="detailedVideo">
 
                 {% for source in video.files %}
                     {% if not source.is_fullscreen %}
@@ -32,7 +32,7 @@
                            srclang="{{ track.src_lang }}" kind="{{ track.type }}" label="{{ track.label }}">
                 {% endfor %}
             </video>
-            <div id="videoControls">
+            <div id="videoControls" class="mediaControls">
                 <img id="playPauseButton" class="button video-icon" src="/static/images/smallplay.svg" title="Play" alt="Play/pause video">
                 <span id="currentTimeSpan" class="timeSpan">00:00</span>
                 <input type="range" id="playProgress" min="0" max="1000" value="0">

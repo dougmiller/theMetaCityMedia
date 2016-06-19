@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     var videoContainer = document.getElementById("videoContainer"),
         videoBox = document.getElementById("videoBox"),
-        video = document.getElementById("detailed_video"),
+        video = document.getElementById("detailedVideo"),
         sources = video.getElementsByTagName('source'),
         videoControls = document.getElementById("videoControls"),
         playPauseButton = document.getElementById("playPauseButton"),

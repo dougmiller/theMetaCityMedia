@@ -68,8 +68,8 @@ def show_all_audio():
 @app.route('/audio/<audio_id>')
 def show_specific_audio(audio_id):
     if audio_id.isnumeric():
-        audio_clip = Audio.query.filter_by(id=audio_id).first_or_404()
-        return render_template('detailed/audio.jinja2', audio_clip=audio_clip)
+        audio = Audio.query.filter_by(id=audio_id).first_or_404()
+        return render_template('detailed/audio.jinja2', audio=audio)
     else:
         abort(404)
 

@@ -242,6 +242,9 @@ class AudioFile(db.Model):
     def __repr__(self):
         return '<Audio File %r>' % self.id
 
+    def human_readable_size(self):
+        return format_size_to_human_readable(self.file_size)
+
 
 class AudioTrack(db.Model):
     """

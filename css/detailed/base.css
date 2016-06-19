@@ -5,34 +5,165 @@
 @import "picture.css";
 @import "video.css";
 
+main.mediaItem {
+    max-width: var(--size-media-default);
+    margin: 0 auto;
+    background-color: var(--colour-float);
+}
+
 .mediaItem {
     h1 {font-family: var(--font-heading);}
     h2 {font-family: var(--font-lead);}
     h3 {font-family: var(--font-lead);}
     h4 {font-family: var(--font-lead);}
     h5 {font-family: var(--font-lead);}
-}
 
-#mediaTitle {
-    margin: 0;
-    padding: 1em 0;
-    text-align: center;
+    #mediaTitle {
+        margin: 0;
+        padding: 1em 0;
+        text-align: center;
 
-    a {
-        color: var(--colour-explore);
-        text-decoration: none;
+        a {
+            color: var(--colour-explore);
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: var(--colour-work);
+        }
+
+        a:active {
+            color: var(--colour-rest);
+        }
+
+        a:visited {
+            color: var(--colour-explore);
+        }
     }
 
-    a:hover {
-        color: var(--colour-work);
+    .mediaContainer {
+        max-width: var(--medium-upper-bound);
+        margin: 0 auto;
+        text-align: center;
+
+        .mediaControls {
+            display: flex;
+            align-items: center;
+            padding: 15px 5px;
+            background: var(--colour-deep);
+
+            #playProgress {
+                width: 60%;
+            }
+
+            #playPauseButton {
+                flex: 0 auto;
+            }
+            .timeSpan {
+                font-family: var(--font-bulk);
+                font-size: 1em;
+                margin: 0.2em;
+                flex: 1 auto;
+                text-align: center;
+                color: var(--colour-float);
+            }
+            #fullscreenButton {
+                flex: 0 auto;
+            }
+            #tracksControl {
+                flex: 0 auto;
+                position: relative;
+            }
+            #tracksControl:hover #tracksList {
+                display: block;
+            }
+            #tracksList {
+                display: none;
+                position: absolute;
+                top: 20px;
+                right: 0;
+                list-style-type: none;
+                margin: 0;
+                padding: 0;
+                white-space: nowrap;
+                text-align: left;
+                border: 2px solid var(--colour-work);
+                background: var(--colour-glide);
+
+                li {
+                    padding: 0.4em;
+                    background: var(--colour-float);
+                    margin: 0.6em;
+                    font-family: var(--font-bulk);
+                    border: 1px solid var(--colour-float);
+
+                }
+
+                li.active {
+                    border: 1px solid var(--colour-work);
+                    color: var(--colour-work);
+                }
+
+                li:hover {
+                    cursor: pointer;
+                    border: 1px solid var(--colour-explore);
+                }
+            }
+            #tracksList:hover {
+                display: block;
+            }
+
+            #tracksList.emulateHover {
+                display: block;
+            }
+
+            #noTracksList {
+                display: none;
+            }
+            #soundControl {
+                flex: 0 auto;
+                position: relative;
+            }
+            #soundControl:hover #soundSlider {
+                display: block;
+            }
+            #soundSlider {
+                display: none;
+                position: absolute;
+                top: -100px;
+                right: 5px;
+                -webkit-appearance: slider-vertical;
+                width: 20px;
+                height: 100px;
+                z-index: 100;
+            }
+
+            #soundSlider.emulateHover {
+                display: block;
+            }
+
+            #noSoundSlider {
+                display: none;
+            }
+            .button {
+                margin: 0 5px;
+            }
+        }
     }
 
-    a:active {
-        color: var(--colour-rest);
-    }
+    .mediaInfo {
+    padding: 1em;
 
-    a:visited {
-        color: var(--colour-explore);
+        ul {
+            list-style-type: none;
+            margin: 1em 0;
+            padding: 0;
+
+            li {
+                display: inline;
+                font-family: var(--font-bulk);
+            }
+        }
     }
 }
 
