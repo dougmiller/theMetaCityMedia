@@ -160,6 +160,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     this.classList.add('active');
                     tracksList.classList.remove('emulateHover');
 
+                    // Index 0 is the disable tracks button
                     if (index === 0) {
                         for (var j = 0; j < video.textTracks.length; j++) {
                             video.textTracks[j].mode = "disabled";

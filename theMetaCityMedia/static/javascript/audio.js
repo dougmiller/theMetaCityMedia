@@ -1,4 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
+    "use strict";
+
     var audioContainer = document.getElementById("audioContainer"),
         audioBox = document.getElementById("audioBox"),
         audio = document.getElementById("audioObject"),
@@ -16,7 +18,39 @@ document.addEventListener("DOMContentLoaded", function () {
     playProgress.value = 0;
     audio.controls = false;
 
-    audio.addEventListener("loadstart", function () {});
+    audio.addEventListener("loadstart", function () {
+        if (audio.textTracks.length === 0) {
+            tracksButton.src = "/static/images/notracks.svg";
+            tracksButton.alt = "Icon showing no tracks are available";
+            tracksButton.title = "No tracks available";
+            tracksList.id = "noTracksList";
+        }
+
+        Array.prototype.find.call(audio.textTracks, function(track) {
+            return track.kind === 'chapters';
+        }).mode = "showing";
+
+        for (var j = 0; j < tracksList.children.length; j++) {
+            (function (index) {
+                tracksList.children[index].addEventListener("click", function () {
+                    var chosen = Array.prototype.find.call(audio.textTracks, function(track) {
+                            return track.kind === tracksList.children[index].dataset.kind;
+                        });
+
+                    if (this.classList.contains('active')) {
+                        this.classList.remove('active');
+                        chosen.mode = "disabled";
+                    } else {
+                        this.classList.add('active');
+                        chosen.mode = "showing";
+                    }
+
+                    // close mobile hover after click
+                    tracksList.classList.remove('emulateHover');
+                });
+            }(j));
+        }
+    });
 
     audio.addEventListener("timeupdate", function () {
         currentTimeSpan.innerHTML = rawTimeToFormattedTime(this.currentTime);
@@ -68,6 +102,10 @@ document.addEventListener("DOMContentLoaded", function () {
         playPauseButton.src = "/static/images/smallplay.svg";
         playPauseButton.alt = "Option to play the audio";
         playPauseButton.title = "Play";
+    });
+
+    tracksButton.addEventListener("touchstart", function () {
+        tracksList.classList.add('emulateHover');
     });
 
     function rawTimeToFormattedTime(rawTime) {

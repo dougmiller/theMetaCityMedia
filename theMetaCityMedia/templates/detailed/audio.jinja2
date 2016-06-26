@@ -39,9 +39,8 @@
                 <div id="tracksControl" class="audio-icon">
                     <img id="tracksButton" class="button audio-icon" src="/static/images/tracks.svg" title="Change track options" alt="Button to open track options">
                     <ul id="tracksList">
-                        <li class="active">No track</li>
-                        {% for track in audio.tracks %}
-                            <li>{{ track.get_description() }}</li>
+                        {% for track in audio.tracks_sans_chapters() %}
+                            <li data-kind="{{ track.type }}">{{ track.get_description() }}</li>
                         {% endfor %}
                     </ul>
                 </div>

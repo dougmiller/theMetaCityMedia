@@ -216,6 +216,11 @@ class Audio(db.Model):
                 types.append(f.Mime_Type)
         return types
 
+    def tracks_sans_chapters(self):
+        for x in self.tracks:
+            if not x.type == 'chapters':
+                yield x
+
 
 class AudioFile(db.Model):
     """
@@ -260,8 +265,8 @@ class AudioTrack(db.Model):
     def __repr__(self):
         return '<Audio track: %r>' % self.id
 
-    def get_url(self, audio):
-        return audio.file_name + '.' + self.src_lang + '.' + self.type + '.vtt'
+    def get_url(self):
+        return '.' + self.src_lang + '.' + self.type + '.vtt'
 
     def get_description(self):
         return self.type.title() + ': ' + self.src_lang
