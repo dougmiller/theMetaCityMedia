@@ -2,6 +2,7 @@
 
 {% block title %}{{ audio.Parent.title }}{% endblock %}
 {% block includes %}
+    <script src="/static/javascript/audio.js"></script>
 {% endblock %}
 
 {% block media %}
@@ -15,7 +16,7 @@
                    data-endposter="{{ audio.has_end_poster_url }}"
                    data-hasfullscreen="{{ audio.has_fullscreen }}"
                    preload="auto"
-                   id="detailed_audio">
+                   id="audioObject">
 
                 {% for source in audio.files %}
                     {% if not source.is_fullscreen %}
