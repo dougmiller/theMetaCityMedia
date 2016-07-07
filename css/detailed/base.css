@@ -96,7 +96,6 @@ main.mediaItem {
                     margin: 0.6em;
                     font-family: var(--font-bulk);
                     border: 1px solid var(--colour-float);
-
                 }
 
                 li.active {
@@ -147,6 +146,41 @@ main.mediaItem {
             }
             .button {
                 margin: 0 5px;
+            }
+        }
+
+        #chapterControls {
+            display: flex;
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            white-space: nowrap;
+            text-align: left;
+            border: 2px solid var(--colour-work);
+            background: var(--colour-glide);
+
+            li {
+                text-align: center;
+                flex: 1;
+                padding: 0.4em;
+                background: var(--colour-float);
+                margin: 0.6em;
+                font-family: var(--font-bulk);
+                border: 1px solid var(--colour-float);
+            }
+
+            li.active {
+                border: 1px solid var(--colour-work);
+                color: var(--colour-work);
+            }
+
+            li:hover {
+                cursor: pointer;
+                border: 1px solid var(--colour-explore);
+            }
+
+            li.playing {
+                border: 1px solid var(--colour-work);
             }
         }
     }

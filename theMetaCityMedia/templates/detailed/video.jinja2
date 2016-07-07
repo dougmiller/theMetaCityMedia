@@ -91,13 +91,13 @@
             {% if not video.has_start_poster %}
                 No start poster,
             {% else %}
-                <a href="http://assets.localcity.com/video/startposters/{{ video.file_name }}.startposter.svg">Start poster</a>
+                <a href="https://assets.localcity.com/video/startposters/{{ video.file_name }}.startposter.svg">Start poster</a>
             {% endif %}
 
             {% if not video.has_end_poster %}
                 No end poster
             {% else %}
-                <a href="http://assets.localcity.com/video/endposters/{{ video.file_name }}.endposter.svg">End poster</a>
+                <a href="https://assets.localcity.com/video/endposters/{{ video.file_name }}.endposter.svg">End poster</a>
             {% endif %}
         </h3>
 
@@ -105,7 +105,7 @@
             <h3>Tracks</h3>
             <ul>
                 {% for track in video.tracks %}
-                    <li><a href="http://assets.localcity.com/video/tracks/{{ video.file_name }}{{ track.get_url() }}">{{ track.get_description() }}</a></li>
+                    <li><a href="https://assets.localcity.com/video/tracks/{{ video.file_name }}{{ track.get_url() }}">{{ track.get_description() }}</a></li>
                 {% endfor %}
             </ul>
         {% else %}

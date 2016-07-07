@@ -18,7 +18,46 @@ document.addEventListener("DOMContentLoaded", function () {
     playProgress.value = 0;
     audio.controls = false;
 
-    audio.addEventListener("loadstart", function () {
+    audio.addEventListener("loadstart", function() {
+        var chapters = Array.prototype.find.call(audio.textTracks, function(track) {
+            return track.kind === 'chapters';
+        });
+
+        if (chapters) {
+            chapters.mode = 'showing';
+            var chapterControls = document.createElement('ul');
+            chapterControls.setAttribute("id", "chapterControls");
+
+            var pollForChapters = setInterval(function() {
+                if (chapters.cues.length) {
+                    clearInterval(pollForChapters);
+
+                    for (var k = 0; k < chapters.cues.length; k++) {
+                        (function(index) {
+                            var chapterLink = document.createElement('li');
+                            chapterLink.appendChild(document.createTextNode(chapters.cues[index].text));
+                            chapterControls.appendChild(chapterLink);
+                        })(k);
+                    }
+
+                    audioControls.parentNode.appendChild(chapterControls);
+
+                    chapters.addEventListener("cuechange", function(cue) {
+                        // ID's are 'numerical'
+                        var chapterButtons = Array.from(chapterControls.children);
+                        chapterButtons.forEach(function(child) {
+                            child.classList.remove('playing');
+                        });
+                        
+                        chapterControls.childNodes[cue.target.activeCues[0].id - 1].classList.add('playing');
+                    }, false);
+                }
+            }, 100);
+
+        }
+    });
+
+    audio.addEventListener("loadstart", function() {
         if (audio.textTracks.length === 0) {
             tracksButton.src = "/static/images/notracks.svg";
             tracksButton.alt = "Icon showing no tracks are available";
@@ -26,16 +65,12 @@ document.addEventListener("DOMContentLoaded", function () {
             tracksList.id = "noTracksList";
         }
 
-        Array.prototype.find.call(audio.textTracks, function(track) {
-            return track.kind === 'chapters';
-        }).mode = "showing";
-
         for (var j = 0; j < tracksList.children.length; j++) {
             (function (index) {
                 tracksList.children[index].addEventListener("click", function () {
                     var chosen = Array.prototype.find.call(audio.textTracks, function(track) {
-                            return track.kind === tracksList.children[index].dataset.kind;
-                        });
+                        return track.kind === tracksList.children[index].dataset.kind;
+                    });
 
                     if (this.classList.contains('active')) {
                         this.classList.remove('active');

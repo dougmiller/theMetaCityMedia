@@ -67,6 +67,15 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
 
+        var chapters = Array.prototype.find.call(video.textTracks, function(track) {
+            return track.kind === 'subtitles';
+        });
+
+        if (chapters) {
+            chapters.mode = 'showing';
+            console.log(chapters.cues);
+        }
+
         if (!canPlayVid) {
             getPoster("generic", 'error').then(function(errorPoster) {
                 errorPoster.setAttribute("class", "videoPoster");

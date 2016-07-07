@@ -16,17 +16,18 @@
                    data-endposter="{{ audio.has_end_poster_url }}"
                    data-hasfullscreen="{{ audio.has_fullscreen }}"
                    preload="auto"
+                   crossorigin="anonymous"
                    id="audioObject">
 
                 {% for source in audio.files %}
                     {% if not source.is_fullscreen %}
-                        <source src="https://assets.themetacity.com/audio/{{ audio.file_name }}.{{ source.extension }}"
-                            type='audio/{{ source.mime_type }}; codecs="{{ source.audio_codec }}{% if source.audio_codec != 'nill' %},{{ source.audio_codec }}{% endif %}"' />
+                        <source src="http://assets.localcity.com/audio/{{ audio.file_name }}.{{ source.extension }}"
+                            type='audio/{{ source.mime_type }}; codecs="{{ source.audio_codec }}"' />
                     {% endif %}
                 {% endfor %}
 
                 {% for track in audio.tracks %}
-                    <track src="https://assets.themetacity.com/audio/tracks/{{ audio.file_name }}.{{ track.src_lang }}.{{ track.type }}.vtt"
+                    <track src="http://assets.localcity.com/audio/tracks/{{ audio.file_name }}.{{ track.src_lang }}.{{ track.type }}.vtt"
                            srclang="{{ track.src_lang }}" kind="{{ track.type }}" label="{{ track.label }}">
                 {% endfor %}
             </audio>
@@ -71,7 +72,7 @@
         <ul>
             {% for file in audio.files %}
                     <li>
-                        <a href="https://assets.localcity.com/audio/{{ audio.file_name }}.{{ file.extension }}">{{ audio.file_name }}.{{ file.extension }}</a><br>
+                        <a href="http://assets.localcity.com/audio/{{ audio.file_name }}.{{ file.extension }}">{{ audio.file_name }}.{{ file.extension }}</a><br>
                         {{ file.resolution }} {{ file.audio_codec }} {{ file.human_readable_size() }}
                     </li>
             {% endfor %}

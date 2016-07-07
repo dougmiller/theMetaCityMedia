@@ -236,7 +236,7 @@ class AudioFile(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     parent_audio = db.Column(db.Integer, db.ForeignKey('audio.id'))
     audio_codec = db.Column(db.Enum('vorbis', 'mp3', 'wav', name='audio_audio_codec'))
-    mime_type = db.Column(db.Enum('ogg', 'webm', 'mp3', 'wav', name='audio_mime_type'))
+    mime_type = db.Column(db.Enum('ogg', 'webm', 'mpeg', 'wav', name='audio_mime_type'))
     extension = db.Column(db.Enum('ogg', 'mp3', 'wav', name='audio_file_extension'))
     bit_rate = db.Column(db.Integer())
     bit_depth = db.Column(db.Integer())
