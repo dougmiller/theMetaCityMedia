@@ -42,11 +42,8 @@ elif [ $1 == "production" ]; then
   echo "Finished copying files"
   echo "Changing strings to production values"
   sed -i '/admin/d' /media/tmcmedia/theMetaCityMedia/__init__.py
-  cd /media/tmcmedia/theMetaCityMedia/templates
 
-  for i in *.* ; do
-    sed -i 's/http:\/\/assets.localcity.com/https:\/\/assets.themetacity.com/g' ${i}
-  done
+  find /media/tmcmedia/theMetaCityMedia/templates -type f -print0 | xargs -0 sed -i 's/http:\/\/assets.localcity.com/https:\/\/assets.themetacity.com/g'
 
   echo "Finished deployment"
 fi

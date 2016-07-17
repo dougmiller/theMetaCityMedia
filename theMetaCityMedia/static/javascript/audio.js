@@ -36,28 +36,29 @@ document.addEventListener("DOMContentLoaded", function () {
                         (function(index) {
                             var chapterLink = document.createElement('li');
                             chapterLink.appendChild(document.createTextNode(chapters.cues[index].text));
+                            chapterLink.addEventListener("click", function() {
+                               audio.currentTime = chapters.cues[index].startTime;
+                            });
+
+                            chapters.cues[index].addEventListener('enter', function() {
+                                console.log("Entered cue: ", index);
+                               chapterLink.classList.add('playing');
+                            });
+
+                            chapters.cues[index].addEventListener('exit', function() {
+                                console.log("Exited cue: ", index);
+                                chapterLink.classList.remove('playing');
+                            });
+
                             chapterControls.appendChild(chapterLink);
                         })(k);
                     }
 
                     audioControls.parentNode.appendChild(chapterControls);
-
-                    chapters.addEventListener("cuechange", function(cue) {
-                        // ID's are 'numerical'
-                        var chapterButtons = Array.from(chapterControls.children);
-                        chapterButtons.forEach(function(child) {
-                            child.classList.remove('playing');
-                        });
-                        
-                        chapterControls.childNodes[cue.target.activeCues[0].id - 1].classList.add('playing');
-                    }, false);
                 }
             }, 100);
-
         }
-    });
 
-    audio.addEventListener("loadstart", function() {
         if (audio.textTracks.length === 0) {
             tracksButton.src = "/static/images/notracks.svg";
             tracksButton.alt = "Icon showing no tracks are available";
@@ -153,5 +154,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function leftZeroPad(rawString, paddingValue) {
         return (paddingValue + rawString).slice(-paddingValue.length);
+    }
+
+    /**
+     * Finds and returns the position of the source (0 indexed) in the sources object
+     * @returns {number}
+     */
+    function getCurretlyPlayingSourceIndex() {
+        return [].slice.call(sources).map(function (source) {
+            return source.src;
+        }).indexOf(audio.currentSrc);
     }
 });

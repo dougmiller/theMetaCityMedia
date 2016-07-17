@@ -46,7 +46,7 @@
                     </ul>
                 </div>
                 <div id="soundControl">
-                    <img id="soundButton" class="button" src="/static/images/sound-0.svg" title="No sound availiable" alt="Icon showing no sound is available">
+                    <img id="soundButton" class="button" src="/static/images/sound-3.svg" title="Max Volume" alt="Maximum volume selected">
                     <input id="soundSlider" type="range" min="0" max="10" value="10" orient="vertical">
                 </div>
             </div>
@@ -71,10 +71,10 @@
         <h3>Files:</h3>
         <ul>
             {% for file in audio.files %}
-                    <li>
-                        <a href="http://assets.localcity.com/audio/{{ audio.file_name }}.{{ file.extension }}">{{ audio.file_name }}.{{ file.extension }}</a><br>
-                        {{ file.resolution }} {{ file.audio_codec }} {{ file.human_readable_size() }}
-                    </li>
+                <li>
+                    <a href="http://assets.localcity.com/audio/{{ audio.file_name }}.{{ file.extension }}">{{ audio.file_name }}.{{ file.extension }}</a><br>
+                    {{ file.resolution }} {{ file.audio_codec }} {{ file.human_readable_size() }}
+                </li>
             {% endfor %}
         </ul>
 

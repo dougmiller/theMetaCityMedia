@@ -17,4 +17,5 @@ echo "Creating schema"
 $prod_psql -c "CREATE SCHEMA public;"
 echo "Pushing schema to prod"
 $prod_psql -f /tmp/tmcmedia_dev_schema_and_objects
+$prod_psql -c "GRANT SELECT ON ALL TABLES IN SCHEMA public TO tmcmediaselector;"
 echo "Finished!"
