@@ -30,6 +30,10 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     video.addEventListener("ended", function () {
+        playPauseButton.src = "/static/images/smallplay.svg";
+        playPauseButton.alt = "Option to play the video";
+        playPauseButton.title = "Play";
+
         var endPosterRef = hasEndPoster === "True" ? videoFileName : 'generic';
         getPoster(endPosterRef, 'end').then(function(endPoster) {
             endPoster.setAttribute("class", "videoPoster");
