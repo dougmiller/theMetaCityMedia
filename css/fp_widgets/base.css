@@ -20,10 +20,14 @@
         border: var(--colour-work) 1px solid;
         box-shadow: 10px 10px 15px 0px var(--colour-forgotten);
         break-inside: avoid;
+        column-break-inside: avoid;
+        page-break-inside: avoid;
         margin: 1em;
+        display: inline-block;
 
         img {
             height: auto;
+            min-height: 5em;
             width: 100%;
         }
 

@@ -35,3 +35,10 @@ footer {
         font-family: var(--font-bulk);
     }
 }
+
+footer.frontPage {
+    max-width: inherit;
+    margin: 0;
+    padding: 0.7em;
+    font-size: 1em;
+}

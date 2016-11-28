@@ -1,63 +1,26 @@
 document.addEventListener("DOMContentLoaded", function () {
     "use strict";
 
-    var audioContainer = document.getElementById("audioContainer"),
-        audioBox = document.getElementById("audioBox"),
-        audio = document.getElementById("audioObject"),
-        sources = audio.getElementsByTagName('source'),
+    var audio = document.getElementById("audioObject"),
         audioControls = document.getElementById("audioControls"),
         playPauseButton = document.getElementById("playPauseButton"),
-        fullscreenButton = document.getElementById("fullscreenButton"),
         currentTimeSpan = document.getElementById("currentTimeSpan"),
         playProgress = document.getElementById("playProgress"),
         soundButton = document.getElementById("soundButton"),
         soundSlider = document.getElementById("soundSlider"),
         tracksButton = document.getElementById("tracksButton"),
-        tracksList = document.getElementById("tracksList");
+        tracksList = document.getElementById("tracksList"),
+        soundState = {
+            hideSlderTimout: undefined,
+            prevButtonIcon: soundButton.src,
+            hideSlderTimoutTime: 3000
+        };
 
     playProgress.value = 0;
     audio.controls = false;
 
-    audio.addEventListener("loadstart", function() {
-        var chapters = Array.prototype.find.call(audio.textTracks, function(track) {
-            return track.kind === 'chapters';
-        });
-
-        if (chapters) {
-            chapters.mode = 'showing';
-            var chapterControls = document.createElement('ul');
-            chapterControls.setAttribute("id", "chapterControls");
-
-            var pollForChapters = setInterval(function() {
-                if (chapters.cues.length) {
-                    clearInterval(pollForChapters);
-
-                    for (var k = 0; k < chapters.cues.length; k++) {
-                        (function(index) {
-                            var chapterLink = document.createElement('li');
-                            chapterLink.appendChild(document.createTextNode(chapters.cues[index].text));
-                            chapterLink.addEventListener("click", function() {
-                               audio.currentTime = chapters.cues[index].startTime;
-                            });
-
-                            chapters.cues[index].addEventListener('enter', function() {
-                                console.log("Entered cue: ", index);
-                               chapterLink.classList.add('playing');
-                            });
-
-                            chapters.cues[index].addEventListener('exit', function() {
-                                console.log("Exited cue: ", index);
-                                chapterLink.classList.remove('playing');
-                            });
-
-                            chapterControls.appendChild(chapterLink);
-                        })(k);
-                    }
-
-                    audioControls.parentNode.appendChild(chapterControls);
-                }
-            }, 100);
-        }
+    audio.addEventListener("loadeddata", function () {
+        var chapterTracks, chapterControls, pollForChapterCues;
 
         if (audio.textTracks.length === 0) {
             tracksButton.src = "/static/images/notracks.svg";
@@ -66,26 +29,66 @@ document.addEventListener("DOMContentLoaded", function () {
             tracksList.id = "noTracksList";
         }
 
-        for (var j = 0; j < tracksList.children.length; j++) {
-            (function (index) {
-                tracksList.children[index].addEventListener("click", function () {
-                    var chosen = Array.prototype.find.call(audio.textTracks, function(track) {
-                        return track.kind === tracksList.children[index].dataset.kind;
+        chapterTracks = Array.prototype.filter.call(audio.textTracks, function (track) {
+            return track.kind === "chapters";
+        });
+
+        chapterTracks.forEach(function(chapterTrack) {
+            pollForChapterCues = setTimeout(function () {
+                if (chapterTrack.cues != null) {
+                    clearInterval(pollForChapterCues);
+
+                    chapterControls = document.createElement("ul");
+                    chapterTracks.mode = "showing";
+                    chapterControls.setAttribute("id", "chapterControls");
+
+                    chapterTrack.addEventListener("cuechange", function () {
+                        console.log("Cue Changed");
                     });
 
-                    if (this.classList.contains('active')) {
-                        this.classList.remove('active');
-                        chosen.mode = "disabled";
-                    } else {
-                        this.classList.add('active');
-                        chosen.mode = "showing";
-                    }
+                    Array.from(chapterTrack.cues).forEach(function (cue) {
+                        var chapterLink = document.createElement("li");
+                        chapterLink.appendChild(document.createTextNode(cue.text));
+                        console.log(chapterTrack.cues);
 
-                    // close mobile hover after click
-                    tracksList.classList.remove('emulateHover');
+                        chapterLink.addEventListener("click", function () {
+                            chapterLink.classList.add("playing");
+                        });
+
+                        cue.addEventListener("enter", function () {
+                            chapterLink.classList.add("playing");
+                        });
+
+                        cue.addEventListener("exit", function () {
+                            chapterLink.classList.remove("playing");
+                        });
+
+                        chapterControls.appendChild(chapterLink);
+                    });
+                    audioControls.parentNode.appendChild(chapterControls);
+                }
+            }, 1000);
+        });
+
+
+        Array.from(tracksList.children).forEach(function (tracksListItem) {
+            tracksListItem.addEventListener("click", function () {
+                var chosen = Array.prototype.find.call(audio.textTracks, function (audioTrack) {
+                    return audioTrack.kind === tracksListItem.dataset.kind;
                 });
-            }(j));
-        }
+
+                if (tracksListItem.classList.contains("active")) {
+                    tracksListItem.classList.remove("active");
+                    chosen.mode = "disabled";
+                } else {
+                    tracksListItem.classList.add("active");
+                    chosen.mode = "showing";
+                }
+
+                // close mobile hover after click
+                tracksList.classList.remove("emulateHover");
+            });
+        });
     });
 
     audio.addEventListener("timeupdate", function () {
@@ -141,7 +144,67 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     tracksButton.addEventListener("touchstart", function () {
-        tracksList.classList.add('emulateHover');
+        tracksList.classList.add("emulateHover");
+    });
+
+    soundButton.addEventListener("click", function () {
+        if (audio.muted === false) {
+            audio.muted = true;
+            soundState.prevButtonIcon = soundButton.src;
+            soundButton.src = "/static/images/sound-m.svg";
+            soundButton.alt = "Icon showing no sound is muted";
+            soundButton.title = "Sound muted.";
+            soundSlider.id = "noSoundSlider";
+        } else {
+            audio.muted = false;
+            soundButton.src = soundState.prevButtonIcon;
+            soundButton.alt = "Icon showing state of sound, currently: " + audio.volume * 100 + "%";
+            soundButton.title = "Change sound options";
+            soundSlider.id = "soundSlider";
+        }
+    });
+
+    soundSlider.addEventListener("touchend", function () {
+        soundState.hideSlderTimout = setTimeout(function(){
+            soundSlider.classList.remove('emulateHover');
+        }, soundState.hideSlderTimoutTime);
+    });
+
+    soundSlider.addEventListener("touchstart", function () {
+        clearTimeout(soundState.hideSlderTimout);
+    });
+
+    soundSlider.addEventListener("input", function () {
+        audio.volume = (this.value / this.max);
+
+        soundButton.alt = "Button to change sound options";
+        soundButton.title = "Change sound options";
+
+        if (audio.volume < 1 && audio.volume >= 0.85) {
+             soundButton.src = "/static/images/sound-3.svg";
+        }
+
+        if (audio.volume < 0.85 && audio.volume >= 0.33) {
+             soundButton.src = "/static/images/sound-2.svg";
+        }
+
+        if (audio.volume < 0.33 && audio.volume > 0) {
+             soundButton.src = "/static/images/sound-1.svg";
+        }
+
+        if (audio.volume === 0) {
+            soundButton.src = "/static/images/sound-0.svg";
+            soundButton.alt = "Icon showing no sound level is at 0";
+            soundButton.title = "Sound at 0.";
+        }
+    });
+
+    soundButton.addEventListener("touchend", function (event) {
+        event.stopImmediatePropagation(); // touchend also triggers click so need to stop that from happening and muting the track
+        soundState.hideSlderTimout = setTimeout(function(){
+            soundSlider.classList.remove('emulateHover');
+        }, soundState.hideSlderTimoutTime);
+        soundSlider.classList.add('emulateHover');
     });
 
     function rawTimeToFormattedTime(rawTime) {
@@ -154,15 +217,5 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function leftZeroPad(rawString, paddingValue) {
         return (paddingValue + rawString).slice(-paddingValue.length);
-    }
-
-    /**
-     * Finds and returns the position of the source (0 indexed) in the sources object
-     * @returns {number}
-     */
-    function getCurretlyPlayingSourceIndex() {
-        return [].slice.call(sources).map(function (source) {
-            return source.src;
-        }).indexOf(audio.currentSrc);
     }
 });
