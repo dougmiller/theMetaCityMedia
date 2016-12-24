@@ -18,7 +18,7 @@
     .mediaEntry {
         background: var(--colour-float);
         border: var(--colour-work) 1px solid;
-        box-shadow: 10px 10px 15px 0px var(--colour-forgotten);
+        box-shadow: 10px 10px 15px 0 var(--colour-forgotten);
         break-inside: avoid;
         column-break-inside: avoid;
         page-break-inside: avoid;
