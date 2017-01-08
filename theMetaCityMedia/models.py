@@ -1,4 +1,6 @@
-from theMetaCityMedia import db
+from flask.ext.sqlalchemy import SQLAlchemy
+
+db = SQLAlchemy()
 
 
 def format_size_to_human_readable(size):

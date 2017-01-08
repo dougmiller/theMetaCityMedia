@@ -12,7 +12,7 @@ var postcss_autoprefixer = require('autoprefixer');
 
 var options = {
     from: 'css/style.css',
-    to: 'theMetaCityMedia/static/css/style.css',
+    to: 'theMetaCityMedia/media/static/css/style.css',
     map: { inline: true }
 };
 
@@ -29,7 +29,7 @@ postcss([
     ])
     .process(css, options)
     .then(function (result) {
-        fs.writeFileSync('theMetaCityMedia/static/css/style.css', result.css);
+        fs.writeFileSync('theMetaCityMedia/media/static/css/style.css', result.css);
         console.log("CSS finished");
     }, function(error) {
         console.log(error);

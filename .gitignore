@@ -1,5 +1,5 @@
 flask/
 configdetails.py
 publisher.config
-theMetaCityMedia/static/css/*
+theMetaCityMedia/media/static/css/*
 node_modules/
