@@ -1,10 +1,10 @@
-from flask import Response, render_template, abort
+from flask import Response
 import json
-from theMetaCityMedia.models import db
 from theMetaCityMedia.models import Video, Audio, Code, Picture, MediaItem, Tags
 from . import api_1_0
 
 from sqlalchemy.ext.declarative import DeclarativeMeta
+from sqlalchemy.sql.expression import func
 
 
 class AlchemyEncoder(json.JSONEncoder):
@@ -38,9 +38,12 @@ def show_welcome_message():
     return resp
 
 
-@api_1_0.route('media_end_link')
-def audio():
-    data = {'a': 2, 'b': 3}
+@api_1_0.route('help')
+def show_help_message():
+    data = {
+        'message': 'Thanks for subscribing to cat facts.',
+    }
+
     resp = Response(
         response=json.dumps(data),
         status=200,
@@ -48,12 +51,19 @@ def audio():
     return resp
 
 
+@api_1_0.route('video_end_follow_on/<current_video_id>')
 @api_1_0.route('video_end_follow_on')
-def video_end_follow_on():
-    media = Video.query.all()
-    media.sort(key=lambda media_entry: media_entry.parent_id)
-    media = media[::-1]
+def video_end_follow_on(current_video_id=None):
+    videos_query = Video.query.order_by(func.random()).limit(2).all()
+    videos = []
+    for video in videos_query:
+        video_data = {
+            'title': video.Parent.title,
+            'about': video.Parent.about,
+            'postcard': video.Parent.Postcard.url,
+        }
+        videos.append(video_data)
     return Response(
-        response=json.dumps(media, cls=AlchemyEncoder),
+        response=json.dumps(videos, cls=AlchemyEncoder),
         status=200,
         mimetype="application/json")
