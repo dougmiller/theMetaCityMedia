@@ -365,7 +365,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function getPoster(filename, type) {
        return new Promise(function (resolve, reject) {
             var request = new XMLHttpRequest();
-            request.open('GET', 'https://assets.themetacity.com/video/' + type + 'posters/' + filename + '.' + type + 'poster.svg', true);
+            request.open('GET', 'http://assets.localcity.com/video/' + type + 'posters/' + filename + '.' + type + 'poster.svg', true);
 
             request.onload = function () {
                 if (this.status >= 200 && this.status < 400) {

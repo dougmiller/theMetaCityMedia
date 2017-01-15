@@ -1,6 +1,6 @@
 {% macro fp_audio(audio) -%}
 <article class="mediaEntry audio">
-    <a href="/audio/{{ audio.id }}"><img src="https://assets.themetacity.com/audio/postcards/{{ audio.Parent.Postcard.url }}" title="{{ audio.Parent.Postcard.title }}" alt="{{ audio.Parent.Postcard.alt_text }}"></a>
+    <a href="/audio/{{ audio.id }}"><img src="http://assets.localcity.com/audio/postcards/{{ audio.Parent.Postcard.url }}" title="{{ audio.Parent.Postcard.title }}" alt="{{ audio.Parent.Postcard.alt_text }}"></a>
     <h1><a href="/audio/{{ audio.id }}">{{ audio.Parent.title }}</a></h1>
     <div class="metaEntry">
         <h2 class="published">{{ audio.Parent.date_published }}</h2>

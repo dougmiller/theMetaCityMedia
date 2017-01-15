@@ -119,13 +119,8 @@ document.addEventListener("DOMContentLoaded", function () {
         audio.playPause();
     });
 
-    audio.addEventListener("timeupdate", function () {
-        currentTimeSpan.innerHTML = rawTimeToFormattedTime(this.currentTime);
-        // Setting this value does not trigger the 'change' event
-        playProgress.value = (this.currentTime / this.duration) * 1000;
-    });
-
     playProgress.addEventListener("change", function () {
+        console.log(this.value, audio.currentTime);
         audio.currentTime = audio.duration * (this.value / 1000);
     });
 
@@ -141,6 +136,25 @@ document.addEventListener("DOMContentLoaded", function () {
         playPauseButton.src = "/static/images/smallplay.svg";
         playPauseButton.alt = "Option to play the audio";
         playPauseButton.title = "Play";
+
+        var request = new XMLHttpRequest();
+        request.open('GET', 'http://api.localcity.com/v/1/0/help', true);
+
+        request.onload = function () {
+            console.log("asd");
+
+            if (this.status >= 200 && this.status < 400) {
+                //resolve(document.importNode(this.responseXML.firstChild, true));
+            } else {
+                //reject({status: this.status, statusText: this.statusText});
+            }
+        };
+
+        request.onerror = function () {
+            console.log(this);
+            //reject({status: this.status, statusText: this.statusText});
+        };
+        request.send();
     });
 
     tracksButton.addEventListener("touchstart", function () {

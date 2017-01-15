@@ -22,13 +22,13 @@
 
                 {% for source in video.files %}
                     {% if not source.is_fullscreen %}
-                        <source src="https://assets.themetacity.com/video/{{ video.file_name }}.{{ source.extension }}"
+                        <source src="http://assets.localcity.com/video/{{ video.file_name }}.{{ source.extension }}"
                             type='video/{{ source.mime_type }}; codecs="{{ source.video_codec }}{% if source.audio_codec != 'nill' %},{{ source.audio_codec }}{% endif %}"' />
                     {% endif %}
                 {% endfor %}
 
                 {% for track in video.tracks %}
-                    <track src="https://assets.themetacity.com/video/tracks/{{ video.file_name }}.{{ track.src_lang }}.{{ track.type }}.vtt"
+                    <track src="http://assets.localcity.com/video/tracks/{{ video.file_name }}.{{ track.src_lang }}.{{ track.type }}.vtt"
                            srclang="{{ track.src_lang }}" kind="{{ track.type }}" label="{{ track.label }}">
                 {% endfor %}
             </video>
@@ -75,12 +75,12 @@
             {% for file in video.files %}
                 {% if file.is_fullscreen %}
                     <li>
-                        <a href="https://assets.localcity.com/video/{{ video.file_name }}.fullscreen.{{ file.extension }}">{{ video.file_name }}.fullscreen.{{ file.extension }}</a><br>
+                        <a href="http://assets.localcity.com/video/{{ video.file_name }}.fullscreen.{{ file.extension }}">{{ video.file_name }}.fullscreen.{{ file.extension }}</a><br>
                         {{ file.resolution }} {{ file.Video_Codec }} {{ file.get_audio_codec_if_present() }} {{ file.human_readable_size() }}
                     </li>
                 {% else %}
                     <li>
-                        <a href="https://assets.localcity.com/video/{{ video.file_name }}.{{ file.extension }}">{{ video.file_name }}.{{ file.extension }}</a><br>
+                        <a href="http://assets.localcity.com/video/{{ video.file_name }}.{{ file.extension }}">{{ video.file_name }}.{{ file.extension }}</a><br>
                         {{ file.resolution }} {{ file.video_codec }}{{ file.get_audio_codec_if_present() }} {{ file.human_readable_size() }}
                     </li>
                 {% endif %}
@@ -91,13 +91,13 @@
             {% if not video.has_start_poster %}
                 No start poster,
             {% else %}
-                <a href="https://assets.localcity.com/video/startposters/{{ video.file_name }}.startposter.svg">Start poster</a>
+                <a href="http://assets.localcity.com/video/startposters/{{ video.file_name }}.startposter.svg">Start poster</a>
             {% endif %}
 
             {% if not video.has_end_poster %}
                 No end poster
             {% else %}
-                <a href="https://assets.localcity.com/video/endposters/{{ video.file_name }}.endposter.svg">End poster</a>
+                <a href="http://assets.localcity.com/video/endposters/{{ video.file_name }}.endposter.svg">End poster</a>
             {% endif %}
         </h3>
 
@@ -105,7 +105,7 @@
             <h3>Tracks</h3>
             <ul>
                 {% for track in video.tracks %}
-                    <li><a href="https://assets.localcity.com/video/tracks/{{ video.file_name }}{{ track.get_url() }}">{{ track.get_description() }}</a></li>
+                    <li><a href="http://assets.localcity.com/video/tracks/{{ video.file_name }}{{ track.get_url() }}">{{ track.get_description() }}</a></li>
                 {% endfor %}
             </ul>
         {% else %}

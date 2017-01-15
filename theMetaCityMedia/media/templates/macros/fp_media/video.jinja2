@@ -1,6 +1,6 @@
 {% macro fp_video(video) -%}
 <article class="mediaEntry video">
-    <a href="/video/{{ video.id }}"><img src="https://assets.themetacity.com/video/postcards/{{ video.Parent.Postcard.url }}" title="{{ video.Parent.Postcard.title }}" alt="{{ video.Parent.Postcard.alt_text }}"></a>
+    <a href="/video/{{ video.id }}"><img src="http://assets.localcity.com/video/postcards/{{ video.Parent.Postcard.url }}" title="{{ video.Parent.Postcard.title }}" alt="{{ video.Parent.Postcard.alt_text }}"></a>
     <h1><a href="/video/{{ video.id }}">{{ video.Parent.title }}</a></h1>
     <div class="metaEntry">
         <h2 class="published">{{ video.Parent.date_published }}</h2>

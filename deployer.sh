@@ -24,26 +24,34 @@ if [ $1 == "development" ]; then
   echo "Starting to copy files"
 
   cd theMetaCityMedia
-  sudo cp -R * /srv/http/tmcmedia/theMetaCityMedia
-
+  sudo cp -R * /srv/http/media.localcity.com/theMetaCityMedia
   echo "Finished copying files"
+
+  echo "Mogrifying paths"
+  find /srv/http/media.localcity.com/theMetaCityMedia/templates -type f -print0 | xargs -0 sed -i 's/http:\/\/assets.localcity.com:5000/http:\/\/assets.localcity.com/g'
+  find /srv/http/media.localcity.com/theMetaCityMedia/static -type f -print0 | xargs -0 sed -i 's/http:\/\/api.localcity.com:5000/http:\/\/api.localcity.com/g'
+  echo "Fnished mogrifying paths"
+
   echo "Finished deploying"
 elif [ $1 == "production" ]; then
-  echo "Checking if mount available"
-  #if mountpoint -q /media/tmcmedia ; then
-  #  echo "tmcMedia is not mounted. Exiting."
-  #  exit 3
-  #fi
-
   echo "Starting deployment to production environment"
-  echo "Starting to copy files"
-  cd theMetaCityMedia
-  cp -R * /media/tmcmedia/theMetaCityMedia
-  echo "Finished copying files"
-  echo "Changing strings to production values"
-  sed -i '/admin/d' /media/tmcmedia/theMetaCityMedia/__init__.py
 
-  find /media/tmcmedia/theMetaCityMedia/templates -type f -print0 | xargs -0 sed -i 's/http:\/\/assets.localcity.com/https:\/\/assets.themetacity.com/g'
+  echo "Checking if mount available"
+  if ! mountpoint -q /media/media.themetacity.com ; then
+    echo "media.themetacity.com is not mounted. Requesting mount..."
+    tmcdeployer mount media
+  fi
+
+  echo "Starting to copy files from staging server"
+  cd /srv/http/media.themetacity.com/theMetaCityMedia
+  cp -R * /media/media.themetacity.com/theMetaCityMedia
+  echo "Finished copying files"
+
+  echo "Changing strings to production values"
+  sed -i '/admin/d' /media/media.themetacity.com/theMetaCityMedia/__init__.py
+
+  find /media/media.themetacity.com/theMetaCityMedia/templates -type f -print0 | xargs -0 sed -i 's/http:\/\/assets.localcity.com/https:\/\/assets.themetacity.com/g'
+  find /media/media.themetacity.com/theMetaCityMedia/templates -type f -print0 | xargs -0 sed -i 's/http:\/\/api.localcity.com/https:\/\/api.themetacity.com/g'
 
   echo "Finished deployment"
 fi
