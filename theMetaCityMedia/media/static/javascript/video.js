@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         var endPosterRef = hasEndPoster === "True" ? videoFileName : 'generic';
         getPoster(endPosterRef, 'end').then(function(endPoster) {
-            endPoster.setAttribute("class", "videoPoster");
+            endPoster.setAttribute("class", "mediaPoster");
             endPoster.setAttribute("height", video.getAttribute("height"));
             endPoster.setAttribute("width", video.getAttribute("width"));
             videoBox.appendChild(endPoster);
@@ -52,10 +52,9 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     video.addEventListener("play", function () {
-        var posters = videoContainer.getElementsByClassName("videoPoster");
-
-        for (var i = 0; i < posters.length; i++) {
-            videoBox.removeChild(posters[i]);
+        var posters = videoContainer.getElementsByClassName("mediaPoster");
+        for (var poster of posters) {
+            poster.parentNode.removeChild(poster);
         }
     });
 
@@ -93,7 +92,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (canPlayVid && !fullscreenFlag) {
                 var startPosterRef = hasStartPoster === "True" ? videoFileName : 'generic';
                 getPoster(startPosterRef, 'start').then(function (startPoster) {
-                    startPoster.setAttribute("class", "videoPoster");
+                    startPoster.setAttribute("class", "mediaPoster");
                     startPoster.setAttribute("height", video.getAttribute("height"));
                     startPoster.setAttribute("width", video.getAttribute("width"));
                     videoBox.appendChild(startPoster);
@@ -292,7 +291,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     soundButton.addEventListener("touchend", function (event) {
-        console.log("sound button touchended");
         event.stopImmediatePropagation(); // Stop click event from happening and muting the track
         hideSlderTimout = setTimeout(function(){
             soundSlider.classList.remove('emulateHover');

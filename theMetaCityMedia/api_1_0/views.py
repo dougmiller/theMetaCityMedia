@@ -4,7 +4,7 @@ from theMetaCityMedia.models import Video, Audio, Code, Picture, MediaItem, Tags
 from . import api_1_0
 
 from sqlalchemy.ext.declarative import DeclarativeMeta
-from sqlalchemy.sql.expression import func
+from  sqlalchemy.sql.expression import func
 
 
 class AlchemyEncoder(json.JSONEncoder):
@@ -58,12 +58,19 @@ def video_end_follow_on(current_video_id=None):
     videos = []
     for video in videos_query:
         video_data = {
+            'id': video.Parent.id,
             'title': video.Parent.title,
-            'about': video.Parent.about,
-            'postcard': video.Parent.Postcard.url,
+            'file_name': video.file_name,
+            'running_time': video.running_time,
         }
         videos.append(video_data)
     return Response(
         response=json.dumps(videos, cls=AlchemyEncoder),
         status=200,
         mimetype="application/json")
+
+
+@api_1_0.after_request
+def apply_caching(response):
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    return response

@@ -46,21 +46,29 @@ main.mediaItem {
         margin: 0 auto;
         text-align: center;
 
+        .mediaBox {
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .mediaPoster {
+            margin: 0 auto;
+        }
+
         .mediaMeta {
             align-items: center;
             padding: 15px 5px;
             background: var(--colour-deep);
             color: var(--colour-float);
 
-            .timeSpan {
+            #timeBox {
+                font-size: 1.5em;
                 font-family: var(--font-bulk);
-                font-size: 1em;
-                margin: 0.2em;
                 text-align: center;
             }
 
             #playProgress {
-                width: 60%;
+                width: 100%;
             }
 
             .mediaControls {
@@ -78,31 +86,35 @@ main.mediaItem {
                 #tracksControl {
                     display: flex;
                     justify-content: center;
+                    position: relative;
                 }
 
                 #tracksControl:hover #tracksList {
-                    display: block;
+                    visibility: visible;
+                    transition-delay: 0s;
                 }
 
                 #tracksList {
-                    display: none;
-                    position: absolute;
-                    top: 20px;
-                    right: 0;
+                    background: var(--colour-glide);
+                    border: 2px solid var(--colour-work);
+                    visibility: hidden;
+                    left: 0;
                     list-style-type: none;
                     margin: 0;
                     padding: 0;
-                    white-space: nowrap;
+                    position: absolute;
                     text-align: left;
-                    border: 2px solid var(--colour-work);
-                    background: var(--colour-glide);
+                    top: 36px;
+                    white-space: nowrap;
+                    transition-delay: 1s;
 
                     li {
-                        padding: 0.4em;
                         background: var(--colour-float);
-                        margin: 0.6em;
-                        font-family: var(--font-bulk);
                         border: 1px solid var(--colour-float);
+                        color: var(--colour-explore);
+                        font-family: var(--font-bulk);
+                        margin: 0.6em;
+                        padding: 0.4em;
                     }
 
                     li.active {
@@ -111,13 +123,13 @@ main.mediaItem {
                     }
 
                     li:hover {
-                        cursor: pointer;
                         border: 1px solid var(--colour-explore);
+                        cursor: pointer;
                     }
                 }
 
                 #tracksList:hover {
-                    display: block;
+                    visibility: visible;
                 }
 
                 #tracksList.emulateHover {
@@ -129,27 +141,30 @@ main.mediaItem {
                 }
 
                 #soundControl {
+                    position: relative;
                     display: flex;
                     justify-content: center;
                 }
 
                 #soundControl:hover #soundSlider {
-                    display: block;
+                    visibility: visible;
+                    transition-delay: 0s;
                 }
 
                 #soundSlider {
-                    display: none;
+                    bottom: 78px;
+                    visibility: hidden;
+                    height: 20px;
+                    left: -42px;
                     position: absolute;
-                    top: -100px;
-                    right: 5px;
-                    -webkit-appearance: slider-vertical;
-                    width: 20px;
-                    height: 100px;
+                    transform: rotate(270deg);
+                    width: 100px;
                     z-index: 100;
+                    transition-delay: 1s;
                 }
 
                 #soundSlider.emulateHover {
-                    display: block;
+                    visibility: visible;
                 }
 
                 #noSoundSlider {
@@ -198,7 +213,7 @@ main.mediaItem {
     }
 
     .mediaInfo {
-    padding: 1em;
+        padding: 1em;
 
         ul {
             list-style-type: none;

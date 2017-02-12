@@ -2,6 +2,10 @@ document.addEventListener("DOMContentLoaded", function () {
     "use strict";
 
     var audio = document.getElementById("audioObject"),
+        audioBox = document.getElementById("audioBox"),
+        audioPoster = document.getElementById("audioPoster"),
+        audioPosterImg = document.getElementById("audioPosterImg"),
+        sources = audio.getElementsByTagName('source'),
         audioControls = document.getElementById("audioControls"),
         playPauseButton = document.getElementById("playPauseButton"),
         currentTimeSpan = document.getElementById("currentTimeSpan"),
@@ -10,6 +14,9 @@ document.addEventListener("DOMContentLoaded", function () {
         soundSlider = document.getElementById("soundSlider"),
         tracksButton = document.getElementById("tracksButton"),
         tracksList = document.getElementById("tracksList"),
+        videoFileName = audio.dataset.filename,
+        hasStartPoster = audio.dataset.startposter,
+        hasEndPoster = audio.dataset.endposter,
         soundState = {
             hideSlderTimout: undefined,
             prevButtonIcon: soundButton.src,
@@ -18,6 +25,125 @@ document.addEventListener("DOMContentLoaded", function () {
 
     playProgress.value = 0;
     audio.controls = false;
+
+    audio.addEventListener("loadstart", function () {
+        var canPlayVid = false,
+            chapters;
+        // N.B. requires that the script is loaded early enough/blocking, so no defer
+        // If you do not then you can miss this event firing and nothing works as intended
+
+        Array.prototype.some.call(sources, function (source) {
+            if (audio.canPlayType(source.type)) {
+                return canPlayVid = true;
+            }
+        });
+
+        chapters = Array.prototype.find.call(audio.textTracks, function(track) {
+            return track.kind === 'subtitles';
+        });
+
+        if (chapters) {
+            chapters.mode = 'showing';
+            console.log(chapters.cues);
+        }
+
+        if (!canPlayVid) {
+            getPoster("generic", 'error').then(function(errorPoster) {
+                errorPoster.setAttribute("class", "mediaPoster");
+                audioPoster.appendChild(errorPoster);
+            }, function(error){
+                console.log("No end poster: ");
+            });
+        } else {
+            var startPosterRef = hasStartPoster === "True" ? audioFileName : 'generic';
+            getPoster(startPosterRef, 'start').then(function (startPoster) {
+                startPoster.setAttribute("class", "mediaPoster");
+                audioPoster.appendChild(startPoster);
+
+                startPoster.getElementById('playButton').addEventListener("click", function () {
+                    audio.playPause();
+                });
+            }, function (error) {
+                console.log("No start poster: " + error);
+            });
+
+            getLoadingbar().then(function (loadingBar) {
+                loadingBar.setAttribute("class", "loadingBar");
+                loadingBar.style.top = video.height + "px";
+                loadingBar.setAttributeNS(null, "width", video.width + "px");
+                audioBox.appendChild(loadingBar);
+
+                function makeNewBufferBar() {
+                    var newRect = document.createElementNS('http://www.w3.org/2000/svg',"rect");
+                    newRect.setAttributeNS(null,"height","100%");
+                    newRect.setAttributeNS(null,"x", 0  + "px");
+                    newRect.setAttributeNS(null,"y", 0 + "px");
+                    return newRect;
+                }
+
+                var bars = loadingBar.getElementsByTagName('rect');
+
+                var renderInterval = setInterval(function () {
+                    bars = loadingBar.getElementsByTagName('rect');
+
+                    while (bars.length > video.buffered.length) {
+                        bars[bars.length -1].remove();
+                    }
+
+                    while (bars.length < video.buffered.length) {
+                        loadingBar.appendChild(makeNewBufferBar());
+                        bars = loadingBar.getElementsByTagName('rect');
+                    }
+
+                    // Sometimes dat has not loaded enough for this to register properly
+                    if (video.buffered.length){
+                        for (var i = 0; i < video.buffered.length; i++) {
+                            bars[i].setAttributeNS(null,"width", ((video.buffered.end(i) - video.buffered.start(i)) / video.duration) * video.width + "px");
+                            bars[i].setAttributeNS(null,"x", (video.buffered.start(i) / video.duration) * video.width + "px");
+                        }
+                        // b/c this is floating point math, sometimes the video.buffered.end(0) returns 0.001 less than buffered.length
+                        // /Checking for a whole second less is a fair work around that does not impact on display too much
+                        if (video.buffered.end(0) >= video.duration -1) {
+                            clearInterval(renderInterval);
+                            loadingBar.style.opacity = 0;
+                        }
+                    }
+                }, 500);
+            }, function (error) {
+                console.log("No loading bar: ");
+            });
+        }
+
+        if (audio.textTracks.length === 0) {
+            tracksButton.src = "/static/images/notracks.svg";
+            tracksButton.alt = "Icon showing no tracks are available";
+            tracksButton.title = "No tracks available";
+            tracksList.id = "noTracksList";
+        }
+
+        for (var j = 0; j < tracksList.children.length; j++) {
+            (function (index) {
+                tracksList.children[index].addEventListener("click", function () {
+
+                    for (var k = 0; k < tracksList.children.length; k++) {
+                       tracksList.children[k].classList.remove('active');
+                    }
+
+                    this.classList.add('active');
+                    tracksList.classList.remove('emulateHover');
+
+                    // Index 0 is the disable tracks button
+                    if (index === 0) {
+                        for (var j = 0; j < video.textTracks.length; j++) {
+                            video.textTracks[j].mode = "disabled";
+                        }
+                    } else {
+                        video.textTracks[index - 1].mode = "showing";
+                    }
+                });
+            }(j));
+        }
+    });
 
     audio.addEventListener("loadeddata", function () {
         var chapterTracks, chapterControls, pollForChapterCues;
@@ -91,58 +217,47 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
+    audio.addEventListener("play", function () {
+        var posters = audioPoster.getElementsByClassName("mediaPoster");
+        for (var poster of posters) {
+            poster.parentNode.removeChild(poster);
+        }
+    });
+
     audio.addEventListener("timeupdate", function () {
         currentTimeSpan.innerHTML = rawTimeToFormattedTime(this.currentTime);
         // Setting this value does not trigger the 'change' event
         playProgress.value = (this.currentTime / this.duration) * 1000;
     });
 
-    audio.isPlaying = function () {
-        return !(this.paused || this.ended || this.seeking || this.readyState < this.HAVE_FUTURE_DATA);
-    };
-
-    audio.playPause = function () {
-        if (this.isPlaying()) {
-            this.pause();
-            playPauseButton.src = "/static/images/smallplay.svg";
-            playPauseButton.alt = "Option to play the video";
-            playPauseButton.title = "Play";
-        } else {
-            this.play();
-            playPauseButton.src = "/static/images/smallpause.svg";
-            playPauseButton.alt = "Option to pause the video";
-            playPauseButton.title = "Pause";
-        }
-    };
-
-    playPauseButton.addEventListener("click", function () {
-        audio.playPause();
-    });
-
-    playProgress.addEventListener("change", function () {
-        console.log(this.value, audio.currentTime);
-        audio.currentTime = audio.duration * (this.value / 1000);
-    });
-
-    playProgress.addEventListener("mousedown", function () {
-        audio.pause();
-    });
-
-    playProgress.addEventListener("mouseup", function () {
-        audio.play();
-    });
-
     audio.addEventListener("ended", function () {
-        playPauseButton.src = "/static/images/smallplay.svg";
-        playPauseButton.alt = "Option to play the audio";
-        playPauseButton.title = "Play";
+        var title = playPauseButton.getElementsByTagNameNS("http://www.w3.org/2000/svg","title")[0];
+        playPauseButton.alt = "Option to play the video";
+        title.textContent = "Play";
+        playPauseButton.getElementById("transitionToPlay").beginElement();
+
+        var endPosterRef = hasEndPoster === "True" ? videoFileName : 'generic';
+        getPoster(endPosterRef, 'end').then(function(endPoster) {
+            endPoster.setAttribute("class", "mediaPoster");
+            audioPoster.appendChild(endPoster);
+
+            endPoster.getElementById('playButton').addEventListener("click", function () {
+                audio.play();
+                playPauseButton.alt = "Option to pause the video";
+                title.textContent = "Pause";
+                playPauseButton.getElementById("transitionToPause").beginElement();
+                audioPoster.removeChild(endPoster);
+            });
+
+        }, function(error){
+            console.log("No end poster: ");
+        });
+
 
         var request = new XMLHttpRequest();
-        request.open('GET', 'http://api.localcity.com/v/1/0/help', true);
+        request.open('GET', 'http://api.localcity.com:5000/v/1/0/video_end_follow_on', true);
 
         request.onload = function () {
-            console.log("asd");
-
             if (this.status >= 200 && this.status < 400) {
                 //resolve(document.importNode(this.responseXML.firstChild, true));
             } else {
@@ -155,6 +270,57 @@ document.addEventListener("DOMContentLoaded", function () {
             //reject({status: this.status, statusText: this.statusText});
         };
         request.send();
+    });
+
+    audio.isPlaying = function () {
+        return !(this.paused || this.ended || this.seeking || this.readyState < this.HAVE_FUTURE_DATA);
+    };
+
+    audio.playPause = function () {
+        var title = playPauseButton.getElementsByTagNameNS("http://www.w3.org/2000/svg","title")[0];
+
+        if (audio.isPlaying()) {
+            audio.pause();
+            playPauseButton.alt = "Option to play the video";
+            title.textContent = "Play";
+            playPauseButton.getElementById("transitionToPlay").beginElement();
+        } else {
+            audio.play();
+            playPauseButton.alt = "Option to pause the video";
+            title.textContent = "Pause";
+            playPauseButton.getElementById("transitionToPause").beginElement();
+        }
+    };
+
+    audioPosterImg.addEventListener("click", function () {
+        audio.playPause();
+    });
+
+    playPauseButton.addEventListener("click", function () {
+        audio.playPause();
+    });
+
+    playProgress.addEventListener("change", function () {
+        audio.currentTime = audio.duration * (playProgress.value / 1000);
+    });
+
+    playProgress.addEventListener("mousedown", function () {
+        var title = playPauseButton.getElementsByTagNameNS("http://www.w3.org/2000/svg","title")[0];
+        if (audio.isPlaying()) {
+            audio.pause();
+            title.textContent = "Play";
+            playPauseButton.getElementById("transitionToPlay").beginElement();
+        } else {
+            title.textContent = "Play";
+            playPauseButton.getElementById("transitionPlayToPlay").beginElement();
+        }
+    });
+
+    playProgress.addEventListener("mouseup", function () {
+        audio.play();
+        var title = playPauseButton.getElementsByTagNameNS("http://www.w3.org/2000/svg","title")[0];
+        title.textContent = "Pause";
+        playPauseButton.getElementById("transitionToPause").beginElement();
     });
 
     tracksButton.addEventListener("touchstart", function () {
@@ -176,6 +342,14 @@ document.addEventListener("DOMContentLoaded", function () {
             soundButton.title = "Change sound options";
             soundSlider.id = "soundSlider";
         }
+    });
+
+    soundButton.addEventListener("touchend", function (event) {
+        event.stopImmediatePropagation(); // touchend also triggers click so need to stop that from happening and muting the track
+        soundState.hideSlderTimout = setTimeout(function(){
+            soundSlider.classList.remove('emulateHover');
+        }, soundState.hideSlderTimoutTime);
+        soundSlider.classList.add('emulateHover');
     });
 
     soundSlider.addEventListener("touchend", function () {
@@ -213,13 +387,26 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    soundButton.addEventListener("touchend", function (event) {
-        event.stopImmediatePropagation(); // touchend also triggers click so need to stop that from happening and muting the track
-        soundState.hideSlderTimout = setTimeout(function(){
-            soundSlider.classList.remove('emulateHover');
-        }, soundState.hideSlderTimoutTime);
-        soundSlider.classList.add('emulateHover');
-    });
+    function getPoster(filename, type) {
+       return new Promise(function (resolve, reject) {
+            var request = new XMLHttpRequest();
+            request.open('GET', 'http://assets.localcity.com/audio/' + type + 'posters/' + filename + '.' + type + '.svg', true);
+
+            request.onload = function () {
+                if (this.status >= 200 && this.status < 400) {
+                    resolve(document.importNode(this.responseXML.firstChild, true));
+                } else {
+                    reject({status: this.status, statusText: this.statusText});
+                }
+            };
+
+            request.onerror = function () {
+                console.log(this);
+                reject({status: this.status, statusText: this.statusText});
+            };
+            request.send();
+        });
+    }
 
     function rawTimeToFormattedTime(rawTime) {
         var chomped, seconds, minutes;

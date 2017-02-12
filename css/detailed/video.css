@@ -1,14 +1,17 @@
 #videoContainer {
-    #videoBox {
-        margin: 0 auto;
-        position: relative;
-    }
 
-    .videoPoster {
+    #videoPoster {
         position: absolute;
         top: 0;
         left: 0;
-        margin: 0 auto;
+    }
+
+    #videoBox {
+        .mediaPoster {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
     }
 
     .loadingBar {

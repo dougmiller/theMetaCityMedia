@@ -23,9 +23,7 @@ def show_favicon():
 
 @media.route('/video/')
 def show_all_videos():
-    videos = Video.query.all()
-    videos.sort(key=lambda media_entry: media_entry.parent_id)
-    videos = videos[::-1]
+    videos = Video.query.order_by(Video.parent_id.desc()).all()
     return render_template('index.jinja2', media=videos)
 
 
@@ -40,9 +38,7 @@ def show_specific_video(video):
 
 @media.route('/code/')
 def show_all_code():
-    code_snippets = Code.query.all()
-    code_snippets.sort(key=lambda media_entry: media_entry.parent_id)
-    code_snippets = code_snippets[::-1]
+    code_snippets = Code.query.order_by(Code.parent_id.desc()).all()
     return render_template('index.jinja2', media=code_snippets)
 
 
@@ -57,9 +53,7 @@ def show_specific_code(code_id):
 
 @media.route('/audio/')
 def show_all_audio():
-    audio = Audio.query.all()
-    audio.sort(key=lambda media_entry: media_entry.parent_id)
-    audio = audio[::-1]
+    audio = Audio.query.order_by(Audio.parent_id.desc()).all()
     return render_template('index.jinja2', media=audio)
 
 
@@ -74,9 +68,7 @@ def show_specific_audio(audio_id):
 
 @media.route('/picture/')
 def show_all_pictures():
-    pictures = Picture.query.all()
-    pictures.sort(key=lambda media_entry: media_entry.parent_id)
-    pictures = pictures[::-1]
+    pictures = Picture.query.order_by(Picture.parent_id.desc()).all()
     return render_template('index.jinja2', media=pictures)
 
 

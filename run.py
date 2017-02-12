@@ -5,8 +5,9 @@ from os import walk
 
 
 app = create_app('config')
-extra_dirs = ['theMetaCityMedia/api_0_1', 'theMetaCityMedia/media']
+extra_dirs = ['theMetaCityMedia/api_1_0', 'theMetaCityMedia/api_home', 'theMetaCityMedia/media/templates']
 extra_files = extra_dirs[:]
+extra_files.append('theMetaCityMedia/media/views.py')
 
 for extra_dir in extra_dirs:
     for dirname, dirs, files in walk(extra_dir):

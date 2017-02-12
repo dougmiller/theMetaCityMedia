@@ -9,7 +9,7 @@
 <main class="mediaItem audio">
     <h1 id="mediaTitle"><a href="/audio/{{ audio.id }}">{{ audio.Parent.title }}</a></h1>
     <div id="audioContainer" class="mediaContainer">
-        <div id="audioBox">
+        <div id="audioBox" class="mediaBox">
             <audio controls
                    data-filename="{{ audio.file_name }}"
                    data-startposter="{{ audio.has_start_poster }}"
@@ -31,15 +31,15 @@
                            srclang="{{ track.src_lang }}" kind="{{ track.type }}" label="{{ track.label }}">
                 {% endfor %}
             </audio>
-            <img src="http://assets.localcity.com/audio/postcards/{{ audio.Parent.Postcard.url }}"/>
+            <div id="audioPoster" class="mediaPoster">
+                <img id="audioPosterImg" src="http://assets.localcity.com/audio/postcards/{{ audio.Parent.Postcard.url }}"/>
+            </div>
             <div id="audioMeta" class="mediaMeta">
-                <p><span id="currentTimeSpan" class="timeSpan">00:00</span> / <span id="runningTimeSpan" class="timeSpan">{{ audio.format_running_time_to_human_readable() }}</span></p>
+                <p id="timeBox"><span id="currentTimeSpan" class="timeSpan">00:00</span> / <span id="runningTimeSpan" class="timeSpan">{{ audio.format_running_time_to_human_readable() }}</span></p>
 
                 <input type="range" id="playProgress" min="0" max="1000" value="0">
 
                 <div id="audioControls" class="mediaControls">
-                    <img id="playPauseButton" class="button audio-icon" src="/static/images/smallplay.svg" title="Play" alt="Play/pause audio">
-                    <img id="fullscreenButton" class="button audio-icon" src="/static/images/fullscreen.svg" title="Go to fullscreen. If there is a higher resolution audio available it will load that, otherwise it will upscale the current audio." alt="Button to open audio in fullscreen">
                     <div id="tracksControl" class="audio-icon">
                         <img id="tracksButton" class="button audio-icon" src="/static/images/tracks.svg" title="Change track options" alt="Button to open track options">
                         <ul id="tracksList">
@@ -48,9 +48,10 @@
                             {% endfor %}
                         </ul>
                     </div>
+                    {{ import_svg("smallplay") }}
                     <div id="soundControl">
+                        <input id="soundSlider" type="range" min="0" max="10" value="10">
                         <img id="soundButton" class="button" src="/static/images/sound-3.svg" title="Max Volume" alt="Maximum volume selected">
-                        <input id="soundSlider" type="range" min="0" max="10" value="10" orient="vertical">
                     </div>
                 </div>
             </div>
