@@ -13,4 +13,8 @@
         fill: var(--colour-float);
         transition-delay: 0s;
     }
+
+    #soundIconRayMute {
+        stroke: var(--colour-work);
+    }
 }

@@ -329,13 +329,15 @@ document.addEventListener("DOMContentLoaded", function () {
     //});
 
     var soundTracker = {
-        shouldAniamte3 : false,
-        shouldAniamte2 : true,
-        shouldAniamte1 : true,
+        level3Visible : true,
+        level2Visible : true,
+        level1Visible : true,
+        level0Visible : true,
         previousVolume : 1.0,
         soundGates: {
-            upper: 0.8,
-            lower: 0.4,
+            max: 0.8,
+            upper: 0.5,
+            lower: 0.2,
             base: 0.0
         }
     };
@@ -375,60 +377,61 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     soundSlider.addEventListener("input", function () {
-                        // this.value is 1 to 10       // previous value tracks volume which is between 0 and 1
-        var direction = (this.value / 10) - soundTracker.previousVolume;
-        soundTracker.previousVolume = this.value / 10;
-        audio.volume = (this.value / this.max);
+
+        var volumeRatio = this.value / this.max;
+        var direction = volumeRatio - soundTracker.previousVolume; // this.value is 1 to this.max, previous value tracks volume which is between 0 and 1, need to convert
+        soundTracker.previousVolume = volumeRatio;
+        audio.volume = volumeRatio;
 
         soundButton.title = "Button to change sound options";
         soundButton.description = "Change sound options";
-            // positive direction is increase in volume
+
+
+
+
+
+        // positive direction is increase in volume
         if (direction > 0) {
-            if (audio.volume < 1 && audio.volume >= soundTracker.soundGates.upper) {
-                if (soundTracker.shouldAniamte3) {
-                    soundTracker.shouldAniamte2 = true;
-                    soundTracker.shouldAniamte3 = false;
-                    soundButton.getElementById("soundIconRay3NoneToFull").beginElement();
-                }
+            if (audio.volume >= soundTracker.soundGates.max && !soundTracker.level3Visible) {
+                soundTracker.level3Visible = true;
+                soundButton.getElementById("soundIconRay3NoneToFull").beginElement();
             }
 
-            if (audio.volume < soundTracker.soundGates.upper && audio.volume >= soundTracker.soundGates.lower) {
-                if (soundTracker.shouldAniamte2) {
-                    soundTracker.shouldAniamte2 = false;
-                    soundTracker.shouldAniamte3 = true;
-                    soundButton.getElementById("soundIconRay2NoneToFull").beginElement();
-                }
+            if (audio.volume > soundTracker.soundGates.upper && !soundTracker.level2Visible) {
+                soundTracker.level2Visible = true;
+                soundButton.getElementById("soundIconRay2NoneToFull").beginElement();
             }
 
-            if (audio.volume < soundTracker.soundGates.lower && audio.volume > soundTracker.soundGates.base) {
-                if (soundTracker.shouldAniamte1) {
-                    soundTracker.shouldAniamte1 = false;
-                    soundTracker.shouldAniamte2 = true;
-                    soundButton.getElementById("soundIconRay1NoneToFull").beginElement();
-                }
+            if (audio.volume > soundTracker.soundGates.lower && !soundTracker.level1Visible) {
+                soundTracker.level1Visible = true;
+                soundButton.getElementById("soundIconRay1NoneToFull").beginElement();
+            }
+
+            if (audio.volume > soundTracker.soundGates.base && !soundTracker.level0Visible) {
+                soundTracker.level0Visible = true;
+                soundButton.getElementById("soundIconRayMuteFullToNone").beginElement();
             }
         } else if (direction < 0) { // decrease in volume
 
-            if (audio.volume < soundTracker.soundGates.upper && audio.volume >= soundTracker.soundGates.lower) {
-                if (soundTracker.shouldAniamte2) {
-                    soundTracker.shouldAniamte3 = true;
-                    soundTracker.shouldAniamte2 = false;
-                    soundButton.getElementById("soundIconRay3FullToNone").beginElement();
-                }
+            if (audio.volume <= soundTracker.soundGates.max && soundTracker.level3Visible) {
+                soundTracker.level3Visible = false;
+                soundButton.getElementById("soundIconRay3FullToNone").beginElement();
             }
 
-            if (audio.volume < soundTracker.soundGates.lower && audio.volume > soundTracker.soundGates.base) {
-                if (soundTracker.shouldAniamte1) {
-                    soundTracker.shouldAniamte2 = true;
-                    soundTracker.shouldAniamte1 = false;
-                    soundButton.getElementById("soundIconRay2FullToNone").beginElement();
-                }
+            if (audio.volume <= soundTracker.soundGates.upper && soundTracker.level2Visible) {
+                soundTracker.level2Visible = false;
+                soundButton.getElementById("soundIconRay2FullToNone").beginElement();
             }
-        }
 
-        if (audio.volume === 0) {
-            soundTracker.shouldAniamte1 = true;
-            soundButton.getElementById("soundIconRay1FullToNone").beginElement();
+            if (audio.volume <= soundTracker.soundGates.lower && soundTracker.level1Visible) {
+                soundTracker.level1Visible = false;
+                soundButton.getElementById("soundIconRay1FullToNone").beginElement();
+            }
+
+            if (audio.volume == soundTracker.soundGates.base && soundTracker.level0Visible) {
+                soundTracker.level0Visible = false;
+                soundButton.getElementById("soundIconRay0FullToNone").beginElement();
+            }
         }
     });
 
