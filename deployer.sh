@@ -24,14 +24,17 @@ if [ $1 == "development" ]; then
   echo "Starting to copy files"
 
   cd theMetaCityMedia
+  sudo rm -rf /srv/http/media.localcity.com/theMetaCityMedia/*
   sudo cp -R * /srv/http/media.localcity.com/theMetaCityMedia
   echo "Finished copying files"
 
   echo "Mogrifying paths"
-  find /srv/http/media.localcity.com/theMetaCityMedia/templates -type f -print0 | xargs -0 sed -i 's/http:\/\/assets.localcity.com:5000/http:\/\/assets.localcity.com/g'
-  find /srv/http/media.localcity.com/theMetaCityMedia/static -type f -print0 | xargs -0 sed -i 's/http:\/\/api.localcity.com:5000/http:\/\/api.localcity.com/g'
+  sudo find /srv/http/media.localcity.com/theMetaCityMedia/media/templates -type f -print0 | xargs -0 sed -i 's/http:\/\/assets.localcity.com:5000/http:\/\/assets.localcity.com/g'
+  sudo find /srv/http/media.localcity.com/theMetaCityMedia/media/static -type f -print0 | xargs -0 sed -i 's/http:\/\/api.localcity.com:5000/http:\/\/api.localcity.com/g'
   echo "Fnished mogrifying paths"
 
+  echo "Restarting server"
+  sudo systemctl restart httpd
   echo "Finished deploying"
 elif [ $1 == "production" ]; then
   echo "Starting deployment to production environment"

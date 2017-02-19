@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
         playPauseButton = document.getElementById("playPauseButton"),
         currentTimeSpan = document.getElementById("currentTimeSpan"),
         playProgress = document.getElementById("playProgress"),
-        soundButton = document.getElementById("soundButton"),
+        soundButton = document.getElementById("tmcSoundIcon"),
         soundSlider = document.getElementById("soundSlider"),
         tracksButton = document.getElementById("tracksButton"),
         tracksList = document.getElementById("tracksList"),
@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
         hasEndPoster = audio.dataset.endposter,
         soundState = {
             hideSlderTimout: undefined,
-            prevButtonIcon: soundButton.src,
+            prevButtonIcon: soundButton,
             hideSlderTimoutTime: 3000
         };
 
@@ -66,7 +66,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }, function (error) {
                 console.log("No start poster: " + error);
             });
-
+        /*
             getLoadingbar().then(function (loadingBar) {
                 loadingBar.setAttribute("class", "loadingBar");
                 loadingBar.style.top = video.height + "px";
@@ -112,6 +112,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }, function (error) {
                 console.log("No loading bar: ");
             });
+            */
         }
 
         if (audio.textTracks.length === 0) {
@@ -323,10 +324,21 @@ document.addEventListener("DOMContentLoaded", function () {
         playPauseButton.getElementById("transitionToPause").beginElement();
     });
 
-    tracksButton.addEventListener("touchstart", function () {
-        tracksList.classList.add("emulateHover");
-    });
+    //tracksButton.addEventListener("touchstart", function () {
+    //    tracksList.classList.add("emulateHover");
+    //});
 
+    var soundTracker = {
+        shouldAniamte3 : false,
+        shouldAniamte2 : true,
+        shouldAniamte1 : true,
+        previousVolume : 1.0,
+        soundGates: {
+            upper: 0.8,
+            lower: 0.4,
+            base: 0.0
+        }
+    };
     soundButton.addEventListener("click", function () {
         if (audio.muted === false) {
             audio.muted = true;
@@ -363,27 +375,60 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     soundSlider.addEventListener("input", function () {
+                        // this.value is 1 to 10       // previous value tracks volume which is between 0 and 1
+        var direction = (this.value / 10) - soundTracker.previousVolume;
+        soundTracker.previousVolume = this.value / 10;
         audio.volume = (this.value / this.max);
 
-        soundButton.alt = "Button to change sound options";
-        soundButton.title = "Change sound options";
+        soundButton.title = "Button to change sound options";
+        soundButton.description = "Change sound options";
+            // positive direction is increase in volume
+        if (direction > 0) {
+            if (audio.volume < 1 && audio.volume >= soundTracker.soundGates.upper) {
+                if (soundTracker.shouldAniamte3) {
+                    soundTracker.shouldAniamte2 = true;
+                    soundTracker.shouldAniamte3 = false;
+                    soundButton.getElementById("soundIconRay3NoneToFull").beginElement();
+                }
+            }
 
-        if (audio.volume < 1 && audio.volume >= 0.85) {
-             soundButton.src = "/static/images/sound-3.svg";
-        }
+            if (audio.volume < soundTracker.soundGates.upper && audio.volume >= soundTracker.soundGates.lower) {
+                if (soundTracker.shouldAniamte2) {
+                    soundTracker.shouldAniamte2 = false;
+                    soundTracker.shouldAniamte3 = true;
+                    soundButton.getElementById("soundIconRay2NoneToFull").beginElement();
+                }
+            }
 
-        if (audio.volume < 0.85 && audio.volume >= 0.33) {
-             soundButton.src = "/static/images/sound-2.svg";
-        }
+            if (audio.volume < soundTracker.soundGates.lower && audio.volume > soundTracker.soundGates.base) {
+                if (soundTracker.shouldAniamte1) {
+                    soundTracker.shouldAniamte1 = false;
+                    soundTracker.shouldAniamte2 = true;
+                    soundButton.getElementById("soundIconRay1NoneToFull").beginElement();
+                }
+            }
+        } else if (direction < 0) { // decrease in volume
 
-        if (audio.volume < 0.33 && audio.volume > 0) {
-             soundButton.src = "/static/images/sound-1.svg";
+            if (audio.volume < soundTracker.soundGates.upper && audio.volume >= soundTracker.soundGates.lower) {
+                if (soundTracker.shouldAniamte2) {
+                    soundTracker.shouldAniamte3 = true;
+                    soundTracker.shouldAniamte2 = false;
+                    soundButton.getElementById("soundIconRay3FullToNone").beginElement();
+                }
+            }
+
+            if (audio.volume < soundTracker.soundGates.lower && audio.volume > soundTracker.soundGates.base) {
+                if (soundTracker.shouldAniamte1) {
+                    soundTracker.shouldAniamte2 = true;
+                    soundTracker.shouldAniamte1 = false;
+                    soundButton.getElementById("soundIconRay2FullToNone").beginElement();
+                }
+            }
         }
 
         if (audio.volume === 0) {
-            soundButton.src = "/static/images/sound-0.svg";
-            soundButton.alt = "Icon showing no sound level is at 0";
-            soundButton.title = "Sound at 0.";
+            soundTracker.shouldAniamte1 = true;
+            soundButton.getElementById("soundIconRay1FullToNone").beginElement();
         }
     });
 
@@ -419,4 +464,25 @@ document.addEventListener("DOMContentLoaded", function () {
     function leftZeroPad(rawString, paddingValue) {
         return (paddingValue + rawString).slice(-paddingValue.length);
     }
+
+    /* Special cases of suck */
+    var soundIconBody = document.getElementById("soundIconBody");
+
+    soundIconBody.addEventListener("mouseenter", function () {
+        soundSlider.classList.add("emulateHover");
+    });
+
+    soundIconBody.addEventListener("mouseout", function () {
+        soundSlider.classList.remove("emulateHover");
+    });
+
+    soundSlider.addEventListener("mouseenter", function () {
+        soundSlider.classList.add("emulateHover");
+        soundIconBody.classList.add("emulateHover");
+    });
+
+    soundSlider.addEventListener("mouseout", function () {
+        soundSlider.classList.remove("emulateHover");
+        soundIconBody.classList.remove("emulateHover");
+    });
 });

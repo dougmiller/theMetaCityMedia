@@ -76,7 +76,6 @@ main.mediaItem {
                 justify-content: flex-end;
 
                 #playPauseButton {
-                    height: 3em;
                     align-self: auto;
                 }
 
@@ -85,7 +84,7 @@ main.mediaItem {
 
                 #tracksControl {
                     display: flex;
-                    justify-content: center;
+                    align-items: center;
                     position: relative;
                 }
 
@@ -100,11 +99,9 @@ main.mediaItem {
                     visibility: hidden;
                     left: 0;
                     list-style-type: none;
-                    margin: 0;
                     padding: 0;
                     position: absolute;
                     text-align: left;
-                    top: 36px;
                     white-space: nowrap;
                     transition-delay: 1s;
 
@@ -143,19 +140,26 @@ main.mediaItem {
                 #soundControl {
                     position: relative;
                     display: flex;
-                    justify-content: center;
+                    align-items: center;
                 }
 
-                #soundControl:hover #soundSlider {
-                    visibility: visible;
-                    transition-delay: 0s;
+                #soundIconBody {
+                    transition-delay: 1s;
+                }
+
+                #soundIconBody.emulateHover {
+                    fill: var(--colour-float);
                 }
 
                 #soundSlider {
-                    bottom: 78px;
+                    bottom: 92px;
+                    background: var(--colour-float);
                     visibility: hidden;
                     height: 20px;
-                    left: -42px;
+                    left: -34px;
+                    border-top-right-radius: 10px;
+                    border-bottom-right-radius: 10px;
+                    padding-left: 1em;
                     position: absolute;
                     transform: rotate(270deg);
                     width: 100px;
@@ -165,6 +169,7 @@ main.mediaItem {
 
                 #soundSlider.emulateHover {
                     visibility: visible;
+                    transition-delay: 0s;
                 }
 
                 #noSoundSlider {

@@ -25,4 +25,5 @@
     --colour-work:          hsla(20, 75%, 50%, 1);
     --colour-rest:          hsla(20, 75%, 50%, 0.5);
     --colour-fight:         hsla(10, 85%, 50%, 1);
+    --colour-meditate:      hsla(0, 0%, 0%, 0);
 }

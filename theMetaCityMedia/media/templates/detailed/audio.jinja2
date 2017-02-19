@@ -40,18 +40,18 @@
                 <input type="range" id="playProgress" min="0" max="1000" value="0">
 
                 <div id="audioControls" class="mediaControls">
-                    <div id="tracksControl" class="audio-icon">
-                        <img id="tracksButton" class="button audio-icon" src="/static/images/tracks.svg" title="Change track options" alt="Button to open track options">
+                    <div id="tracksControl">
+                        {{ import_svg("tracks-icon") }}
                         <ul id="tracksList">
                             {% for track in audio.tracks_sans_chapters() %}
                                 <li data-kind="{{ track.type }}">{{ track.get_description() }}</li>
                             {% endfor %}
                         </ul>
                     </div>
-                    {{ import_svg("smallplay") }}
+                    {{ import_svg("small-play-pause-icon") }}
                     <div id="soundControl">
+                        {{ import_svg("sound-icon") }}
                         <input id="soundSlider" type="range" min="0" max="10" value="10">
-                        <img id="soundButton" class="button" src="/static/images/sound-3.svg" title="Max Volume" alt="Maximum volume selected">
                     </div>
                 </div>
             </div>

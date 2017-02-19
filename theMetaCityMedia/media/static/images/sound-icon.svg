@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.2" baseProfile="tiny" id="tmcSoundIcon"  width="45px" height="40px" viewBox="-5 -1 42 42">
+    <title>Sound Icon</title>
+    <description>Sound contolling icon</description>
+    <path class="soundIcon" id="soundIconBody" d="M27,3 L20,12 L8,12 L8,28 L20,28 L27,37 A 20 20, 0, 1, 1, 27 3z" />
+    <path class="soundIcon" id="soundIconRay1" d="M 23,26 A 8 8, 0, 0, 0, 23 14">
+        <animate id="soundIconRay1FullToNone" dur="0.2s" attributeName="d"
+         values="M 23,26 A 8 8, 0, 0, 0, 23 14;
+                 M 22,20 A 8 8, 0, 0, 0, 22 20"
+         fill="freeze"
+         begin="never"/>
+        <animate id="soundIconRay1NoneToFull" dur="0.2s" attributeName="d"
+         values="M 22,20 A 8 8, 0, 0, 0, 22 20;
+                 M 23,26 A 8 8, 0, 0, 0, 23 14;"
+         fill="freeze"
+         begin="never"/>
+    </path>
+    <path class="soundIcon" id="soundIconRay2" d="M 26,30 A 12 12, 0, 0, 0, 26 10">
+        <animate id="soundIconRay2FullToNone" dur="0.2s" attributeName="d"
+         values="M 26,30 A 12 12, 0, 0, 0, 26 10;
+                 M 24,20 A 12 12, 0, 0, 0, 24 20"
+         fill="freeze"
+         begin="never"/>
+        <animate id="soundIconRay2NoneToFull" dur="0.2s" attributeName="d"
+         values="M 24,20 A 12 12, 0, 0, 0, 24 20;
+                 M 26,30 A 12 12, 0, 0, 0, 26 10;"
+         fill="freeze"
+         begin="never"/>
+    </path>
+    <path class="soundIcon" id="soundIconRay3" d="M 29,34 A 16.5 16.5, 0, 0, 0, 29 6">
+        <animate id="soundIconRay3FullToNone" dur="0.2s" attributeName="d"
+         values="M 29,34 A 16.5 16.5, 0, 0, 0, 29 6;
+                 M 32,20 A 16.5 16.5, 0, 0, 0, 32 20"
+         fill="freeze"
+         begin="never"/>
+        <animate id="soundIconRay3NoneToFull" dur="0.2s" attributeName="d"
+         values="M 32,20 A 16.5 16.5, 0, 0, 0, 32 20;
+                 M 29,34 A 16.5 16.5, 0, 0, 0, 29 6;"
+         fill="freeze"
+         begin="never"/>
+    </path>
+</svg>
