@@ -27,8 +27,8 @@ document.addEventListener("DOMContentLoaded", function () {
     audio.controls = false;
 
     audio.addEventListener("loadstart", function () {
-        var canPlayVid = false,
-            chapters;
+        var canPlayVid = false;
+
         // N.B. requires that the script is loaded early enough/blocking, so no defer
         // If you do not then you can miss this event firing and nothing works as intended
 
@@ -37,15 +37,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 return canPlayVid = true;
             }
         });
-
-        chapters = Array.prototype.find.call(audio.textTracks, function(track) {
-            return track.kind === 'subtitles';
-        });
-
-        if (chapters) {
-            chapters.mode = 'showing';
-            console.log(chapters.cues);
-        }
 
         if (!canPlayVid) {
             getPoster("generic", 'error').then(function(errorPoster) {
@@ -66,83 +57,6 @@ document.addEventListener("DOMContentLoaded", function () {
             }, function (error) {
                 console.log("No start poster: " + error);
             });
-        /*
-            getLoadingbar().then(function (loadingBar) {
-                loadingBar.setAttribute("class", "loadingBar");
-                loadingBar.style.top = video.height + "px";
-                loadingBar.setAttributeNS(null, "width", video.width + "px");
-                audioBox.appendChild(loadingBar);
-
-                function makeNewBufferBar() {
-                    var newRect = document.createElementNS('http://www.w3.org/2000/svg',"rect");
-                    newRect.setAttributeNS(null,"height","100%");
-                    newRect.setAttributeNS(null,"x", 0  + "px");
-                    newRect.setAttributeNS(null,"y", 0 + "px");
-                    return newRect;
-                }
-
-                var bars = loadingBar.getElementsByTagName('rect');
-
-                var renderInterval = setInterval(function () {
-                    bars = loadingBar.getElementsByTagName('rect');
-
-                    while (bars.length > video.buffered.length) {
-                        bars[bars.length -1].remove();
-                    }
-
-                    while (bars.length < video.buffered.length) {
-                        loadingBar.appendChild(makeNewBufferBar());
-                        bars = loadingBar.getElementsByTagName('rect');
-                    }
-
-                    // Sometimes dat has not loaded enough for this to register properly
-                    if (video.buffered.length){
-                        for (var i = 0; i < video.buffered.length; i++) {
-                            bars[i].setAttributeNS(null,"width", ((video.buffered.end(i) - video.buffered.start(i)) / video.duration) * video.width + "px");
-                            bars[i].setAttributeNS(null,"x", (video.buffered.start(i) / video.duration) * video.width + "px");
-                        }
-                        // b/c this is floating point math, sometimes the video.buffered.end(0) returns 0.001 less than buffered.length
-                        // /Checking for a whole second less is a fair work around that does not impact on display too much
-                        if (video.buffered.end(0) >= video.duration -1) {
-                            clearInterval(renderInterval);
-                            loadingBar.style.opacity = 0;
-                        }
-                    }
-                }, 500);
-            }, function (error) {
-                console.log("No loading bar: ");
-            });
-            */
-        }
-
-        if (audio.textTracks.length === 0) {
-            tracksButton.src = "/static/images/notracks.svg";
-            tracksButton.alt = "Icon showing no tracks are available";
-            tracksButton.title = "No tracks available";
-            tracksList.id = "noTracksList";
-        }
-
-        for (var j = 0; j < tracksList.children.length; j++) {
-            (function (index) {
-                tracksList.children[index].addEventListener("click", function () {
-
-                    for (var k = 0; k < tracksList.children.length; k++) {
-                       tracksList.children[k].classList.remove('active');
-                    }
-
-                    this.classList.add('active');
-                    tracksList.classList.remove('emulateHover');
-
-                    // Index 0 is the disable tracks button
-                    if (index === 0) {
-                        for (var j = 0; j < video.textTracks.length; j++) {
-                            video.textTracks[j].mode = "disabled";
-                        }
-                    } else {
-                        video.textTracks[index - 1].mode = "showing";
-                    }
-                });
-            }(j));
         }
     });
 
@@ -161,25 +75,24 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         chapterTracks.forEach(function(chapterTrack) {
+            chapterTrack.mode = "showing";
             pollForChapterCues = setTimeout(function () {
                 if (chapterTrack.cues != null) {
                     clearInterval(pollForChapterCues);
 
                     chapterControls = document.createElement("ul");
-                    chapterTracks.mode = "showing";
                     chapterControls.setAttribute("id", "chapterControls");
 
                     chapterTrack.addEventListener("cuechange", function () {
-                        console.log("Cue Changed");
+                        //console.log("Cue Changed");
                     });
 
                     Array.from(chapterTrack.cues).forEach(function (cue) {
                         var chapterLink = document.createElement("li");
                         chapterLink.appendChild(document.createTextNode(cue.text));
-                        console.log(chapterTrack.cues);
 
                         chapterLink.addEventListener("click", function () {
-                            chapterLink.classList.add("playing");
+                            audio.currentTime = cue.startTime + 0.01;
                         });
 
                         cue.addEventListener("enter", function () {
@@ -192,13 +105,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
                         chapterControls.appendChild(chapterLink);
                     });
-                    audioControls.parentNode.appendChild(chapterControls);
+                    audioBox.appendChild(chapterControls);
                 }
             }, 1000);
         });
 
 
-        Array.from(tracksList.children).forEach(function (tracksListItem) {
+        Array.prototype.slice.call(tracksList.children).forEach(function(tracksListItem) {
             tracksListItem.addEventListener("click", function () {
                 var chosen = Array.prototype.find.call(audio.textTracks, function (audioTrack) {
                     return audioTrack.kind === tracksListItem.dataset.kind;
