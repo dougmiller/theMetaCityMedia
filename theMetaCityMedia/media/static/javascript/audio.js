@@ -5,8 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
         audioBox = document.getElementById("audioBox"),
         audioPoster = document.getElementById("audioPoster"),
         audioPosterImg = document.getElementById("audioPosterImg"),
-        sources = audio.getElementsByTagName('source'),
-        audioControls = document.getElementById("audioControls"),
+        sources = audio.getElementsByTagName("source"),
         playPauseButton = document.getElementById("playPauseButton"),
         currentTimeSpan = document.getElementById("currentTimeSpan"),
         playProgress = document.getElementById("playProgress"),
@@ -14,13 +13,13 @@ document.addEventListener("DOMContentLoaded", function () {
         soundSlider = document.getElementById("soundSlider"),
         tracksButton = document.getElementById("tracksButton"),
         tracksList = document.getElementById("tracksList"),
-        videoFileName = audio.dataset.filename,
+        audioFileName = audio.dataset.filename,
         hasStartPoster = audio.dataset.startposter,
         hasEndPoster = audio.dataset.endposter,
         soundState = {
-            hideSlderTimout: undefined,
+            hideSliderTimout: undefined,
             prevButtonIcon: soundButton,
-            hideSlderTimoutTime: 3000
+            hideSilderTimoutTime: 3000
         };
 
     playProgress.value = 0;
@@ -34,24 +33,25 @@ document.addEventListener("DOMContentLoaded", function () {
 
         Array.prototype.some.call(sources, function (source) {
             if (audio.canPlayType(source.type)) {
-                return canPlayVid = true;
+                canPlayVid = true;
             }
         });
 
         if (!canPlayVid) {
-            getPoster("generic", 'error').then(function(errorPoster) {
+            getPoster("generic", "error").then(function (errorPoster) {
                 errorPoster.setAttribute("class", "mediaPoster");
                 audioPoster.appendChild(errorPoster);
-            }, function(error){
-                console.log("No end poster: ");
+            }, function (error) {
+                console.log("No end poster: " + error);
             });
         } else {
-            var startPosterRef = hasStartPoster === "True" ? audioFileName : 'generic';
-            getPoster(startPosterRef, 'start').then(function (startPoster) {
+            var startPosterRef;
+            startPosterRef = hasStartPoster === "True" ? audioFileName : "generic";
+            getPoster(startPosterRef, "start").then(function (startPoster) {
                 startPoster.setAttribute("class", "mediaPoster");
                 audioPoster.appendChild(startPoster);
 
-                startPoster.getElementById('playButton').addEventListener("click", function () {
+                startPoster.getElementById("playButton").addEventListener("click", function () {
                     audio.playPause();
                 });
             }, function (error) {
@@ -74,18 +74,14 @@ document.addEventListener("DOMContentLoaded", function () {
             return track.kind === "chapters";
         });
 
-        chapterTracks.forEach(function(chapterTrack) {
+        chapterTracks.forEach(function (chapterTrack) {
             chapterTrack.mode = "showing";
             pollForChapterCues = setTimeout(function () {
-                if (chapterTrack.cues != null) {
+                if (chapterTrack.cues !== null) {
                     clearInterval(pollForChapterCues);
 
                     chapterControls = document.createElement("ul");
                     chapterControls.setAttribute("id", "chapterControls");
-
-                    chapterTrack.addEventListener("cuechange", function () {
-                        //console.log("Cue Changed");
-                    });
 
                     Array.from(chapterTrack.cues).forEach(function (cue) {
                         var chapterLink = document.createElement("li");
@@ -133,29 +129,29 @@ document.addEventListener("DOMContentLoaded", function () {
 
     audio.addEventListener("play", function () {
         var posters = audioPoster.getElementsByClassName("mediaPoster");
-        for (var poster of posters) {
+        posters.forEach(function (poster) {
             poster.parentNode.removeChild(poster);
-        }
+        });
     });
 
     audio.addEventListener("timeupdate", function () {
         currentTimeSpan.innerHTML = rawTimeToFormattedTime(this.currentTime);
-        // Setting this value does not trigger the 'change' event
+        // Setting this value does not trigger the "change" event
         playProgress.value = (this.currentTime / this.duration) * 1000;
     });
 
     audio.addEventListener("ended", function () {
-        var title = playPauseButton.getElementsByTagNameNS("http://www.w3.org/2000/svg","title")[0];
+        var title = playPauseButton.getElementsByTagNameNS("http://www.w3.org/2000/svg", "title")[0];
         playPauseButton.alt = "Option to play the video";
         title.textContent = "Play";
         playPauseButton.getElementById("transitionToPlay").beginElement();
 
-        var endPosterRef = hasEndPoster === "True" ? videoFileName : 'generic';
-        getPoster(endPosterRef, 'end').then(function(endPoster) {
+        var endPosterRef = hasEndPoster === "True" ? audioFileName : "generic";
+        getPoster(endPosterRef, "end").then(function (endPoster) {
             endPoster.setAttribute("class", "mediaPoster");
             audioPoster.appendChild(endPoster);
 
-            endPoster.getElementById('playButton').addEventListener("click", function () {
+            endPoster.getElementById("playButton").addEventListener("click", function () {
                 audio.play();
                 playPauseButton.alt = "Option to pause the video";
                 title.textContent = "Pause";
@@ -163,25 +159,23 @@ document.addEventListener("DOMContentLoaded", function () {
                 audioPoster.removeChild(endPoster);
             });
 
-        }, function(error){
-            console.log("No end poster: ");
+        }, function (error) {
+            console.log("No end poster: " + error);
         });
 
-
         var request = new XMLHttpRequest();
-        request.open('GET', 'http://api.localcity.com:5000/v/1/0/video_end_follow_on', true);
+        request.open("GET", "http://api.localcity.com:5000/v/1/0/video_end_follow_on", true);
 
         request.onload = function () {
             if (this.status >= 200 && this.status < 400) {
-                //resolve(document.importNode(this.responseXML.firstChild, true));
+                resolve(document.importNode(this.responseXML.firstChild, true));
             } else {
-                //reject({status: this.status, statusText: this.statusText});
+                reject({status: this.status, statusText: this.statusText});
             }
         };
 
         request.onerror = function () {
-            console.log(this);
-            //reject({status: this.status, statusText: this.statusText});
+            reject({status: this.status, statusText: this.statusText});
         };
         request.send();
     });
@@ -191,7 +185,7 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     audio.playPause = function () {
-        var title = playPauseButton.getElementsByTagNameNS("http://www.w3.org/2000/svg","title")[0];
+        var title = playPauseButton.getElementsByTagNameNS("http://www.w3.org/2000/svg", "title")[0];
 
         if (audio.isPlaying()) {
             audio.pause();
@@ -219,7 +213,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     playProgress.addEventListener("mousedown", function () {
-        var title = playPauseButton.getElementsByTagNameNS("http://www.w3.org/2000/svg","title")[0];
+        var title = playPauseButton.getElementsByTagNameNS("http://www.w3.org/2000/svg", "title")[0];
         if (audio.isPlaying()) {
             audio.pause();
             title.textContent = "Play";
@@ -232,7 +226,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     playProgress.addEventListener("mouseup", function () {
         audio.play();
-        var title = playPauseButton.getElementsByTagNameNS("http://www.w3.org/2000/svg","title")[0];
+        var title = playPauseButton.getElementsByTagNameNS("http://www.w3.org/2000/svg", "title")[0];
         title.textContent = "Pause";
         playPauseButton.getElementById("transitionToPause").beginElement();
     });
@@ -242,11 +236,11 @@ document.addEventListener("DOMContentLoaded", function () {
     //});
 
     var soundTracker = {
-        level3Visible : true,
-        level2Visible : true,
-        level1Visible : true,
-        level0Visible : true,
-        previousVolume : 1.0,
+        level3Visible: true,
+        level2Visible: true,
+        level1Visible: true,
+        level0Visible: true,
+        previousVolume: 1.0,
         soundGates: {
             max: 0.8,
             upper: 0.5,
@@ -273,20 +267,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
     soundButton.addEventListener("touchend", function (event) {
         event.stopImmediatePropagation(); // touchend also triggers click so need to stop that from happening and muting the track
-        soundState.hideSlderTimout = setTimeout(function(){
-            soundSlider.classList.remove('emulateHover');
-        }, soundState.hideSlderTimoutTime);
-        soundSlider.classList.add('emulateHover');
+        soundState.hideSliderTimout = setTimeout(function () {
+            soundSlider.classList.remove("emulateHover");
+        }, soundState.hideSilderTimoutTime);
+        soundSlider.classList.add("emulateHover");
     });
 
     soundSlider.addEventListener("touchend", function () {
-        soundState.hideSlderTimout = setTimeout(function(){
-            soundSlider.classList.remove('emulateHover');
-        }, soundState.hideSlderTimoutTime);
+        soundState.hideSliderTimout = setTimeout(function () {
+            soundSlider.classList.remove("emulateHover");
+        }, soundState.hideSilderTimoutTime);
     });
 
     soundSlider.addEventListener("touchstart", function () {
-        clearTimeout(soundState.hideSlderTimout);
+        clearTimeout(soundState.hideSliderTimout);
     });
 
     soundSlider.addEventListener("input", function () {
@@ -298,10 +292,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         soundButton.title = "Button to change sound options";
         soundButton.description = "Change sound options";
-
-
-
-
 
         // positive direction is increase in volume
         if (direction > 0) {
@@ -341,7 +331,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 soundButton.getElementById("soundIconRay1FullToNone").beginElement();
             }
 
-            if (audio.volume == soundTracker.soundGates.base && soundTracker.level0Visible) {
+            if (audio.volume === soundTracker.soundGates.base && soundTracker.level0Visible) {
                 soundTracker.level0Visible = false;
                 soundButton.getElementById("soundIconRay0FullToNone").beginElement();
             }
@@ -349,9 +339,9 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     function getPoster(filename, type) {
-       return new Promise(function (resolve, reject) {
+        return new Promise(function (resolve, reject) {
             var request = new XMLHttpRequest();
-            request.open('GET', 'http://assets.localcity.com/audio/' + type + 'posters/' + filename + '.' + type + '.svg', true);
+            request.open("GET", "http://assets.localcity.com/audio/" + type + "posters/" + filename + "." + type + ".svg", true);
 
             request.onload = function () {
                 if (this.status >= 200 && this.status < 400) {
