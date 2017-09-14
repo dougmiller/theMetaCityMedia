@@ -1,4 +1,4 @@
-#!flask/bin/python
+#!/usr/bin/env python
 from theMetaCityMedia import create_app
 from os import path
 from os import walk

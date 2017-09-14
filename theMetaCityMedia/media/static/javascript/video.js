@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
         fullscreenButton = document.getElementById("fullscreenButton"),
         currentTimeSpan = document.getElementById("currentTimeSpan"),
         playProgress = document.getElementById("playProgress"),
-        soundButton = document.getElementById("soundButton"),
+        soundButton = document.getElementById("tmcSoundIcon"),
         soundSlider = document.getElementById("soundSlider"),
         tracksButton = document.getElementById("tracksButton"),
         tracksList = document.getElementById("tracksList"),
@@ -19,7 +19,12 @@ document.addEventListener("DOMContentLoaded", function () {
         hasEndPoster = video.dataset.endposter,
         hasFullscreen = video.dataset.hasfullscreen,
         canPlayVid = false,
-        fullscreenFlag = false;
+        fullscreenFlag = false,
+        soundState = {
+            hideSliderTimout: undefined,
+            prevButtonIcon: soundButton,
+            hideSilderTimoutTime: 3000
+        };
 
     videoBox.style.width = video.width + "px";
     playProgress.value = 0;
@@ -254,30 +259,92 @@ document.addEventListener("DOMContentLoaded", function () {
         video.play();
     });
 
-    soundSlider.addEventListener("change", function () {
-        video.volume = (this.value / this.max);
-
-        soundButton.alt = "Button to change sound options";
-        soundButton.title = "Change sound options";
-
-        if (video.volume === 1) {
-             soundButton.src = "/static/images/sound-3.svg";
+    var soundTracker = {
+        level3Visible: true,
+        level2Visible: true,
+        level1Visible: true,
+        level0Visible: true,
+        previousVolume: 1.0,
+        soundGates: {
+            max: 0.8,
+            upper: 0.5,
+            lower: 0.2,
+            base: 0.0
         }
+    };
 
-        if (video.volume < 0.66) {
-             soundButton.src = "/static/images/sound-2.svg";
-        }
+    soundButton.addEventListener("touchend", function (event) {
+        event.stopImmediatePropagation(); // touchend also triggers click so need to stop that from happening and muting the track
+        soundState.hideSliderTimout = setTimeout(function () {
+            soundSlider.classList.remove("emulateHover");
+        }, soundState.hideSilderTimoutTime);
+        soundSlider.classList.add("emulateHover");
+    });
 
-        if (video.volume < 0.33) {
-             soundButton.src = "/static/images/sound-1.svg";
-        }
+    soundSlider.addEventListener("touchend", function () {
+        soundState.hideSliderTimout = setTimeout(function () {
+            soundSlider.classList.remove("emulateHover");
+        }, soundState.hideSilderTimoutTime);
+    });
 
-        if (video.volume === 0) {
-            soundButton.src = "/static/images/sound-0.svg";
-            soundButton.alt = "Icon showing no sound is available";
-            soundButton.title = "Sound muted.";
+    soundSlider.addEventListener("touchstart", function () {
+        clearTimeout(soundState.hideSliderTimout);
+    });
+
+    soundSlider.addEventListener("input", function () {
+        var volumeRatio = this.value / this.max;
+        var direction = volumeRatio - soundTracker.previousVolume; // this.value is 1 to this.max, previous value tracks volume which is between 0 and 1, need to convert
+        soundTracker.previousVolume = volumeRatio;
+        video.volume = volumeRatio;
+
+        soundButton.title = "Button to change sound options";
+        soundButton.description = "Change sound options";
+
+        // positive direction is increase in volume
+        if (direction > 0) {
+            if (video.volume >= soundTracker.soundGates.max && !soundTracker.level3Visible) {
+                soundTracker.level3Visible = true;
+                soundButton.getElementById("soundIconRay3NoneToFull").beginElement();
+            }
+
+            if (video.volume > soundTracker.soundGates.upper && !soundTracker.level2Visible) {
+                soundTracker.level2Visible = true;
+                soundButton.getElementById("soundIconRay2NoneToFull").beginElement();
+            }
+
+            if (video.volume > soundTracker.soundGates.lower && !soundTracker.level1Visible) {
+                soundTracker.level1Visible = true;
+                soundButton.getElementById("soundIconRay1NoneToFull").beginElement();
+            }
+
+            if (video.volume > soundTracker.soundGates.base && !soundTracker.level0Visible) {
+                soundTracker.level0Visible = true;
+                soundButton.getElementById("soundIconRayMuteFullToNone").beginElement();
+            }
+        } else if (direction < 0) { // decrease in volume
+
+            if (video.volume <= soundTracker.soundGates.max && soundTracker.level3Visible) {
+                soundTracker.level3Visible = false;
+                soundButton.getElementById("soundIconRay3FullToNone").beginElement();
+            }
+
+            if (video.volume <= soundTracker.soundGates.upper && soundTracker.level2Visible) {
+                soundTracker.level2Visible = false;
+                soundButton.getElementById("soundIconRay2FullToNone").beginElement();
+            }
+
+            if (video.volume <= soundTracker.soundGates.lower && soundTracker.level1Visible) {
+                soundTracker.level1Visible = false;
+                soundButton.getElementById("soundIconRay1FullToNone").beginElement();
+            }
+
+            if (video.volume === soundTracker.soundGates.base && soundTracker.level0Visible) {
+                soundTracker.level0Visible = false;
+                soundButton.getElementById("soundIconRay0FullToNone").beginElement();
+            }
         }
     });
+
 
     var hideSlderTimout;
     soundSlider.addEventListener("touchend", function () {
@@ -411,4 +478,25 @@ document.addEventListener("DOMContentLoaded", function () {
             return source.src;
         }).indexOf(video.currentSrc);
     }
+
+        /* Special cases of suck */
+    var soundIconBody = document.getElementById("soundIconBody");
+
+    soundIconBody.addEventListener("mouseenter", function () {
+        soundSlider.classList.add("emulateHover");
+    });
+
+    soundIconBody.addEventListener("mouseout", function () {
+        soundSlider.classList.remove("emulateHover");
+    });
+
+    soundSlider.addEventListener("mouseenter", function () {
+        soundSlider.classList.add("emulateHover");
+        soundIconBody.classList.add("emulateHover");
+    });
+
+    soundSlider.addEventListener("mouseout", function () {
+        soundSlider.classList.remove("emulateHover");
+        soundIconBody.classList.remove("emulateHover");
+    });
 });

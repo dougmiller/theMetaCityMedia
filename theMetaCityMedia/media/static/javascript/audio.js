@@ -11,16 +11,8 @@ document.addEventListener("DOMContentLoaded", function () {
         playProgress = document.getElementById("playProgress"),
         soundButton = document.getElementById("tmcSoundIcon"),
         soundSlider = document.getElementById("soundSlider"),
-        tracksButton = document.getElementById("tracksButton"),
-        tracksList = document.getElementById("tracksList"),
-        audioFileName = audio.dataset.filename,
-        hasStartPoster = audio.dataset.startposter,
-        hasEndPoster = audio.dataset.endposter,
-        soundState = {
-            hideSliderTimout: undefined,
-            prevButtonIcon: soundButton,
-            hideSilderTimoutTime: 3000
-        };
+        tracksButton = document.getElementById("tmcTracksIcon"),
+        tracksList = document.getElementById("tracksList");
 
     playProgress.value = 0;
     audio.controls = false;
@@ -46,7 +38,7 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         } else {
             var startPosterRef;
-            startPosterRef = hasStartPoster === "True" ? audioFileName : "generic";
+            startPosterRef = audio.dataset.startposter === "True" ? audio.dataset.filename : "generic";
             getPoster(startPosterRef, "start").then(function (startPoster) {
                 startPoster.setAttribute("class", "mediaPoster");
                 audioPoster.appendChild(startPoster);
@@ -106,7 +98,6 @@ document.addEventListener("DOMContentLoaded", function () {
             }, 1000);
         });
 
-
         Array.prototype.slice.call(tracksList.children).forEach(function(tracksListItem) {
             tracksListItem.addEventListener("click", function () {
                 var chosen = Array.prototype.find.call(audio.textTracks, function (audioTrack) {
@@ -129,7 +120,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     audio.addEventListener("play", function () {
         var posters = audioPoster.getElementsByClassName("mediaPoster");
-        posters.forEach(function (poster) {
+        Array.from(posters).forEach(function (poster) {
             poster.parentNode.removeChild(poster);
         });
     });
@@ -141,43 +132,38 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     audio.addEventListener("ended", function () {
-        var title = playPauseButton.getElementsByTagNameNS("http://www.w3.org/2000/svg", "title")[0];
-        playPauseButton.alt = "Option to play the video";
-        title.textContent = "Play";
+        var endPosterRef = audio.dataset.endposter === "True" ? audio.dataset.filename : "generic";
+        playPauseButton.getElementsByTagNameNS("http://www.w3.org/2000/svg", "title")[0].textContent = "Play";
         playPauseButton.getElementById("transitionToPlay").beginElement();
 
-        var endPosterRef = hasEndPoster === "True" ? audioFileName : "generic";
         getPoster(endPosterRef, "end").then(function (endPoster) {
             endPoster.setAttribute("class", "mediaPoster");
-            audioPoster.appendChild(endPoster);
 
             endPoster.getElementById("playButton").addEventListener("click", function () {
-                audio.play();
-                playPauseButton.alt = "Option to pause the video";
-                title.textContent = "Pause";
-                playPauseButton.getElementById("transitionToPause").beginElement();
+                audio.playPause();
                 audioPoster.removeChild(endPoster);
             });
 
+            getOtherMediaLink().then(function(result) {
+                var mediaLink = "http://assets.localcity.com/video/postcards/";
+                var parsedResult = JSON.parse(result);
+                var link1 = endPoster.getElementById("tmcendofmovielink1");
+                var link2 = endPoster.getElementById("tmcendofmovielink2");
+                var image1 = endPoster.getElementById("tmcendofmovielink1image");
+                var image2 = endPoster.getElementById("tmcendofmovielink2image");
+
+                link1.setAttributeNS('http://www.w3.org/1999/xlink', 'href', "/video/" + parsedResult[0].id);
+                link2.setAttributeNS('http://www.w3.org/1999/xlink', 'href', "/video/" + parsedResult[1].id);
+                image1.setAttributeNS('http://www.w3.org/1999/xlink', 'href', mediaLink + parsedResult[0].file_name + ".png");
+                image2.setAttributeNS('http://www.w3.org/1999/xlink', 'href', mediaLink + parsedResult[1].file_name + ".png");
+            }, function(err) {
+                console.log(err);
+            });
+
+            audioPoster.appendChild(endPoster);
         }, function (error) {
             console.log("No end poster: " + error);
         });
-
-        var request = new XMLHttpRequest();
-        request.open("GET", "http://api.localcity.com:5000/v/1/0/video_end_follow_on", true);
-
-        request.onload = function () {
-            if (this.status >= 200 && this.status < 400) {
-                resolve(document.importNode(this.responseXML.firstChild, true));
-            } else {
-                reject({status: this.status, statusText: this.statusText});
-            }
-        };
-
-        request.onerror = function () {
-            reject({status: this.status, statusText: this.statusText});
-        };
-        request.send();
     });
 
     audio.isPlaying = function () {
@@ -189,12 +175,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (audio.isPlaying()) {
             audio.pause();
-            playPauseButton.alt = "Option to play the video";
             title.textContent = "Play";
             playPauseButton.getElementById("transitionToPlay").beginElement();
         } else {
             audio.play();
-            playPauseButton.alt = "Option to pause the video";
             title.textContent = "Pause";
             playPauseButton.getElementById("transitionToPause").beginElement();
         }
@@ -231,11 +215,21 @@ document.addEventListener("DOMContentLoaded", function () {
         playPauseButton.getElementById("transitionToPause").beginElement();
     });
 
-    //tracksButton.addEventListener("touchstart", function () {
-    //    tracksList.classList.add("emulateHover");
-    //});
+    tracksButton.addEventListener("touchstart", function () {
+        tracksList.classList.add("emulateHover");
+    });
 
-    var soundTracker = {
+    playPauseButton.addEventListener("mouseenter", function () {
+        playPauseButton.getElementById("setDashArray").beginElement();
+        playPauseButton.getElementById("setDashOffset").beginElement();
+    });
+
+    playPauseButton.addEventListener("mouseleave", function () {
+        playPauseButton.getElementById("setDashArray").endElement();
+        playPauseButton.getElementById("setDashOffset"). endElement();
+    });
+
+    var soundStateTracker = {
         level3Visible: true,
         level2Visible: true,
         level1Visible: true,
@@ -246,93 +240,71 @@ document.addEventListener("DOMContentLoaded", function () {
             upper: 0.5,
             lower: 0.2,
             base: 0.0
-        }
+        },
+        hideSliderTimout: undefined,
+        hideSilderTimoutTime: 3000
     };
-    soundButton.addEventListener("click", function () {
-        if (audio.muted === false) {
-            audio.muted = true;
-            soundState.prevButtonIcon = soundButton.src;
-            soundButton.src = "/static/images/sound-m.svg";
-            soundButton.alt = "Icon showing no sound is muted";
-            soundButton.title = "Sound muted.";
-            soundSlider.id = "noSoundSlider";
-        } else {
-            audio.muted = false;
-            soundButton.src = soundState.prevButtonIcon;
-            soundButton.alt = "Icon showing state of sound, currently: " + audio.volume * 100 + "%";
-            soundButton.title = "Change sound options";
-            soundSlider.id = "soundSlider";
-        }
-    });
-
-    soundButton.addEventListener("touchend", function (event) {
-        event.stopImmediatePropagation(); // touchend also triggers click so need to stop that from happening and muting the track
-        soundState.hideSliderTimout = setTimeout(function () {
+    soundButton.addEventListener("touchend", function () {
+        soundStateTracker.hideSliderTimout = setTimeout(function () {
             soundSlider.classList.remove("emulateHover");
-        }, soundState.hideSilderTimoutTime);
-        soundSlider.classList.add("emulateHover");
-    });
-
-    soundSlider.addEventListener("touchend", function () {
-        soundState.hideSliderTimout = setTimeout(function () {
-            soundSlider.classList.remove("emulateHover");
-        }, soundState.hideSilderTimoutTime);
+        }, soundStateTracker.hideSilderTimoutTime);
     });
 
     soundSlider.addEventListener("touchstart", function () {
-        clearTimeout(soundState.hideSliderTimout);
+        clearTimeout(soundStateTracker.hideSliderTimout);
+        soundSlider.classList.add("emulateHover");
     });
 
     soundSlider.addEventListener("input", function () {
-
         var volumeRatio = this.value / this.max;
-        var direction = volumeRatio - soundTracker.previousVolume; // this.value is 1 to this.max, previous value tracks volume which is between 0 and 1, need to convert
-        soundTracker.previousVolume = volumeRatio;
+        var direction = volumeRatio - soundStateTracker.previousVolume;
+        soundStateTracker.previousVolume = volumeRatio;
         audio.volume = volumeRatio;
+
+        soundButton.getElementsByTagNameNS("http://www.w3.org/2000/svg", "title")[0].textContent = "Button to change sound options - current volume: " + volumeRatio * 100 + "%";
 
         soundButton.title = "Button to change sound options";
         soundButton.description = "Change sound options";
 
         // positive direction is increase in volume
         if (direction > 0) {
-            if (audio.volume >= soundTracker.soundGates.max && !soundTracker.level3Visible) {
-                soundTracker.level3Visible = true;
+            if (audio.volume >= soundStateTracker.soundGates.max && !soundStateTracker.level3Visible) {
+                soundStateTracker.level3Visible = true;
                 soundButton.getElementById("soundIconRay3NoneToFull").beginElement();
             }
 
-            if (audio.volume > soundTracker.soundGates.upper && !soundTracker.level2Visible) {
-                soundTracker.level2Visible = true;
+            if (audio.volume > soundStateTracker.soundGates.upper && !soundStateTracker.level2Visible) {
+                soundStateTracker.level2Visible = true;
                 soundButton.getElementById("soundIconRay2NoneToFull").beginElement();
             }
 
-            if (audio.volume > soundTracker.soundGates.lower && !soundTracker.level1Visible) {
-                soundTracker.level1Visible = true;
+            if (audio.volume > soundStateTracker.soundGates.lower && !soundStateTracker.level1Visible) {
+                soundStateTracker.level1Visible = true;
                 soundButton.getElementById("soundIconRay1NoneToFull").beginElement();
             }
 
-            if (audio.volume > soundTracker.soundGates.base && !soundTracker.level0Visible) {
-                soundTracker.level0Visible = true;
+            if (audio.volume > soundStateTracker.soundGates.base && !soundStateTracker.level0Visible) {
+                soundStateTracker.level0Visible = true;
                 soundButton.getElementById("soundIconRayMuteFullToNone").beginElement();
             }
         } else if (direction < 0) { // decrease in volume
-
-            if (audio.volume <= soundTracker.soundGates.max && soundTracker.level3Visible) {
-                soundTracker.level3Visible = false;
+            if (audio.volume <= soundStateTracker.soundGates.max && soundStateTracker.level3Visible) {
+                soundStateTracker.level3Visible = false;
                 soundButton.getElementById("soundIconRay3FullToNone").beginElement();
             }
 
-            if (audio.volume <= soundTracker.soundGates.upper && soundTracker.level2Visible) {
-                soundTracker.level2Visible = false;
+            if (audio.volume <= soundStateTracker.soundGates.upper && soundStateTracker.level2Visible) {
+                soundStateTracker.level2Visible = false;
                 soundButton.getElementById("soundIconRay2FullToNone").beginElement();
             }
 
-            if (audio.volume <= soundTracker.soundGates.lower && soundTracker.level1Visible) {
-                soundTracker.level1Visible = false;
+            if (audio.volume <= soundStateTracker.soundGates.lower && soundStateTracker.level1Visible) {
+                soundStateTracker.level1Visible = false;
                 soundButton.getElementById("soundIconRay1FullToNone").beginElement();
             }
 
-            if (audio.volume === soundTracker.soundGates.base && soundTracker.level0Visible) {
-                soundTracker.level0Visible = false;
+            if (audio.volume <= soundStateTracker.soundGates.base && soundStateTracker.level0Visible) {
+                soundStateTracker.level0Visible = false;
                 soundButton.getElementById("soundIconRay0FullToNone").beginElement();
             }
         }
@@ -347,13 +319,33 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (this.status >= 200 && this.status < 400) {
                     resolve(document.importNode(this.responseXML.firstChild, true));
                 } else {
-                    reject({status: this.status, statusText: this.statusText});
+                    reject(Error({status: this.status, statusText: this.statusText}));
                 }
             };
 
             request.onerror = function () {
                 console.log(this);
-                reject({status: this.status, statusText: this.statusText});
+                reject(Error({status: this.status, statusText: this.statusText}));
+            };
+            request.send();
+        });
+    }
+
+    function getOtherMediaLink() {
+        return new Promise(function (resolve, reject) {
+            var request = new XMLHttpRequest();
+            request.open("GET", "http://api.localcity.com:5000/v/1/0/video_end_follow_on", true);
+
+            request.onload = function () {
+                if (this.status >= 200 && this.status < 400) {
+                    resolve(this.response);
+                } else {
+                    reject(Error({status: this.status, statusText: this.statusText}));
+                }
+            };
+
+            request.onerror = function () {
+                reject(Error({status: this.status, statusText: this.statusText}));
             };
             request.send();
         });

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" version="1.2" baseProfile="tiny" id="tmcSoundIcon"  width="45px" height="40px" viewBox="-5 -1 42 42">
-    <title>Sound Icon</title>
+    <title>Button to change sound options - current volume: 100%</title>
     <description>Sound contolling icon</description>
     <path class="soundIcon" id="soundIconBody" d="M27,3 L20,12 L8,12 L8,28 L20,28 L27,37 A 20 20, 0, 1, 1, 27 3z" />
 

@@ -212,16 +212,10 @@ class Audio(db.Model):
         return format_size_to_human_readable(min(audio_file.file_size for audio_file in self.files))
 
     def get_mime_types(self):
-        types = []
-        for f in self.files:
-            if f.Mime_Type not in types:
-                types.append(f.Mime_Type)
-        return types
+        return list(set(self.files.Mime_Type))
 
     def tracks_sans_chapters(self):
-        for x in self.tracks:
-            if not x.type == 'chapters':
-                yield x
+        return list(filter(lambda track: track.type != 'chapters', self.tracks))
 
 
 class AudioFile(db.Model):

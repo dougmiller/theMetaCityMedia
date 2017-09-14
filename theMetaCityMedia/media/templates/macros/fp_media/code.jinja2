@@ -9,10 +9,7 @@
         {% autoescape false %}{{ code.about }}{% endautoescape %}
     </div>
     <ul class="meta">
-        <li class="running_time">{{ code.format_time_to_human_readable() }}</li>
-        <li class="mime_types">{% for mt in code.get_mime_types() %} {{ mt }} {% endfor %}</li>
-        <li class="sizes">{{ code.get_smallest_filesize_formatted() }} {% if code.difference_between_max_and_min_filesize() %} - {{ code.get_largest_filesize_formatted() }} {% endif %}</li>
-        <li class="tracks">{% for track in code.tracks %} {{ track.type }} {% endfor %}</li>
+        <li class="language">{{ code.language }}</li>
         <li class="licence">{{ code.licence }}</li>
     </ul>
 </div>

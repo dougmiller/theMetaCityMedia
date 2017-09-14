@@ -14,16 +14,13 @@
                    data-filename="{{ audio.file_name }}"
                    data-startposter="{{ audio.has_start_poster }}"
                    data-endposter="{{ audio.has_end_poster_url }}"
-                   data-hasfullscreen="{{ audio.has_fullscreen }}"
                    preload="auto"
                    crossorigin="anonymous"
                    id="audioObject">
 
                 {% for source in audio.files %}
-                    {% if not source.is_fullscreen %}
-                        <source src="http://assets.localcity.com/audio/{{ audio.file_name }}.{{ source.extension }}"
-                            type='audio/{{ source.mime_type }}; codecs="{{ source.audio_codec }}"' />
-                    {% endif %}
+                    <source src="http://assets.localcity.com/audio/{{ audio.file_name }}.{{ source.extension }}"
+                        type='audio/{{ source.mime_type }}; codecs="{{ source.audio_codec }}"' />
                 {% endfor %}
 
                 {% for track in audio.tracks %}
@@ -35,22 +32,26 @@
                 <img id="audioPosterImg" src="http://assets.localcity.com/audio/postcards/{{ audio.Parent.Postcard.url }}"/>
             </div>
             <div id="audioMeta" class="mediaMeta">
-                <p id="timeBox"><span id="currentTimeSpan" class="timeSpan">00:00</span> / <span id="runningTimeSpan" class="timeSpan">{{ audio.format_running_time_to_human_readable() }}</span></p>
+                <p id="timeBox"><span id="currentTimeSpan" class="timeSpan">0m 0s</span> / <span id="runningTimeSpan" class="timeSpan">{{ audio.format_running_time_to_human_readable() }}</span></p>
 
                 <input type="range" id="playProgress" min="0" max="1000" value="0">
 
                 <div id="audioControls" class="mediaControls">
-                    <div id="tracksControl">
-                        {{ import_svg("tracks-icon") }}
-                        <ul id="tracksList">
-                            {% for track in audio.tracks_sans_chapters() %}
-                                <li data-kind="{{ track.type }}">{{ track.get_description() }}</li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                    {{ import_svg("small-play-pause-icon") }}
+                    {% if audio.tracks_sans_chapters()|length %}
+                        <div id="tracksControl">
+                            {{ import_svg("icon-tracks") }}
+                            <ul id="tracksList">
+                                {% for track in audio.tracks_sans_chapters() %}
+                                    <li data-kind="{{ track.type }}">{{ track.get_description() }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% else %}
+                        {{ import_svg("icon-no-tracks") }}
+                    {% endif %}
+                    {{ import_svg("icon-play-pause") }}
                     <div id="soundControl">
-                        {{ import_svg("sound-icon") }}
+                        {{ import_svg("icon-sound") }}
                         <input id="soundSlider" type="range" min="0" max="10" value="10">
                     </div>
                 </div>

@@ -32,24 +32,33 @@
                            srclang="{{ track.src_lang }}" kind="{{ track.type }}" label="{{ track.label }}">
                 {% endfor %}
             </video>
-            <div id="videoControls" class="mediaControls">
-                <img id="playPauseButton" class="button video-icon" src="/static/images/smallplay.svg" title="Play" alt="Play/pause video">
+            <div id="videoControls" class="mediaMeta">
                 <span id="currentTimeSpan" class="timeSpan">00:00</span>
-                <input type="range" id="playProgress" min="0" max="1000" value="0">
+
                 <span id="runningTimeSpan" class="timeSpan">{{ video.format_running_time_to_human_readable() }}</span>
-                <img id="fullscreenButton" class="button video-icon" src="/static/images/fullscreen.svg" title="Go to fullscreen. If there is a higher resolution video available it will load that, otherwise it will upscale the current video." alt="Button to open video in fullscreen">
-                <div id="tracksControl" class="video-icon">
-                    <img id="tracksButton" class="button video-icon" src="/static/images/tracks.svg" title="Change track options" alt="Button to open track options">
-                    <ul id="tracksList">
-                        <li class="active">No track</li>
-                        {% for track in video.tracks %}
-                            <li>{{ track.get_description() }}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-                <div id="soundControl">
-                    <img id="soundButton" class="button" src="/static/images/sound-0.svg" title="No sound availiable" alt="Icon showing no sound is available">
-                    <input id="soundSlider" type="range" min="0" max="10" value="10" orient="vertical">
+
+                <input type="range" id="playProgress" min="0" max="1000" value="0">
+
+                <div id="audioControls" class="mediaControls">
+
+                    <img id="fullscreenButton" class="button video-icon" src="/static/images/fullscreen.svg" title="Go to fullscreen. If there is a higher resolution video available it will load that, otherwise it will upscale the current video." alt="Button to open video in fullscreen">
+
+                    <div id="tracksControl" class="video-icon">
+                        <img id="tracksButton" class="button video-icon" src="/static/images/tracks.svg" title="Change track options" alt="Button to open track options">
+                        <ul id="tracksList">
+                            <li class="active">No track</li>
+                            {% for track in video.tracks %}
+                                <li>{{ track.get_description() }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    {{ import_svg("small-play-pause-icon") }}
+
+                    <div id="soundControl">
+                        {{ import_svg("sound-icon") }}
+                        <input id="soundSlider" type="range" min="0" max="10" value="10">
+                    </div>
                 </div>
             </div>
         </div>
